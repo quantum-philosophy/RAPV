@@ -2,11 +2,9 @@ function thermalRunaway
   close all;
   setup;
 
-  iterationLimit = 20;
-  temperatureLimit = 1e3;
-
   options = Test.configure('processorCount', 2, ...
     'expectation', 45e-9, 'deviation', 0.05 * 45e-9);
+  steadyStateOptions = options.steadyStateOptions;
 
   chaos = Temperature.Chaos.DynamicSteadyState(options);
   display(chaos);
@@ -35,9 +33,7 @@ function thermalRunaway
     L = chaos.process.evaluate(rvs')';
 
     [ T, output ] = chaos.solve(options.dynamicPower, L, ...
-      'iterationLimit', iterationLimit, ...
-      'temperatureLimit', Utils.toKelvin(temperatureLimit), ...
-      'tolerance', 0.5);
+      steadyStateOptions);
 
     R = reshape(output.iterationCount, length(x), []);
     T = Utils.toCelsius(reshape(max(T, [], 1), length(x), []));
@@ -47,14 +43,14 @@ function thermalRunaway
 
     subplot(1, 2, 1);
     surfc(X, Y, R);
-    Colormap.data(R, [ 0, iterationLimit ]);
-    zlim([ 0, iterationLimit ]);
+    Colormap.data(R, [ 0, steadyStateOptions.iterationLimit ]);
+    zlim([ 0, steadyStateOptions.iterationLimit ]);
     view(50, 50);
 
     subplot(1, 2, 2);
     surfc(X, Y, T);
-    Colormap.data(T, [ 0, temperatureLimit ]);
-    zlim([ 0, temperatureLimit ]);
+    Colormap.data(T, [ 0, Utils.toCelsius(steadyStateOptions.temperatureLimit) ]);
+    zlim([ 0, Utils.toCelsius(steadyStateOptions.temperatureLimit) ]);
     view(50, 50);
   end
 end
