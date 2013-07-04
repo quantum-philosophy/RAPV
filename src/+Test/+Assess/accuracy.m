@@ -52,8 +52,8 @@ function accuracy
   % Polynomial chaos expansion
   %
   for i = 1:orderCount
-    options.chaosOptions.order = orderSet(i);
-    options.chaosOptions.quadratureOptions.polynomialOrder = orderSet(i);
+    options.surrogateOptions.order = orderSet(i);
+    options.surrogateOptions.quadratureOptions.polynomialOrder = orderSet(i);
 
     fprintf('%5d | ', orderSet(i));
 
