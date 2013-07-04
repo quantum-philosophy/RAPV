@@ -61,7 +61,7 @@ function accuracy
 
     [ Texp, output ] = chaos.compute(options.dynamicPower, ...
       options.steadyStateOptions);
-    Tdata = chaos.sample(output.coefficients, chaosSampleCount);
+    Tdata = chaos.sample(output, chaosSampleCount);
 
     for j = 1:sampleCount
       errorExp(i, j) = Error.computeNRMSE(mcTexp{j}, Texp);
