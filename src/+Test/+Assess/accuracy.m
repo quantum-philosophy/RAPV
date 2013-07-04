@@ -2,6 +2,7 @@ function accuracy
   setup;
   rng(1);
 
+  processorCount = 4;
   stepCount = 1e2;
   chaosSampleCount = 1e5;
 
@@ -18,7 +19,8 @@ function accuracy
   orderCount = length(orderSet);
   sampleCount = length(sampleCountSet);
 
-  options = Test.configure('stepCount', stepCount);
+  options = Test.configure( ...
+    'processorCount', processorCount, 'stepCount', stepCount);
   display(options);
 
   %
@@ -38,8 +40,8 @@ function accuracy
 
   for i = 1:sampleCount
     mcTdata{i} = mcTDATA(1:sampleCountSet(i), :, :);
-    mcTexp{i} = mean(mcTdata{i}, 1);
-    mcTvar{i} = var(mcTdata{i}, [], 1);
+    mcTexp{i} = squeeze(mean(mcTdata{i}, 1));
+    mcTvar{i} = squeeze(var(mcTdata{i}, [], 1));
   end
 
   errorExp = zeros(orderCount, sampleCount);
@@ -70,9 +72,30 @@ function accuracy
       if orderSet(i) == pick(1) && sampleCountSet(j) == pick(2)
         errorPDF(i, j) = Data.compare(Utils.toCelsius(mcTdata{j}), ...
           Utils.toCelsius(Tdata), comparisonOptions, 'draw', true);
+
+        expectationError = abs(mcTexp{j} - Texp);
+        varianceError = abs(mcTvar{j} - output.Tvar);
+
+        figure;
+        subplot(1, 2, 1);
+        Plot.title('Expectation (NRMSE %.4f)', errorExp(i, j));
+        subplot(1, 2, 2);
+        Plot.title('Variance (NRMSE %.4f)', errorVar(i, j));
+        Plot.name('Errors of analytical expectation and variance');
+
+        time = 0:(stepCount - 1);
+        for k = 1:processorCount
+          color = Color.pick(k);
+          subplot(1, 2, 1);
+          line(time, expectationError(k, :), 'Color', color);
+          subplot(1, 2, 2);
+          line(time, varianceError(k, :), 'Color', color);
+        end
+
         Data.compare(Utils.toCelsius(mcTdata{j}(:, :, pick(3))), ...
           Utils.toCelsius(Tdata(:, :, pick(3))), ...
-          comparisonOptions, 'draw', true, 'layout', 'one');
+          comparisonOptions, 'draw', true, 'layout', 'one', ...
+          'labels', { 'MC', 'PC' });
       else
         errorPDF(i, j) = Data.compare(mcTdata{j}, Tdata, ...
           comparisonOptions);
