@@ -19,7 +19,7 @@ function accuracy
   orderCount = length(orderSet);
   sampleCount = length(sampleCountSet);
 
-  options = Test.configure( ...
+  options = Test.configure('processModel', 'Beta', ...
     'processorCount', processorCount, 'stepCount', stepCount);
   display(options);
 
@@ -32,14 +32,12 @@ function accuracy
     options.steadyStateOptions, 'sampleCount', max(sampleCountSet), ...
     'verbose', true);
 
-  mcTDATA = output.Tdata(randperm(max(sampleCountSet)), :, :);
-
   mcTexp = cell(sampleCount, 1);
   mcTvar = cell(sampleCount, 1);
   mcTdata = cell(sampleCount, 1);
 
   for i = 1:sampleCount
-    mcTdata{i} = mcTDATA(1:sampleCountSet(i), :, :);
+    mcTdata{i} = output.Tdata(1:sampleCountSet(i), :, :);
     mcTexp{i} = squeeze(mean(mcTdata{i}, 1));
     mcTvar{i} = squeeze(var(mcTdata{i}, [], 1));
   end
@@ -79,8 +77,10 @@ function accuracy
         figure;
         subplot(1, 2, 1);
         Plot.title('Expectation (NRMSE %.4f)', errorExp(i, j));
+        Plot.label('', 'Absolute error');
         subplot(1, 2, 2);
         Plot.title('Variance (NRMSE %.4f)', errorVar(i, j));
+        Plot.label('', 'Absolute error');
         Plot.name('Errors of analytical expectation and variance');
 
         time = 0:(stepCount - 1);
