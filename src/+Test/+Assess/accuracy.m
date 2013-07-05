@@ -7,9 +7,7 @@ function accuracy
   chaosSampleCount = 1e5;
 
   comparisonOptions = Options('quantity', 'pdf', 'range', 'unbounded', ...
-    'method', 'smooth', 'errorMetric', 'NRMSE');
-
-  display(comparisonOptions, 'Comparison options');
+    'method', 'smooth', 'distanceMetric', 'KLD', 'errorMetric', 'RMSE');
 
   orderSet       = [ 1 2 3 4 5 6 7 ];
   sampleCountSet = [ 1e2 1e3 1e4 1e5 ];
@@ -21,10 +19,9 @@ function accuracy
 
   options = Test.configure('processModel', 'Beta', ...
     'processorCount', processorCount, 'stepCount', stepCount);
-  display(options);
 
   %
-  % Monte Carlo simulation
+  % Monte Carlo
   %
   mc = Temperature.MonteCarlo.DynamicSteadyState(options);
 
@@ -46,10 +43,10 @@ function accuracy
   errorVar = zeros(orderCount, sampleCount);
   errorPDF = zeros(orderCount, sampleCount);
 
-  printHeader(sampleCountSet);
+  printHeader(comparisonOptions, sampleCountSet);
 
   %
-  % Polynomial chaos expansion
+  % Polynomial chaos
   %
   for i = 1:orderCount
     options.surrogateOptions.order = orderSet(i);
@@ -57,15 +54,17 @@ function accuracy
 
     fprintf('%5d | ', orderSet(i));
 
-    chaos = Temperature.Chaos.DynamicSteadyState(options);
+    pc = Temperature.Chaos.DynamicSteadyState(options);
 
-    [ Texp, output ] = chaos.compute(options.dynamicPower, ...
+    [ Texp, output ] = pc.compute(options.dynamicPower, ...
       options.steadyStateOptions);
-    Tdata = chaos.sample(output, chaosSampleCount);
+    Tdata = pc.sample(output, chaosSampleCount);
 
     for j = 1:sampleCount
-      errorExp(i, j) = Error.computeNRMSE(mcTexp{j}, Texp);
-      errorVar(i, j) = Error.computeNRMSE(mcTvar{j}, output.Tvar);
+      errorExp(i, j) = Error.compute( ...
+        comparisonOptions.errorMetric, mcTexp{j}, Texp);
+      errorVar(i, j) = Error.compute( ...
+        comparisonOptions.errorMetric, mcTvar{j}, output.Tvar);
 
       if orderSet(i) == pick(1) && sampleCountSet(j) == pick(2)
         errorPDF(i, j) = Data.compare(Utils.toCelsius(mcTdata{j}), ...
@@ -76,10 +75,12 @@ function accuracy
 
         figure;
         subplot(1, 2, 1);
-        Plot.title('Expectation (NRMSE %.4f)', errorExp(i, j));
+        Plot.title('Expectation (%s %.4f)', ...
+          comparisonOptions.errorMetric, errorExp(i, j));
         Plot.label('', 'Absolute error');
         subplot(1, 2, 2);
-        Plot.title('Variance (NRMSE %.4f)', errorVar(i, j));
+        Plot.title('Variance (%s %.4f)', ...
+          comparisonOptions.errorMetric, errorVar(i, j));
         Plot.label('', 'Absolute error');
         Plot.name('Errors of analytical expectation and variance');
 
@@ -101,31 +102,34 @@ function accuracy
           comparisonOptions);
       end
 
-      fprintf('%15.2f', errorPDF(i, j) * 100);
+      fprintf('%15.4f', errorPDF(i, j));
     end
 
     fprintf(' | ');
 
     for j = 1:sampleCount
-      fprintf('%15.2f', errorExp(i, j) * 100);
+      fprintf('%15.4f', errorExp(i, j));
     end
 
     fprintf(' | ');
 
     for j = 1:sampleCount
-      fprintf('%15.2f', errorVar(i, j) * 100);
+      fprintf('%15.4f', errorVar(i, j));
     end
 
     fprintf('\n');
   end
 end
 
-function printHeader(sampleCountSet)
+function printHeader(comparisonOptions, sampleCountSet)
   sampleCount = length(sampleCountSet);
 
   fprintf('\n');
 
-  names = { 'NRMSE(PDF) * 100', 'NRMSE(Exp) * 100', 'NRMSE(Var) * 100' };
+  names = { ...
+    [ comparisonOptions.distanceMetric, '(PDF)' ], ...
+    [ comparisonOptions.errorMetric, '(Exp)' ], ...
+    [ comparisonOptions.errorMetric, '(Var)' ] };
 
   fprintf('%5s | ', '');
   for i = 1:length(names)
