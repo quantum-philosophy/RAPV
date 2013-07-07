@@ -32,11 +32,12 @@ function thermalRunaway
 
     L = chaos.process.evaluate(rvs')';
 
-    [ T, output ] = chaos.solve(options.dynamicPower, L, ...
-      steadyStateOptions);
+    [ T, output ] = chaos.computeWithLeakage( ...
+      options.dynamicPower, 'L', L, steadyStateOptions);
 
     R = reshape(output.iterationCount, length(x), []);
-    T = Utils.toCelsius(reshape(max(T, [], 1), length(x), []));
+    Tmax = Utils.toCelsius( ...
+      reshape(max(max(T, [], 1), [], 2), length(x), []));
 
     figure;
     Plot.title('Variables %d and %d', pairs(k, 1), pairs(k, 2));
@@ -48,8 +49,8 @@ function thermalRunaway
     view(50, 50);
 
     subplot(1, 2, 2);
-    surfc(X, Y, T);
-    Colormap.data(T, [ 0, Utils.toCelsius(steadyStateOptions.temperatureLimit) ]);
+    surfc(X, Y, Tmax);
+    Colormap.data(Tmax, [ 0, Utils.toCelsius(steadyStateOptions.temperatureLimit) ]);
     zlim([ 0, Utils.toCelsius(steadyStateOptions.temperatureLimit) ]);
     view(50, 50);
   end
