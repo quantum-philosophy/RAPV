@@ -9,7 +9,7 @@ function thermalCycles
   T = temperature.compute(options.dynamicPower, ...
     options.steadyStateOptions);
 
-  lifetime = Lifetime;
+  lifetime = Lifetime('samplingInterval', options.samplingInterval);
   [ ~, lifetimeOutput ] = lifetime.predict(T);
 
   Plot.thermalCycles(T, lifetimeOutput);
@@ -20,10 +20,10 @@ function thermalCycles
   fprintf('Number of significant steps: %d out of %d\n', ...
     length(I), options.stepCount);
 
-  chaos = Temperature.Chaos.ThermalCyclic(options);
+  pc = Temperature.Chaos.ThermalCyclic(options);
 
   time = tic;
-  [ Texp, chaosOutput ] = chaos.compute(options.dynamicPower, ...
+  [ Texp, chaosOutput ] = pc.compute(options.dynamicPower, ...
     options.steadyStateOptions, 'lifetime', lifetimeOutput);
   time = toc(time);
 
