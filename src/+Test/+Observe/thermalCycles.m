@@ -29,5 +29,6 @@ function thermalCycles
 
   fprintf('Solution time: %.2f s\n', time);
 
-  time = options.samplingInterval * (0:(options.stepCount - 1));
+  Plot.temperatureVariation(options.timeLine, Texp, chaosOutput.Tvar, ...
+    'index', lifetimeOutput.peakIndex);
 end

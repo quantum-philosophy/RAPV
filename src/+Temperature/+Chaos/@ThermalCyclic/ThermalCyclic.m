@@ -1,5 +1,4 @@
 classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
-
   methods
     function this = ThermalCyclic(varargin)
       this = this@Temperature.Chaos.DynamicSteadyState(varargin{:});
