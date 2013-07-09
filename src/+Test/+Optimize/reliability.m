@@ -26,17 +26,18 @@ function reliability(varargin)
 
     [ Texp, output ] = pc.compute(Pdyn, options.steadyStateOptions);
 
+    MTTF = output.lifetimeOutput.totalMTTF;
     Pburn = sum(max(reshape(pc.sample(output, sampleCount), ...
       sampleCount, []), [], 2) > maximalTemperature) / sampleCount;
 
     Plot.temperatureVariation(time, Texp, output.Tvar, ...
       'layout', 'one', 'index', output.lifetimeOutput.peakIndex);
     Plot.title('%s: MTTF = %.2e, P(T > %.2f C) = %.2f', ...
-      title, output.lifetimeOutput.totalMTTF, ...
-      Utils.toCelsius(maximalTemperature), Pburn);
-  end
+      title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
 
-  plotSchedule(options.schedule, 'Initial');
+    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.2f\n', ...
+      title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
+  end
 
   populationSize = 10;
   mutationRate = 0.01;
@@ -142,15 +143,9 @@ function reliability(varargin)
   solutionCount = size(best, 1);
   fprintf('Number of solutions: %d\n', solutionCount);
 
-  for i = 1:solutionCount
-    title = [ 'Solution ', num2str(i) ];
-    schedule = Schedule.Dense( ...
-      options.platform, options.application, ...
-      'mapping', best(i, 1:taskCount), ...
-      'priority', best(i, (taskCount + 1):end));
-    plotSchedule(schedule, title);
-    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.2e\n', ...
-      title, fitness(i, 1), Utils.toCelsius(maximalTemperature), ...
-      fitness(i, 2));
+  plotSchedule(options.schedule, 'Initial');
+
+  for k = 1:solutionCount
+    plotSchedule(schedule, [ 'Solution ', num2str(k) ]);
   end
 end
