@@ -31,8 +31,9 @@ function reliability(varargin)
 
     Plot.temperatureVariation(time, Texp, output.Tvar, ...
       'layout', 'one', 'index', output.lifetimeOutput.peakIndex);
-    Plot.title('%s temperature (P(T > %.2f C) = %.2f)', ...
-      title, Utils.toCelsius(maximalTemperature), Pburn);
+    Plot.title('%s: MTTF = %.2e, P(T > %.2f C) = %.2f', ...
+      title, output.lifetimeOutput.totalMTTF, ...
+      Utils.toCelsius(maximalTemperature), Pburn);
   end
 
   plotSchedule(options.schedule, 'Initial');
@@ -101,12 +102,6 @@ function reliability(varargin)
 
     [ Texp, output ] = pc.compute(Pdyn, options.steadyStateOptions);
 
-    Tmax = max(Texp(:));
-    if Tmax > maximalTemperature
-      fitness = 0;
-      return;
-    end
-
     Pburn = sum(max(reshape(pc.sample(output, sampleCount), ...
       sampleCount, []), [], 2) > maximalTemperature) / sampleCount;
 
@@ -126,30 +121,36 @@ function reliability(varargin)
   gaOptions.CrossoverFcn = @crossoversinglepoint;
   gaOptions.MutationFcn = @mutate;
   gaOptions.Display = 'diagnose';
-  gaOptions.UseParallel = 'never';
+  gaOptions.UseParallel = 'always';
 
+  time = tic;
   if multiobjective
     gaOptions.ParetoFraction = 0.15;
     gaOptions.InitialPopulation = populate([], [], []);
     gaOptions.PlotFcns = { @gaplotpareto };
-
-    tic;
-    best = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
+    [ best, fitness ] = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
       [], [], [], [], [], [], gaOptions);
-    fprintf('Multiobjective genetic algorithm: %.2f s\n', toc);
   else
     gaOptions.PlotFcns = { @gaplotbestf };
-
-    tic;
-    best = ga(@evaluateUniobjective, 2 * taskCount, ...
+    [ best, fitness ] = ga(@evaluateUniobjective, 2 * taskCount, ...
       [], [], [], [], [], [], [], gaOptions);
-    fprintf('Uniobjective genetic algorithm: %.2f s\n', toc);
   end
+  time = toc(time);
 
-  schedule = Schedule.Dense( ...
-    options.platform, options.application, ...
-    'mapping', best(1:taskCount), ...
-    'priority', best((taskCount + 1):end));
+  fprintf('Optimization time: %.2f s\n', time);
 
-  plotSchedule(schedule, 'Optimized');
+  solutionCount = size(best, 1);
+  fprintf('Number of solutions: %d\n', solutionCount);
+
+  for i = 1:solutionCount
+    title = [ 'Solution ', num2str(i) ];
+    schedule = Schedule.Dense( ...
+      options.platform, options.application, ...
+      'mapping', best(i, 1:taskCount), ...
+      'priority', best(i, (taskCount + 1):end));
+    plotSchedule(schedule, title);
+    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.2e\n', ...
+      title, fitness(i, 1), Utils.toCelsius(maximalTemperature), ...
+      fitness(i, 2));
+  end
 end
