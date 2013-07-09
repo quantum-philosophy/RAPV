@@ -2,8 +2,8 @@ function reliability(varargin)
   close all;
   setup;
 
-  options = Test.configure('processorCount', 2, ...
-    'tgffFilename', File.join('+Test', '+Assets', '002_040.tgff'), ...
+  options = Test.configure('processorCount', 4, ...
+    'tgffFilename', File.join('+Test', 'Assets', '004_080.tgff'), ...
     varargin{:});
 
   multiobjective = options.get('multiobjective', false);
@@ -122,18 +122,18 @@ function reliability(varargin)
   gaOptions.CrossoverFcn = @crossoversinglepoint;
   gaOptions.MutationFcn = @mutate;
   gaOptions.Display = 'diagnose';
-  gaOptions.UseParallel = 'always';
+  gaOptions.UseParallel = 'never';
 
   time = tic;
   if multiobjective
     gaOptions.ParetoFraction = 0.15;
     gaOptions.InitialPopulation = populate([], [], []);
     gaOptions.PlotFcns = { @gaplotpareto };
-    [ best, fitness ] = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
+    best = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
       [], [], [], [], [], [], gaOptions);
   else
     gaOptions.PlotFcns = { @gaplotbestf };
-    [ best, fitness ] = ga(@evaluateUniobjective, 2 * taskCount, ...
+    best = ga(@evaluateUniobjective, 2 * taskCount, ...
       [], [], [], [], [], [], [], gaOptions);
   end
   time = toc(time);
@@ -146,6 +146,10 @@ function reliability(varargin)
   plotSchedule(options.schedule, 'Initial');
 
   for k = 1:solutionCount
+    schedule = Schedule.Dense( ...
+      options.platform, options.application, ...
+      'mapping', best(k, 1:taskCount), ...
+      'priority', best(k, (taskCount + 1):end));
     plotSchedule(schedule, [ 'Solution ', num2str(k) ]);
   end
 end
