@@ -4,31 +4,22 @@ function thermalCycles
 
   options = Test.configure;
 
-  temperature = Temperature.Analytical.DynamicSteadyState( ...
-    options.temperatureOptions);
-  T = temperature.compute(options.dynamicPower, ...
-    options.steadyStateOptions);
+  pc = Temperature.Chaos.ThermalCyclic(options);
 
-  lifetime = Lifetime('samplingInterval', options.samplingInterval);
-  [ ~, lifetimeOutput ] = lifetime.predict(T);
+  time = tic;
+  [ Texp, output ] = pc.compute( ...
+    options.dynamicPower, options.steadyStateOptions);
+  time = toc(time);
+  fprintf('Polynomial chaos: %.2f s\n', time);
 
-  Plot.thermalCycles(T, lifetimeOutput);
-  Plot.reliability(T, lifetimeOutput);
+  Plot.thermalCycles(output.Tfull, output.lifetimeOutput);
+  Plot.reliability(output.Tfull, output.lifetimeOutput);
 
-  I = Utils.constructPeakIndex(lifetimeOutput);
+  I = Utils.constructPeakIndex(output.lifetimeOutput);
 
   fprintf('Number of significant steps: %d out of %d\n', ...
     length(I), options.stepCount);
 
-  pc = Temperature.Chaos.ThermalCyclic(options);
-
-  time = tic;
-  [ Texp, chaosOutput ] = pc.compute(options.dynamicPower, ...
-    options.steadyStateOptions, 'lifetime', lifetimeOutput);
-  time = toc(time);
-
-  fprintf('Solution time: %.2f s\n', time);
-
-  Plot.temperatureVariation(options.timeLine, Texp, chaosOutput.Tvar, ...
-    'index', lifetimeOutput.peakIndex);
+  Plot.temperatureVariation(options.timeLine, ...
+    Texp, output.Tvar, 'index', output.lifetimeOutput.peakIndex);
 end

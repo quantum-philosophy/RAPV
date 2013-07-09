@@ -1,29 +1,38 @@
-function reliability
+function reliability(varargin)
   close all;
   setup;
 
-  options = Test.configure('processorCount', 2);
+  options = Test.configure('processorCount', 2, ...
+    'tgffFilename', File.join('+Test', '+Assets', '002_040.tgff'), ...
+    varargin{:});
 
-  dss = Temperature.Analytical.DynamicSteadyState( ...
-    options.temperatureOptions);
+  multiobjective = options.get('multiobjective', false);
 
-  pc = Temperature.Chaos.DynamicSteadyState(options);
+  sampleCount = 1e4;
+  burnMargin = 10; % degrees
 
-  lifetime = Lifetime('samplingInterval', options.samplingInterval);
+  pc = Temperature.Chaos.ThermalCyclic(options);
+
+  T = pc.computeWithLeakage( ...
+    options.dynamicPower, options.steadyStateOptions);
+  maximalTemperature = round(max(T(:)) + burnMargin);
+
+  fprintf('Maximal temperature: %.2f C\n', ...
+    Utils.toCelsius(maximalTemperature));
 
   function plotSchedule(schedule, title)
     Pdyn = options.powerScale * options.power.compute(schedule);
     time = options.samplingInterval * (0:(size(Pdyn, 2) - 1));
 
-    T = dss.compute(Pdyn, options.steadyStateOptions);
-    [ ~, lifetimeOutput ] = lifetime.predict(T);
+    [ Texp, output ] = pc.compute(Pdyn, options.steadyStateOptions);
 
-    [ Texp, output ] = pc.compute(Pdyn, ...
-      options.steadyStateOptions, 'lifetime', lifetimeOutput);
+    Pburn = sum(max(reshape(pc.sample(output, sampleCount), ...
+      sampleCount, []), [], 2) > maximalTemperature) / sampleCount;
 
     Plot.temperatureVariation(time, Texp, output.Tvar, ...
-      'layout', 'one', 'index', lifetimeOutput.peakIndex);
-    Plot.title('Temperature profile (%s)', title);
+      'layout', 'one', 'index', output.lifetimeOutput.peakIndex);
+    Plot.title('%s temperature (P(T > %.2f C) = %.2f)', ...
+      title, Utils.toCelsius(maximalTemperature), Pburn);
   end
 
   plotSchedule(options.schedule, 'Initial');
@@ -63,20 +72,45 @@ function reliability
     end
   end
 
-  function fitness = evaluate(chromosome)
+  function fitness = evaluateUniobjective(chromosome)
     schedule = Schedule.Dense( ...
       options.platform, options.application, ...
       'mapping', chromosome(1:taskCount), ...
       'priority', chromosome((taskCount + 1):end));
     Pdyn = options.powerScale * options.power.compute(schedule);
 
-    T = dss.compute(Pdyn, options.steadyStateOptions);
-    [ MTTF, lifetimeOutput ] = lifetime.predict(T);
+    T = pc.computeWithLeakage(Pdyn, options.steadyStateOptions);
+    Tmax = max(T(:));
 
-    % Texp = pc.compute(Pdyn, options.steadyStateOptions, ...
-    %   'lifetime', lifetimeOutput);
+    if Tmax > maximalTemperature
+      fitness = 0;
+      return;
+    end
+
+    MTTF = pc.lifetime.predict(T);
 
     fitness = -MTTF;
+  end
+
+  function fitness = evaluateMultiobjective(chromosome)
+    schedule = Schedule.Dense( ...
+      options.platform, options.application, ...
+      'mapping', chromosome(1:taskCount), ...
+      'priority', chromosome((taskCount + 1):end));
+    Pdyn = options.powerScale * options.power.compute(schedule);
+
+    [ Texp, output ] = pc.compute(Pdyn, options.steadyStateOptions);
+
+    Tmax = max(Texp(:));
+    if Tmax > maximalTemperature
+      fitness = 0;
+      return;
+    end
+
+    Pburn = sum(max(reshape(pc.sample(output, sampleCount), ...
+      sampleCount, []), [], 2) > maximalTemperature) / sampleCount;
+
+    fitness = [ -output.lifetimeOutput.totalMTTF, Pburn ];
   end
 
   gaOptions = gaoptimset;
@@ -84,7 +118,7 @@ function reliability
   gaOptions.EliteCount = floor(0.05 * populationSize);
   gaOptions.CrossoverFraction = 0.8;
   gaOptions.MigrationFraction = 0.2;
-  gaOptions.Generations = 1e3;
+  gaOptions.Generations = 500;
   gaOptions.StallGenLimit = 100;
   gaOptions.TolFun = 1e-3;
   gaOptions.CreationFcn = @populate;
@@ -92,12 +126,25 @@ function reliability
   gaOptions.CrossoverFcn = @crossoversinglepoint;
   gaOptions.MutationFcn = @mutate;
   gaOptions.Display = 'diagnose';
-  gaOptions.PlotFcns = { @gaplotbestf };
   gaOptions.UseParallel = 'never';
 
-  tic;
-  best = ga(@evaluate, 2 * taskCount, gaOptions);
-  fprintf('Genetic algorithm: %.2f s\n', toc);
+  if multiobjective
+    gaOptions.ParetoFraction = 0.15;
+    gaOptions.InitialPopulation = populate([], [], []);
+    gaOptions.PlotFcns = { @gaplotpareto };
+
+    tic;
+    best = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
+      [], [], [], [], [], [], gaOptions);
+    fprintf('Multiobjective genetic algorithm: %.2f s\n', toc);
+  else
+    gaOptions.PlotFcns = { @gaplotbestf };
+
+    tic;
+    best = ga(@evaluateUniobjective, 2 * taskCount, ...
+      [], [], [], [], [], [], [], gaOptions);
+    fprintf('Uniobjective genetic algorithm: %.2f s\n', toc);
+  end
 
   schedule = Schedule.Dense( ...
     options.platform, options.application, ...
