@@ -122,11 +122,11 @@ function reliability(varargin)
   gaOptions.CrossoverFcn = @crossoversinglepoint;
   gaOptions.MutationFcn = @mutate;
   gaOptions.Display = 'diagnose';
-  gaOptions.UseParallel = 'never';
+  gaOptions.UseParallel = 'always';
 
   time = tic;
   if multiobjective
-    gaOptions.ParetoFraction = 0.15;
+    gaOptions.ParetoFraction = 1;
     gaOptions.InitialPopulation = populate([], [], []);
     gaOptions.PlotFcns = { @gaplotpareto };
     best = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
