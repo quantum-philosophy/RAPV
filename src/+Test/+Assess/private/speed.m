@@ -31,17 +31,21 @@ function speed(varargin)
 
     for j = 1:repeat(i)
       tic;
-      analytic.compute(options.dynamicPower, options.steadyStateOptions);
-      measurements(i, 2) = measurements(i, 2) + toc * sampleCount;
-
-      tic;
-      % numeric.compute(options.dynamicPower, options.steadyStateOptions);
-      measurements(i, 3) = measurements(i, 3) + toc * sampleCount;
-
-      tic;
       chaos.compute(options.dynamicPower, options.steadyStateOptions);
       measurements(i, 1) = measurements(i, 1) + toc;
     end
+
+    for j = 1:repeat(i)
+      tic;
+      analytic.compute(options.dynamicPower, options.steadyStateOptions);
+      measurements(i, 2) = measurements(i, 2) + toc * sampleCount;
+    end
+
+    % for j = 1:repeat(i)
+    %  tic;
+    %  numeric.compute(options.dynamicPower, options.steadyStateOptions);
+    %  measurements(i, 3) = measurements(i, 3) + toc * sampleCount;
+    % end
 
     measurements(i, :) = measurements(i, :) / repeat(i);
 
