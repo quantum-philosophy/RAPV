@@ -12,12 +12,12 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
     function [ Texp, output ] = expand(this, Pdyn, varargin)
       options = Options(varargin{:});
 
-      Tfull = this.computeWithoutLeakage(Pdyn);
+      Tfull = this.solve(Pdyn, Options('leakage', []));
       [ ~, lifetimeOutput ] = this.lifetime.predict(Tfull);
 
       function result = target(rvs)
         L = transpose(this.process.evaluate(rvs));
-        T = this.computeWithLeakage(Pdyn, options, 'L', L);
+        T = this.solve(Pdyn, Options(options, 'L', L));
         result = Utils.packPeaks(T, lifetimeOutput);
       end
 
