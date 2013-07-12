@@ -31,12 +31,6 @@ function speed(varargin)
 
     for j = 1:repeat(i)
       tic;
-      chaos.compute(options.dynamicPower, options.steadyStateOptions);
-      measurements(i, 1) = measurements(i, 1) + toc;
-    end
-
-    for j = 1:repeat(i)
-      tic;
       analytic.compute(options.dynamicPower, options.steadyStateOptions);
       measurements(i, 2) = measurements(i, 2) + toc * sampleCount;
     end
@@ -46,6 +40,15 @@ function speed(varargin)
     %  numeric.compute(options.dynamicPower, options.steadyStateOptions);
     %  measurements(i, 3) = measurements(i, 3) + toc * sampleCount;
     % end
+
+    %
+    % NOTE: It should be the last as it was found to affect the others.
+    %
+    for j = 1:repeat(i)
+      tic;
+      chaos.compute(options.dynamicPower, options.steadyStateOptions);
+      measurements(i, 1) = measurements(i, 1) + toc;
+    end
 
     measurements(i, :) = measurements(i, :) / repeat(i);
 
