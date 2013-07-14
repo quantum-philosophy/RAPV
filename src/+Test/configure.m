@@ -1,7 +1,11 @@
 function options = configure(varargin)
   options = Configure.systemSimulation(varargin{:});
+
   options = Configure.processVariation(options);
+  options.processOptions.threshold = 0.95;
+
   options = Configure.polynomialChaos(options);
+  options.surrogateOptions.order = 3;
 
   options.steadyStateOptions = Options( ...
     'algorithm', 'condensedEquation', ...
