@@ -21,19 +21,15 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
         result = Utils.packPeaks(T, lifetimeOutput);
       end
 
-      coefficients = this.chaos.expand(@target);
+      chaosOutput = this.chaos.expand(@target);
 
-      Texp = Utils.unpackPeaks(coefficients(1, :), lifetimeOutput);
+      Texp = Utils.unpackPeaks(chaosOutput.expectation, lifetimeOutput);
 
       if nargout < 2, return; end
 
-      outputCount = size(coefficients, 2);
+      output.Tvar = Utils.unpackPeaks(chaosOutput.variance, lifetimeOutput);
 
-      output.Tvar = Utils.unpackPeaks(sum(coefficients(2:end, :).^2 .* ...
-        Utils.replicate(this.chaos.norm(2:end), 1, outputCount), 1), ...
-        lifetimeOutput);
-
-      output.coefficients = coefficients;
+      output.coefficients = chaosOutput.coefficients;
 
       output.Tfull = Tfull;
       output.lifetimeOutput = lifetimeOutput;

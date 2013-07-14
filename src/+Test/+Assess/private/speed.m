@@ -22,8 +22,10 @@ function speed(varargin)
 
     options = experiment.configure(parameter);
 
-    analytic = Temperature.Analytical.DynamicSteadyState(options.temperatureOptions);
-    % numeric = Temperature.Numerical.DynamicSteadyState(options.temperatureOptions);
+    analytic = Temperature.Analytical.DynamicSteadyState( ...
+      options.temperatureOptions);
+    % numeric = Temperature.Numerical.DynamicSteadyState( ...
+    %   options.temperatureOptions);
     chaos = Temperature.Chaos.DynamicSteadyState(options);
 
     fprintf('%15d', chaos.process.dimensionCount);
