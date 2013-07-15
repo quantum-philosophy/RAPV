@@ -3,9 +3,10 @@ function options = configure(varargin)
 
   options = Configure.processVariation(options);
   options.processOptions.threshold = 0.95;
+  options.processModel = 'Normal';
 
   options = Configure.polynomialChaos(options);
-  options.surrogateOptions.order = 3;
+  options.surrogateOptions.order = 4;
 
   options.steadyStateOptions = Options( ...
     'algorithm', 'condensedEquation', ...
