@@ -8,7 +8,7 @@ function options = configure(varargin)
 
   options = Configure.processVariation(options);
   options.processModel = 'Normal';
-  options.processOptions.threshold = 0.95;
+  options.processOptions.threshold = 0.96;
 
   options = Configure.polynomialChaos(options);
   options.surrogateOptions.order = 4;
