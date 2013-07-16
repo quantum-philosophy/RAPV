@@ -9,7 +9,7 @@ function accuracy
   comparisonOptions = Options('quantity', 'pdf', 'range', 'unbounded', ...
     'method', 'smooth', 'distanceMetric', 'KLD', 'errorMetric', 'RMSE');
 
-  orderSet       = [ 1 2 3 4 5 6 7 ];
+  orderSet       = [ 1 2 3 4 5 6 ];
   sampleCountSet = [ 1e2 1e3 1e4 1e5 ];
 
   pick = [ 4 1e4 50 ];
