@@ -14,6 +14,8 @@ function thermalRunaway
   pairs = combnk(1:dimensionCount, 2);
 
   switch options.processModel
+  case 'Normal'
+    x = linspace(-5, 5, 20);
   case 'Beta'
     x = linspace( ...
       chaos.process.transformation.customDistribution.a + 1e-6, ...
@@ -32,8 +34,8 @@ function thermalRunaway
 
     L = chaos.process.evaluate(rvs')';
 
-    [ T, output ] = chaos.computeWithLeakage( ...
-      options.dynamicPower, 'L', L, steadyStateOptions);
+    [ T, output ] = chaos.solve(options.dynamicPower, ...
+        Options(steadyStateOptions, 'L', L));
 
     R = reshape(output.iterationCount, length(x), []);
     Tmax = Utils.toCelsius( ...
