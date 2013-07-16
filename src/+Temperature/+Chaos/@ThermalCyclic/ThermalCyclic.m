@@ -16,9 +16,10 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
       [ ~, lifetimeOutput ] = this.lifetime.predict(Tfull);
 
       function result = target(rvs)
-        L = transpose(this.process.evaluate(rvs));
-        T = this.solve(Pdyn, Options(options, 'L', L));
-        result = Utils.packPeaks(T, lifetimeOutput);
+        L = this.preprocess(rvs, options);
+        [ T, solveOutput ] = this.solve(Pdyn, Options(options, 'L', L));
+        T = this.postprocess(T, solveOutput, options);
+        T = Utils.packPeaks(T, lifetimeOutput);
       end
 
       chaosOutput = this.chaos.expand(@target);
