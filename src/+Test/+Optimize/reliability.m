@@ -32,7 +32,7 @@ function reliability(varargin)
     fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.2f\n', ...
       title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
 
-    figure('Position', [ 100, 500, 1000, 500 ]);
+    figure('Position', [ 100, 500, 1000, 300 ]);
 
     subplot(1, 2, 1);
     Plot.temperatureVariation(time, Texp, Tvar, ...
