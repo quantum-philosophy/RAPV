@@ -2,48 +2,63 @@ function reliability(varargin)
   close all;
   setup;
 
-  options = Test.configure('processorCount', 4, ...
-    'tgffFilename', File.join('+Test', 'Assets', '004_080.tgff'), ...
+  options = Test.configure('processorCount', 2, ...
+    'tgffFilename', File.join('+Test', 'Assets', '002_040.tgff'), ...
     varargin{:});
 
   multiobjective = options.get('multiobjective', false);
 
   sampleCount = 1e4;
-  burnMargin = 10; % degrees
-
-  pc = Temperature.Chaos.ThermalCyclic(options);
-
-  T = pc.computeWithLeakage( ...
-    options.dynamicPower, options.steadyStateOptions);
-  maximalTemperature = round(max(T(:)) + burnMargin);
+  maximalTemperature = Utils.toKelvin(120);
 
   fprintf('Maximal temperature: %.2f C\n', ...
     Utils.toCelsius(maximalTemperature));
+
+  pc = Temperature.Chaos.ThermalCyclic(options);
 
   function plotSchedule(schedule, title)
     Pdyn = options.powerScale * options.power.compute(schedule);
     time = options.samplingInterval * (0:(size(Pdyn, 2) - 1));
 
-    [ Texp, output ] = pc.compute(Pdyn, options.steadyStateOptions);
+    [ ~, output ] = pc.compute(Pdyn, options.steadyStateOptions);
 
+    Texp = Utils.unpackPeaks(output.expectation, output.lifetimeOutput);
+    Tvar = Utils.unpackPeaks(output.variance, output.lifetimeOutput);
     MTTF = output.lifetimeOutput.totalMTTF;
-    Pburn = sum(max(reshape(pc.sample(output, sampleCount), ...
-      sampleCount, []), [], 2) > maximalTemperature) / sampleCount;
 
-    Plot.temperatureVariation(time, Texp, output.Tvar, ...
-      'layout', 'one', 'index', output.lifetimeOutput.peakIndex);
-    Plot.title('%s: MTTF = %.2e, P(T > %.2f C) = %.2f', ...
-      title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
+    Tdata = max(pc.sample(output, sampleCount), [], 2);
+    Pburn = sum(Tdata > maximalTemperature) / sampleCount;
 
     fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.2f\n', ...
+      title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
+
+    figure('Position', [ 100, 500, 1000, 500 ]);
+
+    subplot(1, 2, 1);
+    Plot.temperatureVariation(time, Texp, Tvar, ...
+      'figure', false, 'layout', 'one', ...
+      'index', output.lifetimeOutput.peakIndex);
+    Plot.title('MTTF = %.2e', MTTF);
+
+    subplot(1, 2, 2);
+    Data.observe(Utils.toCelsius(Tdata), ...
+      'figure', false, 'layout', 'one', 'range', 'unbounded');
+    Plot.vline(Utils.toCelsius(maximalTemperature), ...
+      'Color', 'k', 'LineStyle', '--');
+    Plot.label('Temperature, C', 'Probability');
+    Plot.title('P(T > %.2f C) = %.2f', ...
+      Utils.toCelsius(maximalTemperature), Pburn);
+    Plot.legend('Probability density', 'Temperature constraint');
+
+    Plot.name('%s: MTTF = %.2e, P(T > %.2f C) = %.2f', ...
       title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
   end
 
   populationSize = 10;
   mutationRate = 0.01;
 
-  processorCount   = options.processorCount;
-  taskCount        = options.taskCount;
+  processorCount = options.processorCount;
+  taskCount = options.taskCount;
 
   function population = populate(Genomelength, FitnessFcn, options_)
     M = randi(processorCount, populationSize, taskCount);
@@ -81,7 +96,7 @@ function reliability(varargin)
       'priority', chromosome((taskCount + 1):end));
     Pdyn = options.powerScale * options.power.compute(schedule);
 
-    T = pc.computeWithLeakage(Pdyn, options.steadyStateOptions);
+    T = pc.solve(Pdyn, options.steadyStateOptions);
     Tmax = max(T(:));
 
     if Tmax > maximalTemperature
@@ -116,7 +131,7 @@ function reliability(varargin)
   gaOptions.MigrationFraction = 0.2;
   gaOptions.Generations = 500;
   gaOptions.StallGenLimit = 100;
-  gaOptions.TolFun = 1e-3;
+  gaOptions.TolFun = 0;
   gaOptions.CreationFcn = @populate;
   gaOptions.SelectionFcn = @selectiontournament;
   gaOptions.CrossoverFcn = @crossoversinglepoint;

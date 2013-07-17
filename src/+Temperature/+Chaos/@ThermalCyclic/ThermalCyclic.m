@@ -12,8 +12,8 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
     function [ Texp, output ] = expand(this, Pdyn, varargin)
       options = Options(varargin{:});
 
-      Tfull = this.solve(Pdyn, Options('leakage', []));
-      [ ~, lifetimeOutput ] = this.lifetime.predict(Tfull);
+      Texp = this.solve(Pdyn, Options('leakage', []));
+      [ ~, lifetimeOutput ] = this.lifetime.predict(Texp);
 
       function T = target(rvs)
         L = this.preprocess(rvs, options);
@@ -21,28 +21,16 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
         T = this.postprocess(T, solveOutput, lifetimeOutput, options);
       end
 
-      chaosOutput = this.chaos.expand(@target);
-
-      Texp = Utils.unpackPeaks(chaosOutput.expectation, lifetimeOutput);
-
-      if nargout < 2, return; end
-
-      output.Tvar = Utils.unpackPeaks(chaosOutput.variance, lifetimeOutput);
-
-      output.coefficients = chaosOutput.coefficients;
-
-      output.Tfull = Tfull;
+      output = this.chaos.expand(@target);
       output.lifetimeOutput = lifetimeOutput;
     end
 
-    function Tdata = sample(this, output, sampleCount)
-      Tdata = this.chaos.sample(sampleCount, output.coefficients);
-      Tdata = Utils.unpackPeaks(Tdata, output.lifetimeOutput);
+    function Tdata = sample(this, varargin)
+      Tdata = this.chaos.sample(varargin{:});
     end
 
-    function Tdata = evaluate(this, output, rvs)
-      Tdata = this.chaos.evaluate(rvs, output.coefficients);
-      Tdata = Utils.unpackPeaks(Tdata, output.lifetimeOutput);
+    function Tdata = evaluate(this, varargin)
+      Tdata = this.chaos.evaluate(varargin{:});
     end
   end
 
