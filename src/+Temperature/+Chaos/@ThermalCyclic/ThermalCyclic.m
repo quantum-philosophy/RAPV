@@ -15,11 +15,10 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
       Tfull = this.solve(Pdyn, Options('leakage', []));
       [ ~, lifetimeOutput ] = this.lifetime.predict(Tfull);
 
-      function result = target(rvs)
+      function T = target(rvs)
         L = this.preprocess(rvs, options);
         [ T, solveOutput ] = this.solve(Pdyn, Options(options, 'L', L));
-        T = this.postprocess(T, solveOutput, options);
-        T = Utils.packPeaks(T, lifetimeOutput);
+        T = this.postprocess(T, solveOutput, lifetimeOutput, options);
       end
 
       chaosOutput = this.chaos.expand(@target);
@@ -44,6 +43,21 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
     function Tdata = evaluate(this, output, rvs)
       Tdata = this.chaos.evaluate(rvs, output.coefficients);
       Tdata = Utils.unpackPeaks(Tdata, output.lifetimeOutput);
+    end
+  end
+
+  methods (Access = 'protected')
+    function T = postprocess(this, T, solveOutput, lifetimeOutput, options)
+      T = Utils.packPeaks(T, lifetimeOutput);
+
+      if ~options.get('verbose', false), return; end
+
+      runawayCount = sum(isnan(solveOutput.iterationCount));
+
+      if runawayCount == 0, return; end
+
+      warning('Detected %d thermal runaways out of %d samples.', ...
+        runawayCount, sampleCount);
     end
   end
 end
