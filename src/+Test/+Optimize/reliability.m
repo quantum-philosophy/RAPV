@@ -136,18 +136,18 @@ function reliability(varargin)
   gaOptions.SelectionFcn = @selectiontournament;
   gaOptions.CrossoverFcn = @crossoversinglepoint;
   gaOptions.MutationFcn = @mutate;
-  gaOptions.Display = 'diagnose';
+  gaOptions.Display = 'off';
   gaOptions.UseParallel = 'always';
 
   time = tic;
   if multiobjective
     gaOptions.ParetoFraction = 1;
     gaOptions.InitialPopulation = populate([], [], []);
-    gaOptions.PlotFcns = { @gaplotpareto };
+    gaOptions.OutputFcns = { @printMultiobjective, @plotMultiobjective };
     best = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
       [], [], [], [], [], [], gaOptions);
   else
-    gaOptions.PlotFcns = { @gaplotbestf };
+    gaOptions.OutputFcns = { @printUniobjective, @plotUniobjective };
     best = ga(@evaluateUniobjective, 2 * taskCount, ...
       [], [], [], [], [], [], [], gaOptions);
   end
@@ -167,4 +167,66 @@ function reliability(varargin)
       'priority', best(k, (taskCount + 1):end));
     plotSchedule(schedule, [ 'Solution ', num2str(k) ]);
   end
+end
+
+function [ state, options, onchanged ] = printUniobjective(options, state, flag)
+  switch flag
+  case 'init'
+    fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Best MTTF');
+  case { 'iter', 'done' }
+    fprintf('%10d%15d%15.2e\n', ...
+      state.Generation, state.FunEval, state.Best(end));
+  end
+  onchanged = false;
+end
+
+function [ state, options, onchanged ] = printMultiobjective(options, state, flag)
+  switch flag
+  case 'init'
+    fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Best MTTF');
+  case { 'iter', 'done' }
+    fprintf('%10d%15d\n', ...
+      state.Generation, state.FunEval);
+  end
+  onchanged = false;
+end
+
+function [ state, options, onchanged ] = plotUniobjective(options, state, flag)
+  switch flag
+  case 'init'
+    figure;
+    Plot.label('Generation', 'MTTF');
+  case { 'iter', 'done' }
+    line(state.Generation, -state.Best(end), 'LineStyle', 'none', ...
+      'Marker', '*', 'Color', Color.pick(1));
+  end
+  drawnow;
+  onchanged = false;
+end
+
+function [ state, options, onchanged ] = plotMultiobjective(options, state, flag)
+  [ ~, I ] = sort(state.Score(:, 1));
+  S = state.Score(I, :);
+  S(:, 1) = -S(:, 1);
+  R = state.Rank(I);
+  switch flag
+  case 'init'
+    figure;
+    Plot.label('MTTF', 'P(burn)');
+    hold on;
+    h = plot(S(:, 1), S(:, 2), 'LineStyle', 'none', ...
+      'Marker', 'o', 'Color', Color.pick(1));
+    set(h, 'Tag', 'all');
+    h = plot(S(R == 1, 1), S(R == 1, 2), 'LineStyle', '-', ...
+      'Marker', 'o', 'Color', Color.pick(2));
+    set(h, 'Tag', 'front');
+    hold off;
+  case { 'iter', 'done' }
+    h = findobj(get(gca, 'Children'), 'Tag', 'all');
+    set(h, 'Xdata', S(:, 1), 'Ydata', S(:, 2));
+    h = findobj(get(gca, 'Children'), 'Tag', 'front');
+    set(h, 'Xdata', S(R == 1, 1), 'Ydata', S(R == 1, 2));
+  end
+  drawnow;
+  onchanged = false;
 end
