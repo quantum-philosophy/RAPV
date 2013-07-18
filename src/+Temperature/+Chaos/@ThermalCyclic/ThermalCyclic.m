@@ -9,11 +9,11 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
       this.lifetime = Lifetime('samplingInterval', this.samplingInterval);
     end
 
-    function [ Texp, output ] = expand(this, Pdyn, varargin)
+    function [ Tfull, output ] = expand(this, Pdyn, varargin)
       options = Options(varargin{:});
 
-      Texp = this.solve(Pdyn, Options('leakage', []));
-      [ ~, lifetimeOutput ] = this.lifetime.predict(Texp);
+      Tfull = this.solve(Pdyn, Options('leakage', []));
+      [ ~, lifetimeOutput ] = this.lifetime.predict(Tfull);
 
       function T = target(rvs)
         L = this.preprocess(rvs, options);
