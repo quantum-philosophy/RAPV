@@ -2,7 +2,7 @@ function reliability(varargin)
   close all;
   setup;
 
-  options = Test.configure;
+  options = Test.configure(varargin{:});
 
   pc = Temperature.Chaos.ThermalCyclic(options);
 
