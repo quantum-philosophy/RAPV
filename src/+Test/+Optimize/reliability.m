@@ -2,8 +2,7 @@ function reliability(varargin)
   close all;
   setup;
 
-  options = Test.configure('processorCount', 2, ...
-    'assetPath', File.join('+Test', 'Assets'), varargin{:});
+  options = Test.configure;
 
   pc = Temperature.Chaos.ThermalCyclic(options);
 

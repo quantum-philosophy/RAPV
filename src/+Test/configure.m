@@ -1,5 +1,5 @@
 function options = configure(varargin)
-  options = Configure.systemSimulation( ...
+  options = Configure.systemSimulation('processorCount', 4, ...
     'assetPath', File.join('+Test', 'Assets'), varargin{:});
   options.leakageModel = 'LinearInterpolation';
   options.leakageOptions.LCount = 50;
