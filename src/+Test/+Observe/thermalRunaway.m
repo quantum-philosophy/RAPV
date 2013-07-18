@@ -2,8 +2,7 @@ function thermalRunaway
   close all;
   setup;
 
-  options = Test.configure('processorCount', 2, ...
-    'expectation', 45e-9, 'deviation', 0.05 * 45e-9);
+  options = Test.configure('processorCount', 2);
   steadyStateOptions = options.steadyStateOptions;
 
   chaos = Temperature.Chaos.DynamicSteadyState(options);

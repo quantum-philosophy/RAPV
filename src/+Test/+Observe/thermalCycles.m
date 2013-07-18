@@ -14,15 +14,5 @@ function thermalCycles
 
   Plot.thermalCycles(Tfull, output.lifetimeOutput);
   Plot.reliability(Tfull, output.lifetimeOutput);
-
-  I = Utils.constructPeakIndex(output.lifetimeOutput);
-
-  fprintf('Number of significant steps: %d out of %d\n', ...
-    length(I), options.stepCount);
-
-  Texp = Utils.unpackPeaks(output.expectation, output.lifetimeOutput);
-  Tvar = Utils.unpackPeaks(output.variance, output.lifetimeOutput);
-
-  Plot.temperatureVariation(options.timeLine, ...
-    Texp, Tvar, 'index', output.lifetimeOutput.peakIndex);
+  Plot.solution(pc, output, options.optimizationOptions);
 end

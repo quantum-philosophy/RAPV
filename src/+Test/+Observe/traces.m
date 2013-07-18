@@ -6,7 +6,6 @@ function traces
   errorMetric = 'RMSE';
   stepCount = 1e2;
   mcSampleCount = 1e5;
-  chaosSampleCount = 1e5;
 
   options = Test.configure('stepCount', stepCount);
 
@@ -17,7 +16,6 @@ function traces
 
   [ pcTexp, pcOutput ] = pc.compute(options.dynamicPower, ...
       options.steadyStateOptions);
-  pcOutput.Tdata = pc.sample(pcOutput, chaosSampleCount);
 
   %
   % Monte Carlo
@@ -31,9 +29,9 @@ function traces
   %
   % Comparison
   %
-  Plot.temperatureVariation(options.timeLine, ...
-    { pcTexp, mcTexp }, { pcOutput.Tvar, mcOutput.Tvar }, ...
-    'labels', { 'PC', 'MC' });
+  Plot.temperatureVariation({ pcTexp, mcTexp }, ...
+    { pcOutput.Tvar, mcOutput.Tvar }, ...
+    'time', options.timeLine, 'names', { 'PC', 'MC' });
 
   pcTstd = sqrt(pcOutput.Tvar);
   mcTstd = sqrt(mcOutput.Tvar);

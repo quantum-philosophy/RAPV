@@ -1,5 +1,6 @@
 function options = configure(varargin)
-  options = Configure.systemSimulation(varargin{:});
+  options = Configure.systemSimulation( ...
+    'assetPath', File.join('+Test', 'Assets'), varargin{:});
   options.leakageModel = 'LinearInterpolation';
   options.leakageOptions.LCount = 50;
   options.leakageOptions.TCount = 50;
@@ -20,4 +21,8 @@ function options = configure(varargin)
     'temperatureLimit', Utils.toKelvin(400), ...
     'tolerance', 0.5, ...
     'verbose', true);
+
+  options.optimizationOptions = Options( ...
+    'sampleCount', 1e4, ...
+    'temperatureLimit', Utils.toKelvin(120));
 end

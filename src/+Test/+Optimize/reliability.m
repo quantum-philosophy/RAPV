@@ -3,55 +3,19 @@ function reliability(varargin)
   setup;
 
   options = Test.configure('processorCount', 2, ...
-    'tgffFilename', File.join('+Test', 'Assets', '002_040.tgff'), ...
-    varargin{:});
-
-  multiobjective = options.get('multiobjective', false);
-
-  sampleCount = 1e4;
-  maximalTemperature = Utils.toKelvin(120);
-
-  fprintf('Maximal temperature: %.2f C\n', ...
-    Utils.toCelsius(maximalTemperature));
+    'assetPath', File.join('+Test', 'Assets'), varargin{:});
 
   pc = Temperature.Chaos.ThermalCyclic(options);
 
-  function plotSchedule(schedule, title)
+  function plotSchedule(schedule, name)
     Pdyn = options.powerScale * options.power.compute(schedule);
-    time = options.samplingInterval * (0:(size(Pdyn, 2) - 1));
 
     [ ~, output ] = pc.compute(Pdyn, options.steadyStateOptions);
+    [ MTTF, Pburn ] = Plot.solution(pc, output, ...
+      options.optimizationOptions, 'name', name);
 
-    Texp = Utils.unpackPeaks(output.expectation, output.lifetimeOutput);
-    Tvar = Utils.unpackPeaks(output.variance, output.lifetimeOutput);
-    MTTF = output.lifetimeOutput.totalMTTF;
-
-    Tdata = max(pc.sample(output, sampleCount), [], 2);
-    Pburn = sum(Tdata > maximalTemperature) / sampleCount;
-
-    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.4f\n', ...
-      title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
-
-    figure('Position', [ 100, 500, 1000, 300 ]);
-
-    subplot(1, 2, 1);
-    Plot.temperatureVariation(time, Texp, Tvar, ...
-      'figure', false, 'layout', 'one', ...
-      'index', output.lifetimeOutput.peakIndex);
-    Plot.title('MTTF = %.2e', MTTF);
-
-    subplot(1, 2, 2);
-    Data.observe(Utils.toCelsius(Tdata), ...
-      'figure', false, 'layout', 'one', 'range', 'unbounded');
-    Plot.vline(Utils.toCelsius(maximalTemperature), ...
-      'Color', 'k', 'LineStyle', '--');
-    Plot.label('Temperature, C', 'Probability');
-    Plot.title('P(T > %.2f C) = %.4f', ...
-      Utils.toCelsius(maximalTemperature), Pburn);
-    Plot.legend('Probability density', 'Temperature constraint');
-
-    Plot.name('%s: MTTF = %.2e, P(T > %.2f C) = %.4f', ...
-      title, MTTF, Utils.toCelsius(maximalTemperature), Pburn);
+    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.4f\n', name, MTTF, ...
+      Utils.toCelsius(options.optimizationOptions.temperatureLimit), Pburn);
   end
 
   populationSize = 10;
@@ -97,9 +61,8 @@ function reliability(varargin)
     Pdyn = options.powerScale * options.power.compute(schedule);
 
     T = pc.solve(Pdyn, options.steadyStateOptions);
-    Tmax = max(T(:));
 
-    if Tmax > maximalTemperature
+    if max(T(:)) > options.optimizationOptions.temperatureLimit
       fitness = 0;
       return;
     end
@@ -116,12 +79,11 @@ function reliability(varargin)
       'priority', chromosome((taskCount + 1):end));
     Pdyn = options.powerScale * options.power.compute(schedule);
 
-    [ Texp, output ] = pc.compute(Pdyn, options.steadyStateOptions);
+    [ ~, output ] = pc.compute(Pdyn, options.steadyStateOptions);
+    [ MTTF, Pburn ] = Analyze.solution(pc, output, ...
+      options.optimizationOptions);
 
-    Pburn = sum(max(reshape(pc.sample(output, sampleCount), ...
-      sampleCount, []), [], 2) > maximalTemperature) / sampleCount;
-
-    fitness = [ -output.lifetimeOutput.totalMTTF, Pburn ];
+    fitness = [ -MTTF, Pburn ];
   end
 
   gaOptions = gaoptimset;
@@ -140,7 +102,7 @@ function reliability(varargin)
   gaOptions.UseParallel = 'always';
 
   time = tic;
-  if multiobjective
+  if options.get('multiobjective', false)
     gaOptions.ParetoFraction = 1;
     gaOptions.InitialPopulation = populate([], [], []);
     gaOptions.OutputFcns = { @printMultiobjective, @plotMultiobjective };
@@ -169,7 +131,9 @@ function reliability(varargin)
   end
 end
 
-function [ state, options, onchanged ] = printUniobjective(options, state, flag)
+function [ state, options, onchanged ] = printUniobjective( ...
+  options, state, flag)
+
   switch flag
   case 'init'
     fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Best MTTF');
@@ -180,7 +144,9 @@ function [ state, options, onchanged ] = printUniobjective(options, state, flag)
   onchanged = false;
 end
 
-function [ state, options, onchanged ] = printMultiobjective(options, state, flag)
+function [ state, options, onchanged ] = printMultiobjective( ...
+  options, state, flag)
+
   switch flag
   case 'init'
     fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Best MTTF');
@@ -191,7 +157,9 @@ function [ state, options, onchanged ] = printMultiobjective(options, state, fla
   onchanged = false;
 end
 
-function [ state, options, onchanged ] = plotUniobjective(options, state, flag)
+function [ state, options, onchanged ] = plotUniobjective( ...
+  options, state, flag)
+
   switch flag
   case 'init'
     figure;
@@ -204,7 +172,9 @@ function [ state, options, onchanged ] = plotUniobjective(options, state, flag)
   onchanged = false;
 end
 
-function [ state, options, onchanged ] = plotMultiobjective(options, state, flag)
+function [ state, options, onchanged ] = plotMultiobjective( ...
+  options, state, flag)
+
   [ ~, I ] = sort(state.Score(:, 1));
   S = state.Score(I, :);
   S(:, 1) = -S(:, 1);
