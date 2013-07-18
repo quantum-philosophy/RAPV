@@ -25,4 +25,19 @@ function options = configure(varargin)
   options.optimizationOptions = Options( ...
     'sampleCount', 1e4, ...
     'temperatureLimit', Utils.toKelvin(120));
+
+  geneticOptions = gaoptimset;
+  geneticOptions.PopulationSize = 10;
+  geneticOptions.EliteCount = floor(0.05 * geneticOptions.PopulationSize); % uniobjective
+  geneticOptions.CrossoverFraction = 0.8;
+  geneticOptions.ParetoFraction = 1; % multiobjective
+  geneticOptions.Generations = 500;
+  geneticOptions.StallGenLimit = 100;
+  geneticOptions.TolFun = 0;
+  geneticOptions.SelectionFcn = @selectiontournament;
+  geneticOptions.CrossoverFcn = @crossoversinglepoint;
+  geneticOptions.UseParallel = 'always';
+  geneticOptions.MutationRate = 0.01; % non-standard
+
+  options.geneticOptions = geneticOptions;
 end

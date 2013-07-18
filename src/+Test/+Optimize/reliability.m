@@ -18,15 +18,16 @@ function reliability(varargin)
       Utils.toCelsius(options.optimizationOptions.temperatureLimit), Pburn);
   end
 
-  populationSize = 10;
-  mutationRate = 0.01;
+  geneticOptions = options.geneticOptions;
+  geneticOptions.CreationFcn = @populate;
+  geneticOptions.MutationFcn = @mutate;
 
   processorCount = options.processorCount;
   taskCount = options.taskCount;
 
   function population = populate(Genomelength, FitnessFcn, options_)
-    M = randi(processorCount, populationSize, taskCount);
-    P = rand(populationSize, taskCount);
+    M = randi(processorCount, geneticOptions.PopulationSize, taskCount);
+    P = rand(geneticOptions.PopulationSize, taskCount);
     population = [ M, P ];
   end
 
@@ -41,12 +42,12 @@ function reliability(varargin)
       %
       % Mutate the mapping part.
       %
-      points = find(rand(1, taskCount) < mutationRate);
+      points = find(rand(1, taskCount) < geneticOptions.MutationRate);
       child(points) = randi(processorCount, 1, length(points));
       %
       % Mutate the priority part.
       %
-      points = find(rand(1, taskCount) < mutationRate);
+      points = find(rand(1, taskCount) < geneticOptions.MutationRate);
       child(taskCount + points) = rand(1, length(points));
 
       children(i, :) = child;
@@ -86,32 +87,16 @@ function reliability(varargin)
     fitness = [ -MTTF, Pburn ];
   end
 
-  gaOptions = gaoptimset;
-  gaOptions.PopulationSize = populationSize;
-  gaOptions.EliteCount = floor(0.05 * populationSize);
-  gaOptions.CrossoverFraction = 0.8;
-  gaOptions.MigrationFraction = 0.2;
-  gaOptions.Generations = 500;
-  gaOptions.StallGenLimit = 100;
-  gaOptions.TolFun = 0;
-  gaOptions.CreationFcn = @populate;
-  gaOptions.SelectionFcn = @selectiontournament;
-  gaOptions.CrossoverFcn = @crossoversinglepoint;
-  gaOptions.MutationFcn = @mutate;
-  gaOptions.Display = 'off';
-  gaOptions.UseParallel = 'always';
-
   time = tic;
   if options.get('multiobjective', false)
-    gaOptions.ParetoFraction = 1;
-    gaOptions.InitialPopulation = populate([], [], []);
-    gaOptions.OutputFcns = { @printMultiobjective, @plotMultiobjective };
+    geneticOptions.InitialPopulation = populate([], [], []);
+    geneticOptions.OutputFcns = { @printMultiobjective, @plotMultiobjective };
     best = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
-      [], [], [], [], [], [], gaOptions);
+      [], [], [], [], [], [], geneticOptions);
   else
-    gaOptions.OutputFcns = { @printUniobjective, @plotUniobjective };
+    geneticOptions.OutputFcns = { @printUniobjective, @plotUniobjective };
     best = ga(@evaluateUniobjective, 2 * taskCount, ...
-      [], [], [], [], [], [], [], gaOptions);
+      [], [], [], [], [], [], [], geneticOptions);
   end
   time = toc(time);
 
@@ -149,10 +134,10 @@ function [ state, options, onchanged ] = printMultiobjective( ...
 
   switch flag
   case 'init'
-    fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Best MTTF');
+    fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Non-dominants');
   case { 'iter', 'done' }
-    fprintf('%10d%15d\n', ...
-      state.Generation, state.FunEval);
+    fprintf('%10d%15d%15d\n', ...
+      state.Generation, state.FunEval, sum(state.Rank == 1));
   end
   onchanged = false;
 end
