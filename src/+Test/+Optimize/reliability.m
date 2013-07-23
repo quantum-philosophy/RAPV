@@ -7,7 +7,7 @@ function reliability(varargin)
   pc = Temperature.Chaos.ThermalCyclic(options);
 
   function plotSchedule(schedule, name)
-    Pdyn = options.powerScale * options.power.compute(schedule);
+    Pdyn = options.power.compute(schedule);
 
     [ ~, output ] = pc.compute(Pdyn, options.steadyStateOptions);
     [ MTTF, Pburn ] = Plot.solution(pc, output, ...
@@ -58,7 +58,7 @@ function reliability(varargin)
       options.platform, options.application, ...
       'mapping', chromosome(1:taskCount), ...
       'priority', chromosome((taskCount + 1):end));
-    Pdyn = options.powerScale * options.power.compute(schedule);
+    Pdyn = options.power.compute(schedule);
 
     T = pc.solve(Pdyn, options.steadyStateOptions);
 
@@ -77,7 +77,7 @@ function reliability(varargin)
       options.platform, options.application, ...
       'mapping', chromosome(1:taskCount), ...
       'priority', chromosome((taskCount + 1):end));
-    Pdyn = options.powerScale * options.power.compute(schedule);
+    Pdyn = options.power.compute(schedule);
 
     [ ~, output ] = pc.compute(Pdyn, options.steadyStateOptions);
     [ MTTF, Pburn ] = Analyze.solution(pc, output, ...
