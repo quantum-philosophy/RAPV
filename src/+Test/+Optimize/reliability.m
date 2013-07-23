@@ -25,16 +25,17 @@ function reliability(varargin)
   taskCount = options.taskCount;
 
   function population = populate(Genomelength, FitnessFcn, options_)
-    M = randi(processorCount, geneticOptions.PopulationSize, taskCount);
-    P = rand(geneticOptions.PopulationSize, taskCount);
-    population = [ M, P ];
+    count = geneticOptions.PopulationSize;
+    population = zeros(count, 2 * taskCount, 'uint16');
+    population(:, 1:taskCount) = randi(processorCount, count, taskCount);
+    population(:, (taskCount + 1):end) = randi(taskCount, count, taskCount);
   end
 
   function children = mutate(parents, options_, nvars, ...
     FitnessFcn, state, thisScore, thisPopulation)
 
     count = length(parents);
-    children = zeros(count, 2 * taskCount);
+    children = zeros(count, 2 * taskCount, 'uint16');
     for i = 1:count
       child = thisPopulation(parents(i), :);
 
@@ -47,7 +48,7 @@ function reliability(varargin)
       % Mutate the priority part.
       %
       points = find(rand(1, taskCount) < geneticOptions.MutationRate);
-      child(taskCount + points) = rand(1, length(points));
+      child(taskCount + points) = randi(taskCount, 1, length(points));
 
       children(i, :) = child;
     end
@@ -86,16 +87,23 @@ function reliability(varargin)
     fitness = [ -MTTF, Pburn ];
   end
 
+  geneticOptions.InitialPopulation = populate([], [], []);
+
+  cache = Cache();
+
   time = tic;
   if options.get('multiobjective', false)
-    geneticOptions.InitialPopulation = populate([], [], []);
-    geneticOptions.OutputFcns = { @printMultiobjective, @plotMultiobjective };
-    best = gamultiobj(@evaluateMultiobjective, 2 * taskCount, ...
-      [], [], [], [], [], [], geneticOptions);
+    geneticOptions.OutputFcns = { @plotMultiobjective, ...
+      @(a, b, c) printMultiobjective(a, b, c, cache) };
+    best = gamultiobj( ...
+      @(data) cache.fetch(data, @evaluateMultiobjective), ...
+      2 * taskCount, [], [], [], [], [], [], geneticOptions);
   else
-    geneticOptions.OutputFcns = { @printUniobjective, @plotUniobjective };
-    best = ga(@evaluateUniobjective, 2 * taskCount, ...
-      [], [], [], [], [], [], [], geneticOptions);
+    geneticOptions.OutputFcns = { @plotUniobjective, ...
+      @(a, b, c) printUniobjective(a, b, c, cache) };
+    best = ga( ...
+      @(data) cache.fetch(data, @evaluateUniobjective), ...
+      2 * taskCount, [], [], [], [], [], [], [], geneticOptions);
   end
   time = toc(time);
 
@@ -116,27 +124,31 @@ function reliability(varargin)
 end
 
 function [ state, options, onchanged ] = printUniobjective( ...
-  options, state, flag)
+  options, state, flag, cache)
 
   switch flag
   case 'init'
-    fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Best MTTF');
+    fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
+      'Best MTTF', 'Cache');
   case { 'iter', 'done' }
-    fprintf('%10d%15d%15.2e\n', ...
-      state.Generation, state.FunEval, state.Best(end));
+    fprintf('%10d%15d%15.2e%15.2f\n', ...
+      state.Generation, state.FunEval, state.Best(end), ...
+      cache.hitCount / (cache.hitCount + cache.missCount));
   end
   onchanged = false;
 end
 
 function [ state, options, onchanged ] = printMultiobjective( ...
-  options, state, flag)
+  options, state, flag, cache)
 
   switch flag
   case 'init'
-    fprintf('%10s%15s%15s\n', 'Generation', 'Evaluations', 'Non-dominants');
+    fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
+      'Non-dominants', 'Cache');
   case { 'iter', 'done' }
-    fprintf('%10d%15d%15d\n', ...
-      state.Generation, state.FunEval, sum(state.Rank == 1));
+    fprintf('%10d%15d%15d%15.2f\n', ...
+      state.Generation, state.FunEval, sum(state.Rank == 1), ...
+      cache.hitCount / (cache.hitCount + cache.missCount));
   end
   onchanged = false;
 end
