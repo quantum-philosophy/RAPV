@@ -80,7 +80,7 @@ function options = configure(varargin)
   geneticOptions.SelectionFcn = @selectiontournament;
   geneticOptions.CrossoverFcn = @crossoversinglepoint;
   geneticOptions.UseParallel = 'never';
-  geneticOptions.Vectorized = 'off';
+  geneticOptions.Vectorized = 'on';
   geneticOptions.MutationRate = 0.01; % non-standard
 
   options.geneticOptions = geneticOptions;

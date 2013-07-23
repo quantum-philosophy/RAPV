@@ -4,22 +4,47 @@ function reliability(varargin)
 
   options = Test.configure(varargin{:});
 
+  if options.get('multiobjective', false)
+    objectiveCount = 2;
+  else
+    objectiveCount = 1;
+  end
+
+  %
+  % Shortcut to make the parfor slicing happy
+  %
   pc = Temperature.Chaos.ThermalCyclic(options);
+  solvePC = @pc.solve;
+  computePC = @pc.compute;
+
+  lifetime = pc.lifetime;
+  predictLifetime = @lifetime.predict;
+
+  power = options.power;
+  computePower = @power.compute;
+
+  platform = options.platform;
+  application = options.application;
+
+  steadyStateOptions = options.steadyStateOptions;
+  optimizationOptions = options.optimizationOptions;
+  temperatureLimit = optimizationOptions.temperatureLimit;
 
   function plotSchedule(schedule, name)
-    Pdyn = options.power.compute(schedule);
+    Pdyn = computePower(schedule);
 
-    [ ~, output ] = pc.compute(Pdyn, options.steadyStateOptions);
-    [ MTTF, Pburn ] = Plot.solution(pc, output, ...
-      options.optimizationOptions, 'name', name);
+    [ ~, output ] = computePC(Pdyn, steadyStateOptions);
+    [ MTTF, Pburn ] = Plot.solution( ...
+      pc, output, optimizationOptions, 'name', name);
 
     fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.4f\n', name, MTTF, ...
-      Utils.toCelsius(options.optimizationOptions.temperatureLimit), Pburn);
+      Utils.toCelsius(temperatureLimit), Pburn);
   end
 
   geneticOptions = options.geneticOptions;
   geneticOptions.CreationFcn = @populate;
   geneticOptions.MutationFcn = @mutate;
+  geneticOptions.OutputFcns = @print;
 
   processorCount = options.processorCount;
   taskCount = options.taskCount;
@@ -54,56 +79,84 @@ function reliability(varargin)
     end
   end
 
-  function fitness = evaluateUniobjective(chromosome)
-    schedule = Schedule.Dense( ...
-      options.platform, options.application, ...
-      'mapping', chromosome(1:taskCount), ...
-      'priority', chromosome((taskCount + 1):end));
-    Pdyn = options.power.compute(schedule);
+  cache = Cache();
+  hitCount = 0;
 
-    T = pc.solve(Pdyn, options.steadyStateOptions);
+  function fitness = evaluate(chromosomes)
+    chromosomeCount = size(chromosomes, 1);
+    fitness = nan(chromosomeCount, objectiveCount);
 
-    if max(T(:)) > options.optimizationOptions.temperatureLimit
-      fitness = 0;
-      return;
+    for i = 1:chromosomeCount
+      value = cache.get(chromosomes(i, :));
+      if ~isempty(value), fitness(i, :) = value; end
     end
 
-    MTTF = pc.lifetime.predict(T);
+    I = find(any(isnan(fitness), 2));
+    newCount = length(I);
 
-    fitness = -MTTF;
+    hitCount = hitCount + chromosomeCount - newCount;
+
+    newMapping  = chromosomes(I, 1:taskCount);
+    newPriority = chromosomes(I, (taskCount + 1):end);
+    newFitness  = zeros(newCount, objectiveCount);
+
+    parfor i = 1:newCount
+      schedule = Schedule.Dense(platform, application, ...
+        'mapping', newMapping(i, :), 'priority', newPriority(i, :));
+      Pdyn = computePower(schedule);
+
+      switch objectiveCount
+      case 1
+        T = solvePC(Pdyn, steadyStateOptions);
+
+        if max(T(:)) > temperatureLimit
+          newFitness(i, :) = 0;
+        else
+          newFitness(i, :) = -predictLifetime(T);
+        end
+      case 2
+        [ ~, output ] = computePC(Pdyn, steadyStateOptions);
+        [ MTTF, Pburn ] = Analyze.solution( ...
+          pc, output, optimizationOptions);
+
+        newFitness(i, :) = [ -MTTF, Pburn ];
+      otherwise
+        assert(false);
+      end
+    end
+    fitness(I, :) = newFitness;
+
+    for i = 1:newCount
+      cache.set(chromosomes(I(i), :), newFitness(i, :));
+    end
   end
 
-  function fitness = evaluateMultiobjective(chromosome)
-    schedule = Schedule.Dense( ...
-      options.platform, options.application, ...
-      'mapping', chromosome(1:taskCount), ...
-      'priority', chromosome((taskCount + 1):end));
-    Pdyn = options.power.compute(schedule);
-
-    [ ~, output ] = pc.compute(Pdyn, options.steadyStateOptions);
-    [ MTTF, Pburn ] = Analyze.solution(pc, output, ...
-      options.optimizationOptions);
-
-    fitness = [ -MTTF, Pburn ];
+  function [ state, options, onchanged ] = print(options, state, flag)
+    switch objectiveCount
+    case 1
+      printUniobjective(state, flag, hitCount);
+      plotUniobjective(state, flag);
+    case 2
+      printMultiobjective(state, flag, hitCount);
+      plotMultiobjective(state, flag);
+    otherwise
+      assert(false);
+    end
+    onchanged = false;
   end
 
   geneticOptions.InitialPopulation = populate([], [], []);
 
-  cache = Cache();
-
   time = tic;
-  if options.get('multiobjective', false)
-    geneticOptions.OutputFcns = { @plotMultiobjective, ...
-      @(a, b, c) printMultiobjective(a, b, c, cache) };
-    best = gamultiobj( ...
-      @(data) cache.fetch(data, @evaluateMultiobjective), ...
-      2 * taskCount, [], [], [], [], [], [], geneticOptions);
-  else
-    geneticOptions.OutputFcns = { @plotUniobjective, ...
-      @(a, b, c) printUniobjective(a, b, c, cache) };
-    best = ga( ...
-      @(data) cache.fetch(data, @evaluateUniobjective), ...
-      2 * taskCount, [], [], [], [], [], [], [], geneticOptions);
+  switch objectiveCount
+  case 1
+    best = ga(@evaluate, 2 * taskCount, ...
+      [], [], [], [], [], [], [], geneticOptions);
+  case 2
+    best = gamultiobj(@evaluate, 2 * taskCount, ...
+      [], [], [], [], [], [], geneticOptions);
+  otherwise
+    assert(false);
   end
   time = toc(time);
 
@@ -115,17 +168,14 @@ function reliability(varargin)
   plotSchedule(options.schedule, 'Initial');
 
   for k = 1:solutionCount
-    schedule = Schedule.Dense( ...
-      options.platform, options.application, ...
+    schedule = Schedule.Dense(platform, application, ...
       'mapping', best(k, 1:taskCount), ...
       'priority', best(k, (taskCount + 1):end));
     plotSchedule(schedule, [ 'Solution ', num2str(k) ]);
   end
 end
 
-function [ state, options, onchanged ] = printUniobjective( ...
-  options, state, flag, cache)
-
+function printUniobjective(state, flag, hitCount)
   switch flag
   case 'init'
     fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
@@ -133,14 +183,11 @@ function [ state, options, onchanged ] = printUniobjective( ...
   case { 'iter', 'done' }
     fprintf('%10d%15d%15.2e%15.2f\n', ...
       state.Generation, state.FunEval, state.Best(end), ...
-      cache.hitCount / (cache.hitCount + cache.missCount));
+      hitCount / state.FunEval);
   end
-  onchanged = false;
 end
 
-function [ state, options, onchanged ] = printMultiobjective( ...
-  options, state, flag, cache)
-
+function printMultiobjective(state, flag, hitCount)
   switch flag
   case 'init'
     fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
@@ -148,14 +195,11 @@ function [ state, options, onchanged ] = printMultiobjective( ...
   case { 'iter', 'done' }
     fprintf('%10d%15d%15d%15.2f\n', ...
       state.Generation, state.FunEval, sum(state.Rank == 1), ...
-      cache.hitCount / (cache.hitCount + cache.missCount));
+      hitCount / state.FunEval);
   end
-  onchanged = false;
 end
 
-function [ state, options, onchanged ] = plotUniobjective( ...
-  options, state, flag)
-
+function plotUniobjective(state, flag)
   switch flag
   case 'init'
     figure;
@@ -165,12 +209,9 @@ function [ state, options, onchanged ] = plotUniobjective( ...
       'Marker', '*', 'Color', Color.pick(1));
   end
   drawnow;
-  onchanged = false;
 end
 
-function [ state, options, onchanged ] = plotMultiobjective( ...
-  options, state, flag)
-
+function plotMultiobjective(state, flag)
   [ ~, I ] = sort(state.Score(:, 1));
   S = state.Score(I, :);
   S(:, 1) = -S(:, 1);
@@ -194,5 +235,4 @@ function [ state, options, onchanged ] = plotMultiobjective( ...
     set(h, 'Xdata', S(R == 1, 1), 'Ydata', S(R == 1, 2));
   end
   drawnow;
-  onchanged = false;
 end
