@@ -14,15 +14,8 @@ function reliability(varargin)
   % Shortcut to make the parfor slicing happy
   %
   pc = Temperature.Chaos.ThermalCyclic(options);
-  solvePC = @pc.solve;
-  computePC = @pc.compute;
-
-  lifetime = pc.lifetime;
-  predictLifetime = @lifetime.predict;
-
   power = options.power;
-  computePower = @power.compute;
-
+  lifetime = pc.lifetime;
   platform = options.platform;
   application = options.application;
 
@@ -31,9 +24,9 @@ function reliability(varargin)
   temperatureLimit = optimizationOptions.temperatureLimit;
 
   function plotSchedule(schedule, name)
-    Pdyn = computePower(schedule);
+    Pdyn = power.compute(schedule);
 
-    [ ~, output ] = computePC(Pdyn, steadyStateOptions);
+    [ ~, output ] = pc.compute(Pdyn, steadyStateOptions);
     [ MTTF, Pburn ] = Plot.solution( ...
       pc, output, optimizationOptions, 'name', name);
 
@@ -51,9 +44,9 @@ function reliability(varargin)
 
   function population = populate(Genomelength, FitnessFcn, options_)
     count = geneticOptions.PopulationSize;
-    population = zeros(count, 2 * taskCount, 'uint16');
+    population = zeros(count, 2 * taskCount);
     population(:, 1:taskCount) = randi(processorCount, count, taskCount);
-    population(:, (taskCount + 1):end) = randi(taskCount, count, taskCount);
+    population(:, (taskCount + 1):end) = rand(count, taskCount);
   end
 
   function children = mutate(parents, options_, nvars, ...
@@ -64,16 +57,10 @@ function reliability(varargin)
     for i = 1:count
       child = thisPopulation(parents(i), :);
 
-      %
-      % Mutate the mapping part.
-      %
       points = find(rand(1, taskCount) < geneticOptions.MutationRate);
       child(points) = randi(processorCount, 1, length(points));
-      %
-      % Mutate the priority part.
-      %
       points = find(rand(1, taskCount) < geneticOptions.MutationRate);
-      child(taskCount + points) = randi(taskCount, 1, length(points));
+      child(taskCount + points) = rand(1, length(points));
 
       children(i, :) = child;
     end
@@ -82,9 +69,21 @@ function reliability(varargin)
   cache = Cache();
   hitCount = 0;
 
+  function chromosomes = unify(chromosomes)
+    %
+    % Convert double priorities to ordinal numbers
+    %
+    [ ~, I ] = sort(chromosomes(:, (taskCount + 1):end), 2);
+    for i = 1:size(chromosomes, 1)
+      chromosomes(i, taskCount + I(i, :)) = 1:taskCount;
+    end
+  end
+
   function fitness = evaluate(chromosomes)
     chromosomeCount = size(chromosomes, 1);
     fitness = nan(chromosomeCount, objectiveCount);
+
+    chromosomes = unify(chromosomes);
 
     for i = 1:chromosomeCount
       value = cache.get(chromosomes(i, :));
@@ -103,19 +102,19 @@ function reliability(varargin)
     parfor i = 1:newCount
       schedule = Schedule.Dense(platform, application, ...
         'mapping', newMapping(i, :), 'priority', newPriority(i, :));
-      Pdyn = computePower(schedule);
+      Pdyn = power.compute(schedule);
 
       switch objectiveCount
       case 1
-        T = solvePC(Pdyn, steadyStateOptions);
+        T = pc.solve(Pdyn, steadyStateOptions);
 
         if max(T(:)) > temperatureLimit
           newFitness(i, :) = 0;
         else
-          newFitness(i, :) = -predictLifetime(T);
+          newFitness(i, :) = -lifetime.predict(T);
         end
       case 2
-        [ ~, output ] = computePC(Pdyn, steadyStateOptions);
+        [ ~, output ] = pc.compute(Pdyn, steadyStateOptions);
         [ MTTF, Pburn ] = Analyze.solution( ...
           pc, output, optimizationOptions);
 
@@ -145,6 +144,8 @@ function reliability(varargin)
     onchanged = false;
   end
 
+  rng(0);
+
   geneticOptions.InitialPopulation = populate([], [], []);
 
   time = tic;
@@ -155,6 +156,7 @@ function reliability(varargin)
   case 2
     best = gamultiobj(@evaluate, 2 * taskCount, ...
       [], [], [], [], [], [], geneticOptions);
+    best = unique(unify(best), 'rows');
   otherwise
     assert(false);
   end
