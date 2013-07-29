@@ -4,12 +4,11 @@ function accuracy
 
   processorCount = 4;
   stepCount = 1e2;
-  chaosSampleCount = 1e5;
 
   comparisonOptions = Options('quantity', 'pdf', 'range', 'unbounded', ...
     'method', 'smooth', 'distanceMetric', 'KLD', 'errorMetric', 'RMSE');
 
-  orderSet       = [ 1 2 3 4 5 6 7 ];
+  orderSet       = [ 1 2 3 4 5 6 ];
   sampleCountSet = [ 1e2 1e3 1e4 1e5 ];
 
   pick = [ 4 1e5 50 ];
@@ -17,7 +16,7 @@ function accuracy
   orderCount = length(orderSet);
   sampleCount = length(sampleCountSet);
 
-  options = Test.configure('processModel', 'Beta', ...
+  options = Test.configure('processModel', 'Normal', ...
     'processorCount', processorCount, 'stepCount', stepCount);
 
   %
@@ -50,15 +49,14 @@ function accuracy
   %
   for i = 1:orderCount
     options.surrogateOptions.order = orderSet(i);
-    options.surrogateOptions.quadratureOptions.polynomialOrder = orderSet(i);
 
     fprintf('%5d | ', orderSet(i));
 
-    pc = Temperature.Chaos.DynamicSteadyState(options);
+    surrogate = Temperature.Chaos.DynamicSteadyState(options);
 
-    [ Texp, output ] = pc.compute(options.dynamicPower, ...
+    [ Texp, output ] = surrogate.compute(options.dynamicPower, ...
       options.steadyStateOptions);
-    Tdata = pc.sample(output, chaosSampleCount);
+    Tdata = surrogate.sample(output, max(sampleCountSet));
 
     for j = 1:sampleCount
       errorExp(i, j) = Error.compute( ...

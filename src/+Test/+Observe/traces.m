@@ -4,51 +4,51 @@ function traces
   rng(1);
 
   errorMetric = 'RMSE';
-  stepCount = 1e2;
-  mcSampleCount = 1e5;
+  stepCount = 1e3;
+  sampleCount = 1e4;
 
   options = Test.configure('stepCount', stepCount);
 
   %
-  % Polynomial chaos
-  %
-  pc = Temperature.Chaos.DynamicSteadyState(options);
-
-  [ pcTexp, pcOutput ] = pc.compute(options.dynamicPower, ...
-      options.steadyStateOptions);
-
-  %
   % Monte Carlo
   %
-  mc = Temperature.MonteCarlo.DynamicSteadyState(options);
+  one = Temperature.MonteCarlo.DynamicSteadyState(options);
 
-  [ mcTexp, mcOutput ] = mc.compute(options.dynamicPower, ...
-    options.steadyStateOptions, 'sampleCount', mcSampleCount, ...
+  [ oneTexp, oneOutput ] = one.compute(options.dynamicPower, ...
+    options.steadyStateOptions, 'sampleCount', sampleCount, ...
     'verbose', true);
+
+  %
+  % Polynomial chaos
+  %
+  two = Temperature.Chaos.DynamicSteadyState(options);
+
+  [ twoTexp, twoOutput ] = two.compute(options.dynamicPower, ...
+      options.steadyStateOptions);
 
   %
   % Comparison
   %
-  Plot.temperatureVariation({ pcTexp, mcTexp }, ...
-    { pcOutput.Tvar, mcOutput.Tvar }, ...
-    'time', options.timeLine, 'names', { 'PC', 'MC' });
+  Plot.temperatureVariation({ oneTexp, twoTexp }, ...
+    { oneOutput.Tvar, twoOutput.Tvar }, ...
+    'time', options.timeLine, 'names', { 'MonteCarlo', 'Chaos' });
 
-  pcTstd = sqrt(pcOutput.Tvar);
-  mcTstd = sqrt(mcOutput.Tvar);
+  oneTstd = sqrt(oneOutput.Tvar);
+  twoTstd = sqrt(twoOutput.Tvar);
 
   fprintf('%10s %15s %15s %15s\n', 'Processor', ...
     [ errorMetric, '(Exp)' ], [ errorMetric, '(Std)' ], ...
     [ errorMetric, '(Var)' ]);
   for i = 1:options.processorCount
     fprintf('%10d %15.4f %15.4f %15.4f\n', i, ...
-      Error.compute(errorMetric, mcTexp(i, :), pcTexp(i, :)), ...
-      Error.compute(errorMetric, mcTstd(i, :), pcTstd(i, :)), ...
-      Error.compute(errorMetric, mcOutput.Tvar(i, :), pcOutput.Tvar(i, :)));
+      Error.compute(errorMetric, oneTexp(i, :), twoTexp(i, :)), ...
+      Error.compute(errorMetric, oneTstd(i, :), twoTstd(i, :)), ...
+      Error.compute(errorMetric, oneOutput.Tvar(i, :), twoOutput.Tvar(i, :)));
   end
 
   fprintf('--\n');
   fprintf('%10s %15.4f %15.4f %15.4f\n', '', ...
-    Error.compute(errorMetric, mcTexp, pcTexp), ...
-    Error.compute(errorMetric, mcTstd, pcTstd), ...
-    Error.compute(errorMetric, mcOutput.Tvar, pcOutput.Tvar));
+    Error.compute(errorMetric, oneTexp, twoTexp), ...
+    Error.compute(errorMetric, oneTstd, twoTstd), ...
+    Error.compute(errorMetric, oneOutput.Tvar, twoOutput.Tvar));
 end

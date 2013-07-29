@@ -5,10 +5,10 @@ function thermalRunaway
   options = Test.configure('processorCount', 2);
   steadyStateOptions = options.steadyStateOptions;
 
-  chaos = Temperature.Chaos.DynamicSteadyState(options);
-  display(chaos);
+  surrogate = Temperature.Chaos.DynamicSteadyState(options);
+  display(surrogate);
 
-  dimensionCount = chaos.process.dimensionCount;
+  dimensionCount = surrogate.process.dimensionCount;
 
   pairs = combnk(1:dimensionCount, 2);
 
@@ -17,8 +17,8 @@ function thermalRunaway
     x = linspace(-5, 5, 20);
   case 'Beta'
     x = linspace( ...
-      chaos.process.transformation.customDistribution.a + 1e-6, ...
-      chaos.process.transformation.customDistribution.b - 1e-6, 20);
+      surrogate.process.transformation.customDistribution.a + 1e-6, ...
+      surrogate.process.transformation.customDistribution.b - 1e-6, 20);
   otherwise
     assert(false);
   end
@@ -31,10 +31,10 @@ function thermalRunaway
     rvs = zeros(dimensionCount, length(x)^2);
     rvs(pairs(k, :), :) = [ X(:)'; Y(:)' ];
 
-    L = chaos.process.evaluate(rvs')';
+    V = surrogate.process.evaluate(rvs')';
 
-    [ T, output ] = chaos.solve(options.dynamicPower, ...
-        Options(steadyStateOptions, 'L', L));
+    [ T, output ] = surrogate.computeWithLeakage(options.dynamicPower, ...
+        Options(steadyStateOptions, 'V', V));
 
     R = reshape(output.iterationCount, length(x), []);
     Tmax = Utils.toCelsius( ...

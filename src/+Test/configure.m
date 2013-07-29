@@ -18,21 +18,23 @@ function options = configure(varargin)
   %
   % Model order reduction
   %
-  options.reductionThreshold = 0;
   switch options.processorCount
   case 2
-    options.reductionLimit = 0.45;
+    reductionLimit = 0.45;
   case 4
-    options.reductionLimit = 0.50;
+    reductionLimit = 0.50;
   case 8
-    options.reductionLimit = 0.60;
+    reductionLimit = 0.60;
   case 16
-    options.reductionLimit = 0.60;
+    reductionLimit = 0.60;
   case 32
-    options.reductionLimit = 0.60;
+    reductionLimit = 0.60;
   otherwise
     assert(false);
   end
+  options.reduceModelOrder = Options( ...
+    'threshold', 0, ...
+    'limit', reductionLimit);
 
   %
   % Dynamic steady-state analysis
