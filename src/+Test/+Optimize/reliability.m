@@ -13,9 +13,9 @@ function reliability(varargin)
   %
   % Shortcut to make the parfor slicing happy
   %
-  pc = Temperature.Chaos.ThermalCyclic(options);
+  surrogate = Temperature.Chaos.ThermalCyclic(options);
   power = options.power;
-  lifetime = pc.lifetime;
+  lifetime = surrogate.lifetime;
   platform = options.platform;
   application = options.application;
 
@@ -26,9 +26,9 @@ function reliability(varargin)
   function plotSchedule(schedule, name)
     Pdyn = power.compute(schedule);
 
-    [ ~, output ] = pc.compute(Pdyn, steadyStateOptions);
+    [ ~, output ] = surrogate.compute(Pdyn, steadyStateOptions);
     [ MTTF, Pburn ] = Plot.solution( ...
-      pc, output, optimizationOptions, 'name', name);
+      surrogate, output, optimizationOptions, 'name', name);
 
     fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.4f\n', name, MTTF, ...
       Utils.toCelsius(temperatureLimit), Pburn);
@@ -106,7 +106,7 @@ function reliability(varargin)
 
       switch objectiveCount
       case 1
-        T = pc.solve(Pdyn, steadyStateOptions);
+        T = surrogate.computeWithLeakage(Pdyn, steadyStateOptions);
 
         if max(T(:)) > temperatureLimit
           newFitness(i, :) = 0;
@@ -114,9 +114,9 @@ function reliability(varargin)
           newFitness(i, :) = -lifetime.predict(T);
         end
       case 2
-        [ ~, output ] = pc.compute(Pdyn, steadyStateOptions);
+        [ ~, output ] = surrogate.compute(Pdyn, steadyStateOptions);
         [ MTTF, Pburn ] = Analyze.solution( ...
-          pc, output, optimizationOptions);
+          surrogate, output, optimizationOptions);
 
         newFitness(i, :) = [ -MTTF, Pburn ];
       otherwise
