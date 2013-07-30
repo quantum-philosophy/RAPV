@@ -10,10 +10,9 @@ function options = configure(varargin)
   options = Configure.systemSimulation('processorCount', 4, ...
     'assetPath', File.join('+Test', 'Assets'), varargin{:});
   options.leakageModel = 'LinearInterpolation';
-  options.leakageOptions.LCount = 50;
+  options.leakageOptions.VCount = 50;
   options.leakageOptions.TCount = 50;
   options.leakageOptions.TLimit = Utils.toKelvin([ 0, 400 ]);
-  options.leakageOptions.order = [ 3, 2 ];
 
   %
   % Model order reduction
@@ -41,7 +40,7 @@ function options = configure(varargin)
   %
   options.steadyStateOptions = Options( ...
     'algorithm', 'condensedEquation', ...
-    'version', 2, ...
+    'version', 3, ...
     'iterationLimit', 20, ...
     'temperatureLimit', Utils.toKelvin(400), ...
     'tolerance', 0.5, ...
@@ -58,7 +57,7 @@ function options = configure(varargin)
   % Polynomial chaos expansions
   %
   options = Configure.polynomialChaos(options);
-  options.surrogateOptions.order = 4;
+  options.surrogateOptions.order = 3;
 
   %
   % Optimization

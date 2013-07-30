@@ -25,8 +25,7 @@ function accuracy
   mc = Temperature.MonteCarlo.DynamicSteadyState(options);
 
   [ ~, output ] = mc.compute(options.dynamicPower, ...
-    options.steadyStateOptions, 'sampleCount', max(sampleCountSet), ...
-    'verbose', true);
+    options.steadyStateOptions, 'sampleCount', max(sampleCountSet));
 
   mcTexp = cell(sampleCount, 1);
   mcTvar = cell(sampleCount, 1);
