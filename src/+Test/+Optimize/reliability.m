@@ -4,10 +4,17 @@ function reliability(varargin)
 
   options = Test.configure(varargin{:});
 
-  if options.get('multiobjective', false)
-    objectiveCount = 2;
-  else
+  target = options.get('target', 'Lifetime');
+
+  switch target
+  case 'Lifetime'
     objectiveCount = 1;
+  case 'LifetimeTmax'
+    objectiveCount = 2;
+  case 'LifetimePburn'
+    objectiveCount = 2;
+  otherwise
+    assert(false);
   end
 
   %
@@ -104,20 +111,24 @@ function reliability(varargin)
         'mapping', newMapping(i, :), 'priority', newPriority(i, :));
       Pdyn = power.compute(schedule);
 
-      switch objectiveCount
-      case 1
+      switch target
+      case 'Lifetime'
         T = surrogate.computeWithLeakage(Pdyn, steadyStateOptions);
-
         if max(T(:)) > temperatureLimit
-          newFitness(i, :) = 0;
+          MTTF = 0;
         else
-          newFitness(i, :) = -lifetime.predict(T);
+          MTTF = lifetime.predict(T);
         end
-      case 2
+        newFitness(i, :) = -MTTF;
+      case 'LifetimeTmax'
+        T = surrogate.computeWithLeakage(Pdyn, steadyStateOptions);
+        MTTF = lifetime.predict(T);
+        Tmax = max(T(:));
+        newFitness(i, :) = [ -MTTF, Tmax ];
+      case 'LifetimePburn'
         [ ~, output ] = surrogate.compute(Pdyn, steadyStateOptions);
         [ MTTF, Pburn ] = Analyze.solution( ...
           surrogate, output, optimizationOptions);
-
         newFitness(i, :) = [ -MTTF, Pburn ];
       otherwise
         assert(false);
@@ -131,12 +142,14 @@ function reliability(varargin)
   end
 
   function [ state, options, onchanged ] = print(options, state, flag)
+    state.target = target;
+    state.hitCount = hitCount;
     switch objectiveCount
     case 1
-      printUniobjective(state, flag, hitCount);
+      % printUniobjective(state, flag);
       plotUniobjective(state, flag);
     case 2
-      printMultiobjective(state, flag, hitCount);
+      % printMultiobjective(state, flag);
       plotMultiobjective(state, flag);
     otherwise
       assert(false);
@@ -177,19 +190,19 @@ function reliability(varargin)
   end
 end
 
-function printUniobjective(state, flag, hitCount)
+function printUniobjective(state, flag)
   switch flag
   case 'init'
     fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
       'Best MTTF', 'Cache');
   case { 'iter', 'done' }
     fprintf('%10d%15d%15.2e%15.2f\n', ...
-      state.Generation, state.FunEval, state.Best(end), ...
-      hitCount / state.FunEval);
+      state.Generation, state.FunEval, -state.Best(end), ...
+      state.hitCount / state.FunEval);
   end
 end
 
-function printMultiobjective(state, flag, hitCount)
+function printMultiobjective(state, flag)
   switch flag
   case 'init'
     fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
@@ -197,16 +210,20 @@ function printMultiobjective(state, flag, hitCount)
   case { 'iter', 'done' }
     fprintf('%10d%15d%15d%15.2f\n', ...
       state.Generation, state.FunEval, sum(state.Rank == 1), ...
-      hitCount / state.FunEval);
+      state.hitCount / state.FunEval);
   end
 end
 
 function plotUniobjective(state, flag)
   switch flag
   case 'init'
-    figure;
+    f = figure;
+    set(f, 'Tag', 'figure');
     Plot.label('Generation', 'MTTF');
   case { 'iter', 'done' }
+    f = findobj('Tag', 'figure');
+    Plot.title(f, '%d generations, %d solves (%.2f cache)', ...
+      state.Generation, state.FunEval, state.hitCount / state.FunEval);
     line(state.Generation, -state.Best(end), 'LineStyle', 'none', ...
       'Marker', '*', 'Color', Color.pick(1));
   end
@@ -215,13 +232,35 @@ end
 
 function plotMultiobjective(state, flag)
   [ ~, I ] = sort(state.Score(:, 1));
+
   S = state.Score(I, :);
   S(:, 1) = -S(:, 1);
+
+  switch state.target
+  case 'LifetimeTmax'
+    S(:, 2) = Utils.toCelsius(S(:, 2));
+  case 'LifetimePburn'
+  otherwise
+    assert(false);
+  end
+
   R = state.Rank(I);
+
   switch flag
   case 'init'
-    figure;
-    Plot.label('MTTF', 'P(burn)');
+    f = figure;
+    set(f, 'Tag', 'figure');
+
+    switch state.target
+    case 'LifetimeTmax'
+      names = { 'MTTF, s', 'Tmax, C' };
+    case 'LifetimePburn'
+      names = { 'MTTF, s', 'P(burn)' };
+    otherwise
+      assert(false);
+    end
+    Plot.label(names{:});
+
     hold on;
     h = plot(S(:, 1), S(:, 2), 'LineStyle', 'none', ...
       'Marker', 'o', 'Color', Color.pick(1));
@@ -231,9 +270,13 @@ function plotMultiobjective(state, flag)
     set(h, 'Tag', 'front');
     hold off;
   case { 'iter', 'done' }
-    h = findobj(get(gca, 'Children'), 'Tag', 'all');
+    f = findobj('Tag', 'figure');
+    Plot.title(f, '%d generations, %d solves (%.2f cache), %d non-dominants', ...
+      state.Generation, state.FunEval, state.hitCount / state.FunEval, ...
+      sum(state.Rank == 1));
+    h = findobj(get(f, 'Children'), 'Tag', 'all');
     set(h, 'Xdata', S(:, 1), 'Ydata', S(:, 2));
-    h = findobj(get(gca, 'Children'), 'Tag', 'front');
+    h = findobj(get(f, 'Children'), 'Tag', 'front');
     set(h, 'Xdata', S(R == 1, 1), 'Ydata', S(R == 1, 2));
   end
   drawnow;
