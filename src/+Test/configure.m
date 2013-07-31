@@ -64,7 +64,8 @@ function options = configure(varargin)
   %
   options.optimizationOptions = Options( ...
     'sampleCount', 1e4, ...
-    'temperatureLimit', Utils.toKelvin(120));
+    'temperatureLimit', Utils.toKelvin(120), ...
+    'deadlineDurationRatio', 1.05);
 
   %
   % Genetic algorithm

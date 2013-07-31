@@ -28,7 +28,27 @@ function reliability(varargin)
 
   steadyStateOptions = options.steadyStateOptions;
   optimizationOptions = options.optimizationOptions;
+
+  %
+  % Timing constraint
+  %
+  durationLimit = optimizationOptions.deadlineDurationRatio * ...
+    options.schedule.duration;
+
+  fprintf('Initial duration: %.2f s\n', options.schedule.duration);
+  fprintf('Duration limit: %.2f s\n', durationLimit);
+
+  %
+  % Thermal constraint
+  %
   temperatureLimit = optimizationOptions.temperatureLimit;
+
+  T = surrogate.computeWithLeakage( ...
+    options.dynamicPower, steadyStateOptions);
+  fprintf('Initial maximal temperature: %.2f C\n', ...
+    Utils.toCelsius(max(T(:))));
+  fprintf('Temperature limit: %.2f C\n', ...
+    Utils.toCelsius(temperatureLimit));
 
   function plotSchedule(schedule, name)
     Pdyn = power.compute(schedule);
@@ -74,7 +94,8 @@ function reliability(varargin)
   end
 
   cache = Cache();
-  hitCount = 0;
+  cachedCount = 0;
+  discardedCount = 0;
 
   function chromosomes = unify(chromosomes)
     %
@@ -100,31 +121,28 @@ function reliability(varargin)
     I = find(any(isnan(fitness), 2));
     newCount = length(I);
 
-    hitCount = hitCount + chromosomeCount - newCount;
+    cachedCount = cachedCount + chromosomeCount - newCount;
 
     newMapping  = chromosomes(I, 1:taskCount);
     newPriority = chromosomes(I, (taskCount + 1):end);
-    newFitness  = zeros(newCount, objectiveCount);
+    newFitness  = inf(newCount, objectiveCount);
 
     parfor i = 1:newCount
       schedule = Schedule.Dense(platform, application, ...
         'mapping', newMapping(i, :), 'priority', newPriority(i, :));
+
+      if duration(schedule) > durationLimit, continue; end
+
       Pdyn = power.compute(schedule);
 
       switch target
       case 'Lifetime'
         T = surrogate.computeWithLeakage(Pdyn, steadyStateOptions);
-        if max(T(:)) > temperatureLimit
-          MTTF = 0;
-        else
-          MTTF = lifetime.predict(T);
-        end
-        newFitness(i, :) = -MTTF;
+        if max(T(:)) > temperatureLimit, continue; end
+        newFitness(i, :) = -lifetime.predict(T);
       case 'LifetimeTmax'
         T = surrogate.computeWithLeakage(Pdyn, steadyStateOptions);
-        MTTF = lifetime.predict(T);
-        Tmax = max(T(:));
-        newFitness(i, :) = [ -MTTF, Tmax ];
+        newFitness(i, :) = [ -lifetime.predict(T), max(T(:)) ];
       case 'LifetimePburn'
         [ ~, output ] = surrogate.compute(Pdyn, steadyStateOptions);
         [ MTTF, Pburn ] = Analyze.solution( ...
@@ -136,6 +154,8 @@ function reliability(varargin)
     end
     fitness(I, :) = newFitness;
 
+    discardedCount = discardedCount + sum(isinf(max(newFitness, [], 2)));
+
     for i = 1:newCount
       cache.set(chromosomes(I(i), :), newFitness(i, :));
     end
@@ -143,13 +163,14 @@ function reliability(varargin)
 
   function [ state, options, onchanged ] = print(options, state, flag)
     state.target = target;
-    state.hitCount = hitCount;
+    state.cachedCount = cachedCount;
+    state.discardedCount = discardedCount;
     switch objectiveCount
     case 1
-      % printUniobjective(state, flag);
+      printUniobjective(state, flag);
       plotUniobjective(state, flag);
     case 2
-      % printMultiobjective(state, flag);
+      printMultiobjective(state, flag);
       plotMultiobjective(state, flag);
     otherwise
       assert(false);
@@ -193,24 +214,28 @@ end
 function printUniobjective(state, flag)
   switch flag
   case 'init'
-    fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
-      'Best MTTF', 'Cache');
+    fprintf('%10s%15s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
+      'Cached', 'Discarded', 'Best MTTF');
   case { 'iter', 'done' }
-    fprintf('%10d%15d%15.2e%15.2f\n', ...
-      state.Generation, state.FunEval, -state.Best(end), ...
-      state.hitCount / state.FunEval);
+    fprintf('%10d%15d%15.2f%15.2f%15.2e\n', ...
+      state.Generation, state.FunEval, ...
+      state.cachedCount / state.FunEval, ...
+      state.discardedCount /state.FunEval, ...
+      -state.Best(end));
   end
 end
 
 function printMultiobjective(state, flag)
   switch flag
   case 'init'
-    fprintf('%10s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
-      'Non-dominants', 'Cache');
+    fprintf('%10s%15s%15s%15s%15s\n', 'Generation', 'Evaluations', ...
+      'Cached', 'Discarded', 'Non-dominants');
   case { 'iter', 'done' }
-    fprintf('%10d%15d%15d%15.2f\n', ...
-      state.Generation, state.FunEval, sum(state.Rank == 1), ...
-      state.hitCount / state.FunEval);
+    fprintf('%10d%15d%15.2f%15.2f%15d\n', ...
+      state.Generation, state.FunEval, ...
+      state.cachedCount / state.FunEval, ...
+      state.discardedCount / state.FunEval, ...
+      sum(state.Rank == 1));
   end
 end
 
@@ -219,12 +244,15 @@ function plotUniobjective(state, flag)
   case 'init'
     f = figure;
     set(f, 'Tag', 'figure');
-    Plot.label('Generation', 'MTTF');
+    Plot.label('Generation', 'MTTF, years');
   case { 'iter', 'done' }
+    MTTF = -state.Best(end) / 60 / 60 / 24 / 365;
     f = findobj('Tag', 'figure');
-    Plot.title(f, '%d generations, %d solves (%.2f cache)', ...
-      state.Generation, state.FunEval, state.hitCount / state.FunEval);
-    line(state.Generation, -state.Best(end), 'LineStyle', 'none', ...
+    Plot.title(f, '%d generations, %d solves, %.2f cached, %.2f discarded', ...
+      state.Generation, state.FunEval, ...
+      state.cachedCount / state.FunEval, ...
+      state.discardedCount / state.FunEval);
+    line(state.Generation, MTTF, 'LineStyle', 'none', ...
       'Marker', '*', 'Color', Color.pick(1));
   end
   drawnow;
@@ -234,7 +262,7 @@ function plotMultiobjective(state, flag)
   [ ~, I ] = sort(state.Score(:, 1));
 
   S = state.Score(I, :);
-  S(:, 1) = -S(:, 1);
+  S(:, 1) = -S(:, 1) / 60 / 60 / 24 / 365;
 
   switch state.target
   case 'LifetimeTmax'
@@ -253,9 +281,9 @@ function plotMultiobjective(state, flag)
 
     switch state.target
     case 'LifetimeTmax'
-      names = { 'MTTF, s', 'Tmax, C' };
+      names = { 'MTTF, years', 'Tmax, C' };
     case 'LifetimePburn'
-      names = { 'MTTF, s', 'P(burn)' };
+      names = { 'MTTF, years', 'P(burn)' };
     otherwise
       assert(false);
     end
@@ -271,9 +299,10 @@ function plotMultiobjective(state, flag)
     hold off;
   case { 'iter', 'done' }
     f = findobj('Tag', 'figure');
-    Plot.title(f, '%d generations, %d solves (%.2f cache), %d non-dominants', ...
-      state.Generation, state.FunEval, state.hitCount / state.FunEval, ...
-      sum(state.Rank == 1));
+    Plot.title(f, '%d generations, %d solves, %.2f cached, %.2f discarded', ...
+      state.Generation, state.FunEval, ...
+      state.cachedCount / state.FunEval, ...
+      state.discardedCount / state.FunEval);
     h = findobj(get(f, 'Children'), 'Tag', 'all');
     set(h, 'Xdata', S(:, 1), 'Ydata', S(:, 2));
     h = findobj(get(f, 'Children'), 'Tag', 'front');
