@@ -57,8 +57,8 @@ function reliability(varargin)
     [ MTTF, Pburn ] = Plot.solution( ...
       surrogate, output, optimizationOptions, 'name', name);
 
-    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.4f\n', name, MTTF, ...
-      Utils.toCelsius(temperatureLimit), Pburn);
+    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.2f%%\n', name, MTTF, ...
+      Utils.toCelsius(temperatureLimit), Pburn * 100);
   end
 
   geneticOptions = options.geneticOptions;
@@ -268,6 +268,7 @@ function plotMultiobjective(state, flag)
   case 'LifetimeTmax'
     S(:, 2) = Utils.toCelsius(S(:, 2));
   case 'LifetimePburn'
+    S(:, 2) = S(:, 2) * 100;
   otherwise
     assert(false);
   end
@@ -283,7 +284,7 @@ function plotMultiobjective(state, flag)
     case 'LifetimeTmax'
       names = { 'MTTF, years', 'Tmax, C' };
     case 'LifetimePburn'
-      names = { 'MTTF, years', 'P(burn)' };
+      names = { 'MTTF, years', 'P(burn), %' };
     otherwise
       assert(false);
     end
@@ -292,7 +293,10 @@ function plotMultiobjective(state, flag)
     hold on;
     h = plot(S(:, 1), S(:, 2), 'LineStyle', 'none', ...
       'Marker', 'o', 'Color', Color.pick(1));
-    set(h, 'Tag', 'all');
+    set(h, 'Tag', 'active');
+    h = plot(NaN, NaN, 'LineStyle', 'none', ...
+      'Marker', '.', 'Color', 0.8 * [ 1, 1, 1 ]);
+    set(h, 'Tag', 'inactive');
     h = plot(S(R == 1, 1), S(R == 1, 2), 'LineStyle', '-', ...
       'Marker', 'o', 'Color', Color.pick(2));
     set(h, 'Tag', 'front');
@@ -303,8 +307,12 @@ function plotMultiobjective(state, flag)
       state.Generation, state.FunEval, ...
       state.cachedCount / state.FunEval, ...
       state.discardedCount / state.FunEval);
-    h = findobj(get(f, 'Children'), 'Tag', 'all');
+    h = findobj(get(f, 'Children'), 'Tag', 'active');
+    Xdata = get(h, 'Xdata'); Ydata = get(h, 'Ydata');
     set(h, 'Xdata', S(:, 1), 'Ydata', S(:, 2));
+    h = findobj(get(f, 'Children'), 'Tag', 'inactive');
+    set(h, 'Xdata', [ get(h, 'Xdata'), Xdata ], ...
+      'Ydata', [ get(h, 'Ydata'), Ydata ]);
     h = findobj(get(f, 'Children'), 'Tag', 'front');
     set(h, 'Xdata', S(R == 1, 1), 'Ydata', S(R == 1, 2));
   end
