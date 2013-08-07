@@ -10,3 +10,4 @@ paper-blx.bib
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+*.bcf
