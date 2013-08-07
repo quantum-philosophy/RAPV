@@ -1,19 +1,19 @@
 \usepackage[english]{babel}
-\usepackage[usenames,dvipsnames]{color}
+
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage{cases}
-\usepackage{url}
 \usepackage{mathrsfs}
+\usepackage{cases}
+
 \usepackage{multirow}
 \usepackage{booktabs}
+
 \usepackage{graphicx}
+
 \usepackage[maxnames=1, sorting=none, defernumbers=true]{biblatex}
 \usepackage{csquotes}
 
-\makeatletter
-\let\l@ENGLISH\l@english
-\makeatother
+\usepackage{url}
 
 % Format
 \usepackage{anysize}
@@ -54,10 +54,11 @@
 %
 % Probability theory
 %
-\newcommand{\outcomes}{\Omega}
+\newcommand{\Outcomes}{\Omega}
+\newcommand{\SigmaAlgebra}{\mathcal{F}}
+\newcommand{\ProbabilityMeasure}{\mathbb{P}}
+
 \renewcommand{\o}{\omega}
-\newcommand{\sAlgebra}{\mathcal{F}}
-\newcommand{\pMeasure}{\mathbb{P}}
 
 \newcommand{\oExp}[1]{\mathbb{E}\left(#1\right)}
 \newcommand{\oVar}[1]{\mathbb{V}\text{ar}\left(#1\right)}
