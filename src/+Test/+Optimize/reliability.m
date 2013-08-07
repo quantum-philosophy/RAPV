@@ -57,8 +57,9 @@ function reliability(varargin)
     [ MTTF, Pburn ] = Plot.solution( ...
       surrogate, output, optimizationOptions, 'name', name);
 
-    fprintf('%15s: MTTF = %10.2e, P(T > %.2f C) = %10.2f%%\n', name, MTTF, ...
-      Utils.toCelsius(temperatureLimit), Pburn * 100);
+    fprintf('%15s: MTTF = %10.2f years, P(T > %.2f C) = %10.2f%%\n', ...
+      name, Utils.toYears(MTTF), Utils.toCelsius(temperatureLimit), ...
+      Pburn * 100);
   end
 
   geneticOptions = options.geneticOptions;
@@ -167,10 +168,10 @@ function reliability(varargin)
     state.discardedCount = discardedCount;
     switch objectiveCount
     case 1
-      printUniobjective(state, flag);
+      % printUniobjective(state, flag);
       plotUniobjective(state, flag);
     case 2
-      printMultiobjective(state, flag);
+      % printMultiobjective(state, flag);
       plotMultiobjective(state, flag);
     otherwise
       assert(false);
@@ -245,6 +246,9 @@ function plotUniobjective(state, flag)
     f = figure;
     set(f, 'Tag', 'figure');
     Plot.label('Generation', 'MTTF, years');
+    h = line(NaN, NaN, 'LineStyle', 'none', ...
+      'Marker', '*', 'Color', Color.pick(1));
+    set(h, 'Tag', 'all');
   case { 'iter', 'done' }
     MTTF = -Utils.toYears(state.Best(end));
     f = findobj('Tag', 'figure');
@@ -252,8 +256,9 @@ function plotUniobjective(state, flag)
       state.Generation, state.FunEval, ...
       state.cachedCount / state.FunEval, ...
       state.discardedCount / state.FunEval);
-    line(state.Generation, MTTF, 'LineStyle', 'none', ...
-      'Marker', '*', 'Color', Color.pick(1));
+    h = findobj(get(f, 'Children'), 'Tag', 'all');
+    Xdata = get(h, 'Xdata'); Ydata = get(h, 'Ydata');
+    set(h, 'Xdata', [ Xdata, state.Generation ], 'Ydata', [ Ydata, MTTF ]);
   end
   drawnow;
 end

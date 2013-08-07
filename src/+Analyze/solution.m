@@ -8,7 +8,7 @@ function [ MTTF, Pburn, output ] = solution(pc, output, varargin)
 
   if nargout < 3, return; end
 
-  etaData = data(data(:, 1) > 0, 1) / gamma(1 + 1 / output.lifetimeOutput.beta);
+  etaData = data(data(:, 1) >= 0, 1) / gamma(1 + 1 / output.lifetimeOutput.beta);
   TTFdata = etaData .* (log(1 ./ (1 - rand(length(etaData), 1)))).^ ...
     (1 / output.lifetimeOutput.beta);
 

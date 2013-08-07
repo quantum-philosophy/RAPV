@@ -3,13 +3,13 @@ function [ MTTF, Pburn, output ] = solution(pc, output, varargin)
 
   [ MTTF, Pburn, output ] = Analyze.solution(pc, output, options);
 
-  Plot.figure(1000, 300);
+  Plot.figure(1200, 300);
   if options.has('name'), Plot.name(options.name); end
 
   %
   % Thermal cycles
   %
-  subplot(1, 2, 1);
+  subplot(1, 3, 1);
   Plot.temperatureVariation(output.Texp, output.Tvar, ...
     'figure', false, 'layout', 'one', ...
     'index', output.lifetimeOutput.peakIndex);
@@ -18,7 +18,7 @@ function [ MTTF, Pburn, output ] = solution(pc, output, varargin)
   %
   % Probability density of the maximal temperature
   %
-  subplot(1, 2, 2);
+  subplot(1, 3, 2);
   Data.observe(Utils.toCelsius(max(output.Tdata, [], 2)), ...
     'figure', false, 'layout', 'one', 'range', 'unbounded');
   Plot.vline(Utils.toCelsius(options.temperatureLimit), ...
@@ -31,7 +31,9 @@ function [ MTTF, Pburn, output ] = solution(pc, output, varargin)
   %
   % Probability density of the time to failure
   %
-  Data.observe(Utils.toYears(output.TTFdata), 'range', 'unbounded');
+  subplot(1, 3, 3);
+  Data.observe(Utils.toYears(output.TTFdata), ...
+    'figure', false, 'layout', 'one', 'range', 'unbounded');
   Plot.vline(Utils.toYears(MTTF), 'Color', 'k', 'LineStyle', '--');
   Plot.title('Time to failure');
   Plot.label('Time, years', 'Probability');
