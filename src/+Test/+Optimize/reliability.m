@@ -246,7 +246,7 @@ function plotUniobjective(state, flag)
     set(f, 'Tag', 'figure');
     Plot.label('Generation', 'MTTF, years');
   case { 'iter', 'done' }
-    MTTF = -state.Best(end) / 60 / 60 / 24 / 365;
+    MTTF = -Utils.toYears(state.Best(end));
     f = findobj('Tag', 'figure');
     Plot.title(f, '%d generations, %d solves, %.2f cached, %.2f discarded', ...
       state.Generation, state.FunEval, ...
@@ -262,7 +262,7 @@ function plotMultiobjective(state, flag)
   [ ~, I ] = sort(state.Score(:, 1));
 
   S = state.Score(I, :);
-  S(:, 1) = -S(:, 1) / 60 / 60 / 24 / 365;
+  S(:, 1) = -Utils.toYears(S(:, 1));
 
   switch state.target
   case 'LifetimeTmax'
