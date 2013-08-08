@@ -1,0 +1,10 @@
+The probability space that we shall reside in is defined as a triple $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{maitre2010}.
+Loosely speaking, an $n$-dimensional random variable (a random vector) is then a function $\v{X}: \o \in \outcomes \mapsto \v{X}(\o) \in \real^n$.
+In what follows, the probability space $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is always implied.
+
+The system depends on a set of uncertain parameters, denoted by a random vector $\vU(\o)$, $\o \in \outcomes$, which manifest themselves in deviations of the actual power dissipation from nominal values and, consequently, in deviations of temperature from the one corresponding to the nominal power consumption.
+
+The core of your framework operates on mutually independent random variables.
+In general, however, the uncertain parameters that comprise $\vU(\o)$ are correlated.
+Hence, an adequate probability transformation should be undertaken \cite{eldred2008}.
+Denote such a transformation by $\vU(\o) = \oTransform{\vZ(\o)}$, which relates $\vU(\o)$ with $\nvars$ independent random variables $\vZ(\o)$.

@@ -1,0 +1,34 @@
+Given the thermal specification $\specification$ of the system at hand (see \sref{problem-formulation}), an equivalent thermal RC circuit with $\nnodes$ thermal nodes is constructed \cite{skadron2004}.
+The structure of the circuit depends on the intended level of granularity and, thus, impacts the resulting accuracy.
+For clarity, we assume that each processing element is mapped onto one corresponding node, and the thermal package is represented as a set of additional nodes.
+
+The thermal behavior of the constructed circuit is modeled with the following state-space system \cite{ukhov2012}:
+\begin{subnumcases}{\elabel{temperature-model}}
+  \frac{\d\vX(\t, \o)}{\d\t} = \mA \: \vX(\t, \o) + \mB \: \vP(\t, \o) \elabel{temperature-model-inner} \\
+  \vQ(\t, \o) = \mB^T \vX(\t, \o) + \vQ_\ambient \elabel{temperature-model-outer}
+\end{subnumcases}
+where
+\[
+  \mA = -\mCth^{-\frac{1}{2}} \mGth \mCth^{-\frac{1}{2}} \hspace{1em} \text{and} \hspace{1em} \mB = \mCth^{-\frac{1}{2}} \mM.
+\]
+In the above equations, $\vP \in \real^\nprocs$, $\vQ \in \real^\nprocs$, and $\vX \in \real^\nnodes$ are the input power, output temperature, internal state vectors, respectively, $\mM \in \real^{\nnodes \times \nprocs}$ is a matrix mapping the processing elements onto the thermal nodes, $\mCth \in \real^{\nnodes \times \nnodes}$ and $\mGth \in \real^{\nnodes \times \nnodes}$ are a diagonal matrix of the thermal capacitance and a symmetric, positive-definite matrix of the thermal conductance, respectively, and $\vQ_\ambient \in \real^\nprocs$ is a vector of the ambient temperature.
+In general, \eref{temperature-model-inner} does not have a closed-form solution due to the power term, which is an arbitrary function.
+
+Let $\dt$ be the sampling interval of the power and temperature profiles, and $\nsteps$ be the total number of such $\dt$-spaced samples. As discussed in \cite{ukhov2012}, the solution of \eref{temperature-model} can then be reduced to the following recurrence for $k \in \{ 0, \dots, \nsteps - 1 \}$:
+\begin{equation} \elabel{recurrence}
+  \vX_{k + 1} = \mE \: \vX_k + \mF \: \vP_k
+\end{equation}
+where the subscript $k$ stands for the time moment $k \dt$,
+\[
+  \mE = e^{\mA \dt} \hspace{1em} \text{and} \hspace{1em} \mF = \mA^{-1} (e^{\mA \dt} - \mI) \: \mB.
+\]
+For computational efficiency, the state matrix $\mA$ is factorized using the eigenvalue decomposition as follows \cite{press2007}:
+\begin{equation} \elabel{eigenvalue-decomposition}
+  \mA = \mV \mL \mV^T
+\end{equation}
+where $\mV$ and $\mL = \diag{\lambda_i}$ are an orthogonal matrix of the eigenvectors and a diagonal matrix of the eigenvectors of $\mA$, respectively.
+The matrices $\mE$ and $\mF$ are now trivial to calculate:
+\begin{align*}
+  & \mE = \mV \; \diag{e^{\lambda_i \dt}} \mV^T \text{ and} \\
+  & \mF = \mV \; \diag{ \frac{e^{\lambda_i \dt} - 1}{\lambda_i} } \mV^T \mB.
+\end{align*}

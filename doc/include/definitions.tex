@@ -15,11 +15,33 @@
 
 \usepackage{url}
 
+%
+% Algorithms
+%
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% \usepackage{float}
+% \newfloat{algorithm}{t}{lop}
+
+\newcommand{\tmp}[1]{\underline{#1}}
+
+%
 % Format
+%
 \usepackage{anysize}
 \usepackage[a4paper, top=19mm, bottom=43mm, left=13mm, right=13mm]{geometry}
 \columnsep 4mm
 \linespread{1}
+
+\renewcommand*{\bibfont}{\small}
+
+\usepackage[bottom]{footmisc}
 
 %
 % References
@@ -28,11 +50,13 @@
 \newcommand{\sref}[1]{Sec.~\ref{sec:#1}}
 \newcommand{\tref}[1]{Tab.~\ref{tab:#1}}
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
+\newcommand{\aref}[1]{Alg.~\ref{alg:#1}}
 
 \newcommand{\elabel}[1]{\label{equ:#1}}
 \newcommand{\slabel}[1]{\label{sec:#1}}
 \newcommand{\tlabel}[1]{\label{tab:#1}}
 \newcommand{\flabel}[1]{\label{fig:#1}}
+\newcommand{\alabel}[1]{\label{alg:#1}}
 
 %
 % Text shortcuts
@@ -42,8 +66,10 @@
 \newcommand{\etc}{\emph{etc.}}
 
 %
-% Linear algebra
+% Linear algebra and real analysis
 %
+\newcommand{\real}{\mathbb{R}}
+
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\mI}{\m{I}}
 \newcommand{\mZero}{\m{0}}
@@ -51,12 +77,16 @@
 \renewcommand{\v}[1]{\mathbf{#1}}
 \newcommand{\vZero}{\v{0}}
 
+\newcommand{\diag}[1]{\text{diag}\left( #1 \right)}
+
+\renewcommand{\d}{d}
+
 %
 % Probability theory
 %
-\newcommand{\Outcomes}{\Omega}
-\newcommand{\SigmaAlgebra}{\mathcal{F}}
-\newcommand{\ProbabilityMeasure}{\mathbb{P}}
+\newcommand{\outcomes}{\Omega}
+\newcommand{\sigmaAlgebra}{\mathcal{F}}
+\newcommand{\probabilityMeasure}{\mathcal{P}}
 
 \renewcommand{\o}{\omega}
 
@@ -64,3 +94,66 @@
 \newcommand{\oVar}[1]{\mathbb{V}\text{ar}\left(#1\right)}
 \newcommand{\oCov}[1]{\mathbb{C}\text{ov}\left(#1\right)}
 \newcommand{\oCorr}[1]{\mathbb{C}\text{orr}\left(#1\right)}
+
+%
+% Power and temperature modeling
+%
+\newcommand{\specification}{\mathcal{S}}
+
+\renewcommand{\t}{t}
+\newcommand{\dt}{\Delta \t}
+\newcommand{\period}{\tau}
+
+% Temperature
+\newcommand{\vQ}{\v{q}}
+\newcommand{\mQ}{\m{Q}}
+
+% Power
+\newcommand{\vP}{\v{p}}
+\newcommand{\mP}{\m{P}}
+
+\newcommand{\mM}{\m{M}}
+
+% Capacitance and conductance
+\newcommand{\mCth}{\m{C}}
+\newcommand{\mGth}{\m{G}}
+
+% State-space system
+\newcommand{\vX}{\v{x}}
+\newcommand{\mX}{\m{X}}
+
+\newcommand{\mA}{\m{A}}
+\newcommand{\mB}{\m{B}}
+
+% Recurrence
+\newcommand{\mE}{\m{E}}
+\newcommand{\mF}{\m{F}}
+
+% Eigenvalue decomposition of A
+\newcommand{\mV}{\m{V}}
+\newcommand{\mL}{\m{\Lambda}}
+
+\newcommand{\ambient}{\text{a}}
+\newcommand{\dynamic}{\text{d}}
+\newcommand{\static}{\text{s}}
+
+%
+% Uncertain parameters
+%
+\newcommand{\vU}{\v{u}}
+\newcommand{\vZ}{\v{z}}
+
+\makeatletter
+\def\oTransform{\@ifnextchar\bgroup{\oTransformWithOne}{\oTransformWithZero}}
+\def\oTransformWithOne#1{\mathcal{T}\left[#1\right]}
+\def\oTransformWithZero{\mathcal{T}}
+\makeatother
+
+%
+% Numbers
+%
+\newcommand{\nnodes}{{n_\text{n}}}
+\newcommand{\nprocs}{{n_\text{p}}}
+\newcommand{\nsteps}{{n_\text{t}}}
+
+\newcommand{\nvars}{{n_\text{v}}}

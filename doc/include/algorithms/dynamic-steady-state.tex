@@ -1,0 +1,29 @@
+\begin{algorithm}
+  \caption{Dynamic steady-state temperature analysis. \alabel{dynamic-steady-state}}
+  \begin{algorithmic}[1]
+    \vspace{0.4em}
+
+    \Require{A dynamic power profile $\mP_\dynamic$.}
+    \Ensure{The corresponding temperature profile $\mQ$.}
+
+    \vspace{0.5em}
+
+    \Let{$\tmp{\m{A}}$}{$\mF \; \mP_\dynamic$}
+    \Let{$\tmp{\v{a}}$}{$\tmp{\m{A}}(:, 1)$}
+
+    \For{$k \gets 2 \textrm{ to } \nsteps$}
+      \Let{$\tmp{\v{a}}$}{$\mE \; \tmp{\v{a}} + \tmp{\m{A}}(:, k)$}
+    \EndFor
+
+    \Let{$\mX$}{preallocate memory for a $\nnodes \times \nsteps$ matrix}
+    \Let{$\mX(:, 1)$}{$\mV \; \diag{\left( 1 - e^{\nsteps \dt \lambda_i} \right)^{-1}} \; \mV^T \; \tmp{\v{a}}$}
+
+    \For{$k \gets 2 \textrm{ to } \nsteps$}
+      \Let{$\m{X}(:, k)$}{$\mE \; \mX(:, k - 1) + \tmp{\m{A}}(:, k - 1)$}
+    \EndFor
+
+    \Let{$\mQ$}{$\mB^T \mX + \mQ_\ambient$}
+
+    \vspace{0.4em}
+  \end{algorithmic}
+\end{algorithm}
