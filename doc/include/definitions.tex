@@ -149,6 +149,20 @@
 \makeatother
 
 %
+% Polynomial chaos
+%
+\newcommand{\pcb}{\Phi}
+\newcommand{\pcn}{\eta}
+\newcommand{\pcc}[1]{\hat{#1}}
+\newcommand{\oPC}[3]{\mathcal{C}_{#1}^{#2}\left[#3\right]}
+
+\makeatletter
+\def\oInner#1{\@ifnextchar\bgroup{\oInnerTwo{#1}}{\oInnerOne{#1}}}
+\def\oInnerOne#1{\left\langle #1 \right\rangle}
+\def\oInnerTwo#1#2{\oInnerSingle{#1, #2}}
+\makeatother
+
+%
 % Numbers
 %
 \newcommand{\nnodes}{{n_\text{n}}}
@@ -156,3 +170,6 @@
 \newcommand{\nsteps}{{n_\text{t}}}
 
 \newcommand{\nvars}{{n_\text{v}}}
+
+\newcommand{\norder}{{n_\text{po}}}
+\newcommand{\nterms}{{n_\text{pt}}}

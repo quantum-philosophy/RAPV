@@ -1,0 +1,30 @@
+Due to the inherent complexity, uncertainty quantification problems are typically viewed as approximation problems: one constructs a computationally efficient surrogate of the initial model and then studies this light representation instead.
+The theory of polynomial chaos (PC) expansions \cite{maitre2010} is one way to construct such an approximation, in which the approximating functions are orthogonal polynomials.
+
+\subsubsection{Preprocessing of the uncertain parameters}
+The construction of a PC expansion is based on mutually independent random variables.
+In general, however, the uncertain parameters that comprise $\vU(\o)$ are correlated.
+Hence, an adequate probability transformation should be undertaken \cite{eldred2008}.
+Denote such a transformation by $\vU(\o) = \oTransform{\vZ(\o)}$, which relates $\vU(\o)$ with $\nvars$ independent random variables $\vZ(\o)$.
+
+\subsubsection{Choice of a polynomial basis}
+The next step towards a PC expansion is the choice of a suitable polynomial basis $\{ \pcb_i(\vZ) \}_{i = 1}^\infty$.
+Each $\pcb_i(\vZ)$ is a real-valued polynomial in terms of $\nvars$ variables (recall that $\vZ(\o) \in \real^\nvars$).
+This choice depends mainly on the probability distributions of $\vZ(\o)$.
+Many discrete and continuous distributions directly correspond to certain families of orthogonal polynomials found in the so-called Askey scheme of hypergeometric orthogonal polynomials; see, \eg, \cite{eldred2008}.
+For instance, the Hermite polynomials are a natural choice for Gaussian distributions.
+
+\subsubsection{Expansion of the quantity of interest}
+The uncertain quantity that we study in this paper is the DSS temperature profile $\mQ(\o)$\footnote{As always, the argument $\o$ should be interpreted as $\vU(\o)$ or $\oTransform{\vZ(\o)}$.} of the electronic system at hand under a certain workload represented by $\mP_\dynamic$.
+The expansion is
+\begin{equation} \elabel{polynomial-chaos-expansion}
+  \mQ(\o) = \sum_{k = 1}^\infty \pcc{\mQ}_k \, \pcb_k(\vZ(\o))
+\end{equation}
+where $\pcc{\mQ}_k \in \real^{\nprocs \times \nsteps}$ are the coefficients of the expansion, which are matrix-valued.
+For practical computations, the infinite expansion in \eref{polynomial-chaos-expansion} is truncated to preserve only a certain number, say $\nterms$, first polynomial terms.
+The result is nothing but a polynomial; hence, it is easy to interpret and easy to evaluate.
+Consequently, such quantities as CDFs and PDFs can be estimated at no effort.
+Moreover, the coefficients of a PC expansion immediately yield analytical formulae for the expected value and variance of the expanded quantity.
+
+\subsubsection{Computation of the expansion coefficients}
+The question to discuss now is the computation of $\pcc{\mQ}_k$ in \eref{polynomial-chaos-expansion}.
