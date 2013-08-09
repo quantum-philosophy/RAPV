@@ -14,7 +14,7 @@ where
 In the above equations, $\vP \in \real^\nprocs$, $\vQ \in \real^\nprocs$, and $\vX \in \real^\nnodes$ are the input power, output temperature, internal state vectors, respectively, $\mM \in \real^{\nnodes \times \nprocs}$ is a matrix mapping the processing elements onto the thermal nodes, $\mCth \in \real^{\nnodes \times \nnodes}$ and $\mGth \in \real^{\nnodes \times \nnodes}$ are a diagonal matrix of the thermal capacitance and a symmetric, positive-definite matrix of the thermal conductance, respectively, and $\vQ_\ambient \in \real^\nprocs$ is a vector of the ambient temperature.
 In general, \eref{temperature-model-inner} does not have a closed-form solution due to the power term, which is an arbitrary function.
 
-Let $\dt$ be the sampling interval of the power and temperature profiles, and $\nsteps$ be the total number of such $\dt$-spaced samples. As discussed in \cite{ukhov2012}, the solution of \eref{temperature-model} can then be reduced to the following recurrence for $k \in \{ 0, \dots, \nsteps - 1 \}$:
+Let $\dt$ be the sampling interval of the power and temperature profiles, and $\nsteps$ be the total number of such $\dt$-spaced samples. As discussed in \cite{ukhov2012}, the solution of \eref{temperature-model} can then be reduced to the following recurrence for $k = 1, \dots, \nsteps$:
 \begin{equation} \elabel{recurrence}
   \vX_{k + 1} = \mE \: \vX_k + \mF \: \vP_k
 \end{equation}

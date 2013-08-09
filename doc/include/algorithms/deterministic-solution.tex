@@ -1,14 +1,14 @@
 \begin{algorithm}
-  \caption{Dynamic steady-state temperature analysis. \alabel{dynamic-steady-state}}
+  \caption{Deterministic DSSTA. \alabel{deterministic-solution}}
   \begin{algorithmic}[1]
     \vspace{0.4em}
 
-    \Require{A dynamic power profile $\mP_\dynamic$.}
+    \Require{A total power profile $\mP$.}
     \Ensure{The corresponding temperature profile $\mQ$.}
 
     \vspace{0.5em}
 
-    \Let{$\tmp{\m{A}}$}{$\mF \; \mP_\dynamic$}
+    \Let{$\tmp{\m{A}}$}{$\mF \; \mP$}
     \Let{$\tmp{\v{a}}$}{$\tmp{\m{A}}(:, 1)$}
 
     \For{$k \gets 2 \textrm{ to } \nsteps$}

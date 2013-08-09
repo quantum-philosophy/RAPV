@@ -1,8 +1,0 @@
-Assume $\o$ is fixed and $\vP(\t)$ does not depend on $\vQ(\t)$.
-Under the DSS condition, $\vX_0 = \vX_\nsteps$.
-This boundary constraint and the recurrence in \eref{recurrence} yield a large system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
-As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigenvalue-decomposition}.
-The pseudocode of this algorithm is given in \aref{dynamic-steady-state}.\footnote{Hereafter, we utilize the MATLAB notation of referencing a particular column, \eg, $\m{A}(:, k)$, or a particular row, \eg, $\m{A}(k, :)$, of a matrix $\m{A}$. Also, we shall underline auxiliary vectors, \eg, $\tmp{\v{a}}$, and matrices, \eg, $\tmp{\m{A}}$.}
-\input{include/algorithms/dynamic-steady-state.tex}
-
-The time complexity of direct solutions of the system is $O(\nsteps^3 \nnodes^3)$ while the one of \aref{dynamic-steady-state} is only $O(\nsteps \nnodes^2 + \nnodes^3)$.\footnote{The complexity reported in \cite{ukhov2012} is erroneously overestimated to $O(\nsteps \nnodes^3)$.}

@@ -1,0 +1,21 @@
+\begin{algorithm}
+  \caption{Deterministic DSSTA with leakage. \alabel{deterministic-solution-with-leakage}}
+  \begin{algorithmic}[1]
+    \vspace{0.4em}
+
+    \Require{A dynamic power profile $\mP_\dynamic$, parameters $\vU$.}
+    \Ensure{The corresponding temperature profile $\mQ$.}
+
+    \vspace{0.5em}
+
+    \Let{$\mQ$}{$\mQ_\ambient$}
+
+    \Repeat
+      \Let{$\mP$}{$\mP_\dynamic + \mP_\static(\mQ, \vU)$}
+      \Let{$\mQ^\prime$}{$\mQ$}
+      \Let{$\mQ$}{run {\bf Algorithm 1} for $\mP$}
+    \Until{stopping condition is met according to $\mQ$ and $\mQ^\prime$}
+
+    \vspace{0.4em}
+  \end{algorithmic}
+\end{algorithm}
