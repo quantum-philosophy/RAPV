@@ -1,7 +1,7 @@
-function [ MTTF, Pburn, output ] = solution(pc, output, varargin)
+function [ MTTF, Pburn, output ] = solution(surrogate, output, varargin)
   options = Options(varargin{:});
 
-  data = pc.sample(output, options.sampleCount);
+  data = surrogate.sample(output, options.sampleCount);
 
   MTTF = output.expectation(1);
   Pburn = mean(max(data(:, 2:end), [], 2) > options.temperatureLimit);

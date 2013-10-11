@@ -4,13 +4,12 @@ function thermalCycles(varargin)
 
   options = Test.configure(varargin{:});
 
-  surrogate = Temperature.Chaos.ThermalCyclic(options);
+  surrogate = Temperature.(options.surrogate).ThermalCyclic( ...
+    options, options.steadyStateOptions);
 
   time = tic;
-  [ Tfull, output ] = surrogate.compute( ...
-    options.dynamicPower, options.steadyStateOptions);
-  time = toc(time);
-  fprintf('Polynomial chaos: %.2f s\n', time);
+  [ Tfull, output ] = surrogate.compute(options.dynamicPower);
+  fprintf('%s: %.2f s\n', options.surrogate, toc(time));
 
   Plot.thermalCycles(Tfull, output.lifetimeOutput);
   Plot.reliability(Tfull, output.lifetimeOutput);
