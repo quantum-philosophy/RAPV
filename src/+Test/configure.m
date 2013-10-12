@@ -13,30 +13,17 @@ function options = configure(varargin)
   %
   % Model order reduction
   %
-  switch options.processorCount
-  case 2
-    reductionLimit = 0.45;
-  case 4
-    reductionLimit = 0.50;
-  case 8
-    reductionLimit = 0.60;
-  case 16
-    reductionLimit = 0.60;
-  case 32
-    reductionLimit = 0.60;
-  otherwise
-    assert(false);
-  end
+  reductionLimit = [ 0.45, 0.50, 0.60, 0.60, 0.60 ];
   options.reduceModelOrder = Options( ...
     'threshold', 0, ...
-    'limit', reductionLimit);
+    'limit', reductionLimit(log2(options.processorCount)));
 
   %
   % Dynamic steady-state analysis
   %
   options.steadyStateOptions = Options( ...
     'algorithm', 'condensedEquation', ...
-    'version', 3, ...
+    'version', 1, ...
     'iterationLimit', 20, ...
     'temperatureLimit', Utils.toKelvin(400), ...
     'tolerance', 0.5, ...
@@ -51,6 +38,16 @@ function options = configure(varargin)
   % Surrogate
   %
   options = Configure.surrogate(options);
+  switch options.surrogate
+  case 'Chaos'
+    options.surrogateOptions.order = 3;
+  case 'ASGC'
+    options.surrogateOptions.absoluteTolerance = Inf;
+    options.surrogateOptions.relativeTolerance = 1e-2;
+    options.surrogateOptions.maximalLevel = 10;
+  otherwise
+    assert(false);
+  end
 
   %
   % Optimization

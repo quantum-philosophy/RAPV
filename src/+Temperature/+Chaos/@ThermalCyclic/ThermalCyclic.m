@@ -18,14 +18,6 @@ classdef ThermalCyclic < Temperature.Chaos.DynamicSteadyState
         this.computeWithLeakage(Pdyn, this.preprocess(rvs)), lifetimeOutput));
       output.lifetimeOutput = lifetimeOutput;
     end
-
-    function data = sample(this, varargin)
-      data = this.surrogate.sample(varargin{:});
-    end
-
-    function data = evaluate(this, varargin)
-      data = this.surrogate.evaluate(varargin{:});
-    end
   end
 
   methods (Access = 'protected')
