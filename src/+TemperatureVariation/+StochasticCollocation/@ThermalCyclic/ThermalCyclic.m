@@ -1,11 +1,11 @@
-classdef ThermalCyclic < Temperature.ASGC.DynamicSteadyState
+classdef ThermalCyclic < TemperatureVariation.StochasticCollocation.DynamicSteadyState
   properties (SetAccess = 'protected')
     lifetime
   end
 
   methods
     function this = ThermalCyclic(varargin)
-      this = this@Temperature.ASGC.DynamicSteadyState(varargin{:});
+      this = this@TemperatureVariation.StochasticCollocation.DynamicSteadyState(varargin{:});
       this.lifetime = Lifetime('samplingInterval', this.samplingInterval);
     end
 

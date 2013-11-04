@@ -37,12 +37,12 @@ function options = configure(varargin)
   %
   % Surrogate
   %
-  options = Configure.surrogate(options);
+  options = Configure.temperatureVariation(options);
   switch options.surrogate
-  case 'Chaos'
+  case 'PolynomialChaos'
     options.surrogateOptions.order = 3;
-  case 'ASGC'
-    options.surrogateOptions.absoluteTolerance = Inf;
+  case 'StochasticCollocation'
+    options.surrogateOptions.absoluteTolerance = 1e-1;
     options.surrogateOptions.relativeTolerance = 1e-2;
     options.surrogateOptions.maximalLevel = 10;
   otherwise
