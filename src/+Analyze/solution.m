@@ -1,7 +1,14 @@
 function [ MTTF, Pburn, output ] = solution(surrogate, output, varargin)
   options = Options(varargin{:});
 
-  data = surrogate.sample(output, options.sampleCount);
+  if options.get('verbose', false)
+    fprintf('Solution analysis: collecting %d samples...\n', options.sampleCount);
+    time = tic;
+    data = surrogate.sample(output, options.sampleCount);
+    fprintf('Solution analysis: done in %.2f seconds.\n', toc(time));
+  else
+    data = surrogate.sample(output, options.sampleCount);
+  end
 
   stats = surrogate.analyze(output);
 
