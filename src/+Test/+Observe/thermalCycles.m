@@ -4,8 +4,7 @@ function thermalCycles(varargin)
 
   options = Test.configure(varargin{:});
 
-  surrogate = TemperatureVariation.(options.surrogate).ThermalCyclic( ...
-    options, options.steadyStateOptions);
+  surrogate = TemperatureReliability(options);
 
   time = tic;
   output = surrogate.compute(options.dynamicPower);

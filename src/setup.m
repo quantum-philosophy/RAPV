@@ -1,5 +1,6 @@
 function setup
   use('DataStructure');
-  use('UncertaintyQuantification');
-  use('Reliability');
+
+  use('ElectronicSystems', 'StochasticAnalysis');
+  use('ElectronicSystems', 'ReliabilityAnalysis');
 end
