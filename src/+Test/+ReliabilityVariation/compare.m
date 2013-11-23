@@ -5,7 +5,9 @@ function compare(varargin)
   data2 = construct('MonteCarlo');
 
   Statistic.compare(data1, data2, 'draw', true, ...
-    'method', 'smooth', 'range', 'unbounded');
+    'method', 'smooth', 'range', 'unbounded', ...
+    'names', { 'PolynomialChaos', 'MonteCarlo' });
+  Plot.label('Time, years', 'Probability density');
 end
 
 function data = construct(surrogate, varargin)
@@ -25,4 +27,6 @@ function data = construct(surrogate, varargin)
   else
     data = reliability.sample(output, 1e5);
   end
+
+  data = Utils.toYears(data);
 end
