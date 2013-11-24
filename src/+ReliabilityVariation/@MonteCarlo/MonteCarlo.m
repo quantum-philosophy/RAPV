@@ -7,21 +7,10 @@ classdef MonteCarlo < TemperatureVariation.MonteCarlo & ...
       this = this@TemperatureVariation.MonteCarlo(options);
       this = this@ReliabilityVariation.Base(options);
     end
-
-    function output = compute(this, Pdyn)
-      T = this.temperature.computeWithoutLeakage(Pdyn); % cycle template
-      [ ~, fatigueOutput ] = this.fatigue.compute(T);
-
-      output = this.surrogate.construct( ...
-        @(rvs) this.surve(Pdyn, rvs, fatigueOutput));
-
-      output.T = T;
-      output.fatigueOutput = fatigueOutput;
-    end
   end
 
   methods (Access = 'protected')
-    function result = surve(this, Pdyn, rvs, fatigueOutput)
+    function result = serve(this, Pdyn, rvs, fatigueOutput)
       parameters = this.process.partition(rvs);
       parameters = this.process.evaluate(parameters);
       parameters = this.process.assign(parameters);
@@ -34,6 +23,17 @@ classdef MonteCarlo < TemperatureVariation.MonteCarlo & ...
       %
       % Do nothing
       %
+    end
+
+    function output = simulate(this, Pdyn)
+      T = this.temperature.computeWithoutLeakage(Pdyn); % cycle template
+      [ ~, fatigueOutput ] = this.fatigue.compute(T);
+
+      output = this.surrogate.construct( ...
+        @(rvs) this.serve(Pdyn, rvs, fatigueOutput));
+
+      output.T = T;
+      output.fatigueOutput = fatigueOutput;
     end
   end
 end

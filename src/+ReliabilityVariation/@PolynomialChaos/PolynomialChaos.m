@@ -13,7 +13,7 @@ classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
       [ ~, fatigueOutput ] = this.fatigue.compute(T);
 
       output = this.surrogate.construct( ...
-        @(rvs) this.surve(Pdyn, rvs, fatigueOutput));
+        @(rvs) this.serve(Pdyn, rvs, fatigueOutput));
 
       output.T = T;
       output.fatigueOutput = fatigueOutput;
@@ -21,7 +21,7 @@ classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
   end
 
   methods (Access = 'protected')
-    function result = surve(this, Pdyn, rvs, fatigueOutput)
+    function result = serve(this, Pdyn, rvs, fatigueOutput)
       parameters = this.process.partition(rvs);
       parameters = this.process.evaluate(parameters);
       parameters = this.process.assign(parameters);
