@@ -1,32 +1,33 @@
-function compare(varargin)
+function compare(one, two, varargin)
   setup;
 
-  data1 = construct('PolynomialChaos');
-  data2 = construct('MonteCarlo');
+  if nargin < 1, one = {}; end
+  if nargin < 2, two = {}; end
 
-  Statistic.compare(data1, data2, 'draw', true, ...
+  one = Options('surrogate', 'MonteCarlo', one{:});
+  two = Options('surrogate', 'PolynomialChaos', two{:});
+
+  options = Test.configure(varargin{:}, one);
+  [ ~, oneStats, oneOutput ] = construct(options);
+
+  options = Test.configure(varargin{:}, two);
+  [ ~, twoStats, twoOutput ] = construct(options);
+
+  fprintf('%s:\n', one.surrogate);
+  fprintf('  Expectation: %.4f years\n', ...
+    Utils.toYears(oneStats.expectation));
+  fprintf('  Deviation:   %.4f years\n', ...
+    Utils.toYears(sqrt(oneStats.variance)));
+
+  fprintf('%s:\n', two.surrogate);
+  fprintf('  Expectation: %.4f years\n', ...
+    Utils.toYears(twoStats.expectation));
+  fprintf('  Deviation:   %.4f years\n', ...
+    Utils.toYears(sqrt(twoStats.variance)));
+
+  Statistic.compare(Utils.toYears(oneOutput.data), ...
+    Utils.toYears(twoOutput.data), 'draw', true, ...
     'method', 'smooth', 'range', 'unbounded', ...
-    'names', { 'PolynomialChaos', 'MonteCarlo' });
+    'names', { one.surrogate, two.surrogate });
   Plot.label('Time, years', 'Probability density');
-end
-
-function data = construct(surrogate, varargin)
-  options = Test.configure(varargin{:}, 'surrogate', surrogate);
-
-  reliability = ReliabilityVariation(options);
-  output = reliability.compute(options.dynamicPower);
-
-  stats = reliability.analyze(output);
-
-  fprintf('%s:\n', surrogate);
-  fprintf('  Expectation: %.2f years\n', Utils.toYears(stats.expectation));
-  fprintf('  Deviation:   %.2f years\n', Utils.toYears(sqrt(stats.variance)));
-
-  if isfield(output, 'data')
-    data = output.data;
-  else
-    data = reliability.sample(output, 1e5);
-  end
-
-  data = Utils.toYears(data);
 end
