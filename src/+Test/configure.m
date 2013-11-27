@@ -3,13 +3,18 @@ function options = configure(varargin)
   % System simulation
   %
   options = Configure.systemSimulation('processorCount', 4, ...
-    'assetPath', File.join('Assets'), varargin{:});
+    'assetPath', File.join(File.trace, '..', 'Assets'), varargin{:});
 
   %
   % Deterministic analysis
   %
-  modelOrderReduction = Options('threshold', 0.995, 'limit', 0.60);
-
+  % NOTE: One potential model order reduction is as follows:
+  %
+  % modelOrderReduction = Options('threshold', 0.995, 'limit', 0.60);
+  %
+  % However, in some cases, the system becomes unstable, especially
+  % in the case of the dynamic steady-state temperature analysis.
+  %
   options = Configure.deterministicAnalysis( ...
     'temperatureOptions', Options( ...
       'analysis', 'DynamicSteadyState', ...
@@ -17,7 +22,7 @@ function options = configure(varargin)
       'iterationLimit', 10, ...
       'temperatureLimit', Utils.toKelvin(400), ...
       'convergenceTolerance', 0.1, ...
-      'modelOrderReduction', modelOrderReduction), ...
+      'modelOrderReduction', []), ...
     options); % disabled for now
 
   %

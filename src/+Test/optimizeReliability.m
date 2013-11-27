@@ -1,4 +1,4 @@
-function reliability(varargin)
+function optimizeReliability(varargin)
   close all;
   setup;
 
