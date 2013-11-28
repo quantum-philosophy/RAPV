@@ -1,11 +1,11 @@
 classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
-    ReliabilityVariation.Base
+  SystemVariation.Base
 
   methods
     function this = PolynomialChaos(varargin)
       options = Options(varargin{:});
       this = this@TemperatureVariation.PolynomialChaos(options);
-      this = this@ReliabilityVariation.Base(options);
+      this = this@SystemVariation.Base(options);
     end
 
     function output = compute(this, Pdyn)
@@ -17,23 +17,6 @@ classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
 
       output.T = T;
       output.fatigueOutput = fatigueOutput;
-    end
-  end
-
-  methods (Access = 'protected')
-    function result = serve(this, Pdyn, rvs, fatigueOutput)
-      parameters = this.process.partition(rvs);
-      parameters = this.process.evaluate(parameters);
-      parameters = this.process.assign(parameters);
-
-      T = this.temperature.computeWithLeakage(Pdyn, parameters);
-      result = transpose(this.fatigue.compute(T, fatigueOutput));
-    end
-
-    function result = postprocess(~, ~, result)
-      %
-      % Do nothing
-      %
     end
   end
 end

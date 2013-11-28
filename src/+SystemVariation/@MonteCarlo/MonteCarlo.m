@@ -1,30 +1,15 @@
 classdef MonteCarlo < TemperatureVariation.MonteCarlo & ...
-    ReliabilityVariation.Base
+  SystemVariation.Base
 
   methods
     function this = MonteCarlo(varargin)
       options = Options(varargin{:});
       this = this@TemperatureVariation.MonteCarlo(options);
-      this = this@ReliabilityVariation.Base(options);
+      this = this@SystemVariation.Base(options);
     end
   end
 
   methods (Access = 'protected')
-    function result = serve(this, Pdyn, rvs, fatigueOutput)
-      parameters = this.process.partition(rvs);
-      parameters = this.process.evaluate(parameters);
-      parameters = this.process.assign(parameters);
-
-      T = this.temperature.computeWithLeakage(Pdyn, parameters);
-      result = transpose(this.fatigue.compute(T, fatigueOutput));
-    end
-
-    function result = postprocess(~, ~, result)
-      %
-      % Do nothing
-      %
-    end
-
     function output = simulate(this, Pdyn)
       T = this.temperature.computeWithoutLeakage(Pdyn); % cycle template
       [ ~, fatigueOutput ] = this.fatigue.compute(T);
