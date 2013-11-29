@@ -81,7 +81,7 @@ function accuracy
   quantityCount = length(quantityNames);
 
   for k = 1:quantityCount
-    fprintf('Errors for %s in percentage:\n', quantityNames{k});
+    fprintf('%s:\n', quantityNames{k});
 
     %
     % Header
@@ -101,11 +101,11 @@ function accuracy
     %
     for i = 1:orderCount
       fprintf('%5d | ', orderSet(i));
-      fprintf('%15.4f', 100 * error.expectation{i, k});
+      fprintf('%15.4f', 100 * cellfun(@(x) x(k), error.expectation(i, :)));
       fprintf(' | ');
-      fprintf('%15.4f', 100 * error.variance{i, k});
+      fprintf('%15.4f', 100 * cellfun(@(x) x(k), error.variance(i, :)));
       fprintf(' | ');
-      fprintf('%15.4f', error.data{i, k});
+      fprintf('%15.4f', cellfun(@(x) x(k), error.data(i, :)));
       fprintf(' | ');
       fprintf('\n');
     end
