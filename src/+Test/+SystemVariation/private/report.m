@@ -44,7 +44,7 @@ function reportOne(quantity, stats)
 
   if isempty(data), return; end
 
-  Statistic.observe(data, 'draw', true, 'method', 'smooth', 'range', 'unbounded');
+  Plot.distribution(data, 'method', 'smooth', 'range', 'unbounded');
 
   Plot.vline(nominal, 'Color', Color.pick(2));
   Plot.vline(expectation, 'Color', Color.pick(3));
