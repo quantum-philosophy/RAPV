@@ -1,4 +1,9 @@
 classdef Base < handle
+  properties (Constant)
+    quantityCount = 3;
+    quantityNames = { 'Temperature', 'Energy', 'Lifetime' };
+  end
+
   properties (SetAccess = 'protected')
     fatigue
   end

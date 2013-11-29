@@ -1,4 +1,4 @@
-function report(surrogate, output, stats)
+function report(surrogate, output, quantities)
   display(surrogate, output);
 
   if surrogate.inputCount <= 3
@@ -8,9 +8,10 @@ function report(surrogate, output, stats)
   fprintf('%25s%15s%15s%15s\n', 'Quantity', 'Nominal', ...
     'Expectation', 'Deviation');
 
-  reportOne('temperature', stats.temperature);
-  reportOne('energy', stats.energy);
-  reportOne('lifetime', stats.lifetime);
+  for i = 1:surrogate.quantityCount
+    name = lower(surrogate.quantityNames{i});
+    reportOne(name, quantities.(name));
+  end
 end
 
 function reportOne(quantity, stats)

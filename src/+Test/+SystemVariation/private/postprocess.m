@@ -1,4 +1,4 @@
-function stats = postprocess(surrogate, output, options)
+function quantities = postprocess(surrogate, output, options)
   sampleCount = 1e5;
 
   name = class(surrogate);
@@ -28,34 +28,23 @@ function stats = postprocess(surrogate, output, options)
     stats.variance = var(output.data, [], 1);
   end
 
-  temperature = struct;
-  energy = struct;
-  lifetime = struct;
+  quantities = decode(surrogate, output, stats);
 
-  [ temperature.expectation, energy.expectation, lifetime.expectation ] = ...
-    decode(stats.expectation);
-
-  [ temperature.variance, energy.variance, lifetime.variance ] = ...
-    decode(stats.variance);
-
-  [ temperature.data, energy.data, lifetime.data ] = ...
-    decode(output.data);
-
-  [ T, output ] = surrogate.temperature.computeWithLeakage( ...
-    options.dynamicPower);
-
-  temperature.nominal = max(T(:));
-  energy.nominal = options.samplingInterval * sum(output.P(:));
-  lifetime.nominal = surrogate.fatigue.compute(T);
-
-  stats = struct;
-  stats.temperature = temperature;
-  stats.energy = energy;
-  stats.lifetime = lifetime;
+  [ T, output ] = surrogate.temperature.compute(options.dynamicPower);
+  quantities.temperature.nominal = max(T(:));
+  quantities.energy.nominal = options.samplingInterval * sum(output.P(:));
+  quantities.lifetime.nominal = surrogate.fatigue.compute(T);
 end
 
-function [ temperature, energy, lifetime ] = decode(data)
-  temperature = data(:, 1);
-  energy = data(:, 2);
-  lifetime = data(:, 3);
+function quantities = decode(surrogate, output, stats)
+  quantities = struct;
+
+  for i = 1:surrogate.quantityCount
+    quantity = struct;
+    quantity.expectation = stats.expectation(i);
+    quantity.variance = stats.variance(i);
+    quantity.data = output.data(:, i);
+
+    quantities.(lower(surrogate.quantityNames{i})) = quantity;
+  end
 end
