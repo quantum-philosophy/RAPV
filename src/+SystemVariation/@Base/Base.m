@@ -24,9 +24,11 @@ classdef Base < handle
   % http://www.mathworks.se/help/releases/R2011a/techdoc/matlab_oop/breg81r.html
   %
   methods (Sealed = true, Access = 'protected')
-    function data = serve(this, Pdyn, rvs, fatigueOutput)
+    function data = serve(this, Pdyn, rvs, fatigueOutput, isUniform)
+      if nargin < 5, isUniform = false; end
+
       parameters = this.process.partition(rvs);
-      parameters = this.process.evaluate(parameters);
+      parameters = this.process.evaluate(parameters, isUniform);
       parameters = this.process.assign(parameters);
 
       [ T, output ] = this.temperature.computeWithLeakage(Pdyn, parameters);
