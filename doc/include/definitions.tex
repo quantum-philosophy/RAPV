@@ -25,9 +25,6 @@
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
-% \usepackage{float}
-% \newfloat{algorithm}{t}{lop}
-
 \newcommand{\tmp}[1]{\underline{#1}}
 
 %
@@ -64,6 +61,14 @@
 \newcommand{\eg}{\emph{e.g.}}
 \newcommand{\etc}{\emph{etc.}}
 
+\newcommand{\cdf}{CDF}
+\newcommand{\cdfs}{CDFs}
+
+\newcommand{\pdf}{PDF}
+\newcommand{\pdfs}{PDFs}
+
+\newcommand{\qoi}{QOI}
+
 %
 % Linear algebra and real analysis
 %
@@ -89,10 +94,11 @@
 
 \renewcommand{\o}{\omega}
 
-\newcommand{\oExp}[1]{\mathbb{E}\left(#1\right)}
-\newcommand{\oVar}[1]{\mathbb{V}\text{ar}\left(#1\right)}
-\newcommand{\oCov}[1]{\mathbb{C}\text{ov}\left(#1\right)}
-\newcommand{\oCorr}[1]{\mathbb{C}\text{orr}\left(#1\right)}
+\newcommand{\fExp}[1]{\mathbb{E}\left(#1\right)}
+\newcommand{\fVar}[1]{\mathbb{V}\text{ar}\left(#1\right)}
+\newcommand{\fCov}[1]{\mathbb{C}\text{ov}\left(#1\right)}
+\newcommand{\fCorr}[1]{\mathbb{C}\text{orr}\left(#1\right)}
+\newcommand{\fPDF}{\rho}
 
 %
 % Power and temperature modeling
@@ -144,9 +150,14 @@
 
 \makeatletter
 \def\oTransform{\@ifnextchar\bgroup{\oTransformWithOne}{\oTransformWithZero}}
-\def\oTransformWithOne#1{\mathcal{T}\left[#1\right]}
+\def\oTransformWithOne#1{\mathcal{T}\left( #1 \right)}
 \def\oTransformWithZero{\mathcal{T}}
 \makeatother
+
+%
+% Quantity of interest
+%
+\newcommand{\mR}{\m{R}}
 
 %
 % Polynomial chaos
@@ -154,13 +165,6 @@
 \newcommand{\pcb}{\Phi}
 \newcommand{\pcn}{\eta}
 \newcommand{\pcc}[1]{\hat{#1}}
-\newcommand{\oPC}[3]{\mathcal{C}_{#1}^{#2}\left[#3\right]}
-
-\makeatletter
-\def\oInner#1{\@ifnextchar\bgroup{\oInnerTwo{#1}}{\oInnerOne{#1}}}
-\def\oInnerOne#1{\left\langle #1 \right\rangle}
-\def\oInnerTwo#1#2{\oInnerSingle{#1, #2}}
-\makeatother
 
 %
 % Numbers

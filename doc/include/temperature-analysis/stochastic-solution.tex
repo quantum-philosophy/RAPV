@@ -15,16 +15,29 @@ Many discrete and continuous distributions directly correspond to certain famili
 For instance, the Hermite polynomials are a natural choice for Gaussian distributions.
 
 \subsubsection{Expansion of the quantity of interest}
-The uncertain quantity that we study in this paper is the DSS temperature profile $\mQ(\o)$\footnote{As always, the argument $\o$ should be interpreted as $\vU(\o)$ or $\oTransform{\vZ(\o)}$.} of the electronic system at hand under a certain workload represented by $\mP_\dynamic$.
-The expansion is
+The primary uncertain quantity of this paper is the DSS temperature profile, denoted by the random matrix $\mQ(\o) \in \real^{\nprocs \times \nsteps}$,\footnote{As always, the argument $\o$ stands for $\vU(\o)$ or $\oTransform{\vZ(\o)}$.} of the system at hand under a certain workload, represented by the matrix $\mP_\dynamic \in \real^{\nprocs \times \nsteps}$.
+However, due to the reason that will become clear later on, let us denote the quantity of interest by an abstract random matrix $\mR(\o)$.
+The expansion of $\mR(\o)$ is
 \begin{equation} \elabel{polynomial-chaos-expansion}
-  \mQ(\o) = \sum_{k = 1}^\infty \pcc{\mQ}_k \, \pcb_k(\vZ(\o))
+  \mR(\o) = \sum_{i = 1}^\infty \pcc{\mR}_i \, \pcb_i(\vZ(\o))
 \end{equation}
-where $\pcc{\mQ}_k \in \real^{\nprocs \times \nsteps}$ are the coefficients of the expansion, which are matrix-valued.
-For practical computations, the infinite expansion in \eref{polynomial-chaos-expansion} is truncated to preserve only a certain number, say $\nterms$, first polynomial terms.
-The result is nothing but a polynomial; hence, it is easy to interpret and easy to evaluate.
-Consequently, such quantities as CDFs and PDFs can be estimated at no effort.
+where $\pcc{\mR}_i$ are the coefficients of the expansion, which are matrix valued and have the same dimensionality as $\mR(\o)$.
+For practical computations, \eref{polynomial-chaos-expansion} is truncated to preserve only $\nterms$ first polynomial terms.
+The result is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
+Consequently, such quantities as \cdfs\ and \pdfs\ can be estimated at no effort.
 Moreover, the coefficients of a PC expansion immediately yield analytical formulae for the expected value and variance of the expanded quantity.
 
 \subsubsection{Computation of the expansion coefficients}
-The question to discuss now is the computation of $\pcc{\mQ}_k$ in \eref{polynomial-chaos-expansion}.
+The question now to discuss is the computation of $\{ \pcc{\mR}_i \}_{i = 1}^\nterms$ in \eref{polynomial-chaos-expansion}.
+Each $\pcc{\mR}_i$ is the following multidimensional integral:
+\begin{align}
+  \pcc{\mR}_i & = \fExp{\mR(\oTransform{\vZ(\o)}) \, \pcb_i(\vZ(\o))} \nonumber \\
+  & = \int \mR(\oTransform{\vZ}) \, \pcb_i(\vZ) \, \fPDF(\vZ) \, \d\vZ \elabel{polynomial-chaos-coefficients}
+\end{align}
+where $\fExp{\cdot}$ stands for the mathematical expectation, and $\fPDF(\vZ)$ denotes the \pdf\ of $\vZ(\o)$.\footnote{In case of a discrete distribution, the coefficients are summations with respect to the corresponding probability mass function.}
+Recall that $\pcc{\mR}_i$ is a matrix and note that the operations in \eref{polynomial-chaos-coefficients} are elementwise.
+
+The integral in \eref{polynomial-chaos-coefficients} should be taken numerically.
+In numerical integration, an integral of a function is approximated by a summation over the function values computed at a set of prescribed points and multiplied by the corresponding set of prescribed weights.
+Such pairs of points and weights are called quadrature rules \cite{press2007}.
+When $\mR(\o)$ is $\mQ(\o)$, for any $\vZ$ in the support of the probability distribution of $\vZ(\o)$, the needed $\mQ(\oTransform{\vZ})$ can be evaluated using \aref{deterministic-solution-with-leakage} with $\vU = \oTransform{\vZ}$.
