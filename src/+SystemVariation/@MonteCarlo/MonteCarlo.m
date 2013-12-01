@@ -19,6 +19,8 @@ classdef MonteCarlo < TemperatureVariation.MonteCarlo & ...
 
       output.T = T;
       output.fatigueOutput = fatigueOutput;
+
+      output.data = this.decode(output.data);
     end
   end
 end

@@ -18,5 +18,16 @@ classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
       output.T = T;
       output.fatigueOutput = fatigueOutput;
     end
+
+    function stats = analyze(~, ~)
+      stats.expectation = [];
+      stats.variance = [];
+    end
+  end
+
+  methods (Access = 'protected')
+    function data = postprocess(this, ~, data)
+      data = this.decode(data);
+    end
   end
 end

@@ -8,11 +8,6 @@ function quantities = postprocess(surrogate, output, options)
   stats = surrogate.analyze(output);
   fprintf('%s: done in %.2f seconds.\n', name, toc(time));
 
-  computeExpectation = ~isfield(stats, 'expectation') || ...
-    isempty(stats.expectation) || any(isnan(stats.expectation(:)));
-  computeVariance = ~isfield(stats, 'variance') || ...
-    isempty(stats.variance) || any(isnan(stats.variance(:)));
-
   if ~isfield(output, 'data')
     time = tic;
     fprintf('%s: collecting %d samples...\n', name, sampleCount);
@@ -20,11 +15,11 @@ function quantities = postprocess(surrogate, output, options)
     fprintf('%s: done in %.2f seconds.\n', name, toc(time));
   end
 
-  if computeExpectation
+  if isempty(stats.expectation)
     stats.expectation = mean(output.data, 1);
   end
 
-  if computeVariance
+  if isempty(stats.variance)
     stats.variance = var(output.data, [], 1);
   end
 

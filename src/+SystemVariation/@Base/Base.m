@@ -24,7 +24,7 @@ classdef Base < handle
   % http://www.mathworks.se/help/releases/R2011a/techdoc/matlab_oop/breg81r.html
   %
   methods (Sealed = true, Access = 'protected')
-    function result = serve(this, Pdyn, rvs, fatigueOutput)
+    function data = serve(this, Pdyn, rvs, fatigueOutput)
       parameters = this.process.partition(rvs);
       parameters = this.process.evaluate(parameters);
       parameters = this.process.assign(parameters);
@@ -33,19 +33,27 @@ classdef Base < handle
 
       samplingInterval = this.temperature.samplingInterval;
 
-      result = [ ...
+      data = this.encode([ ...
         ... Temperature
         permute(max(max(T, [], 1), [], 2), [ 3, 2, 1 ]), ...
         ... Energy
         permute(samplingInterval * sum(sum(output.P, 1), 2), [ 3, 2, 1 ]), ...
         ... Lifetime
-        transpose(this.fatigue.compute(T, fatigueOutput)) ];
+        transpose(this.fatigue.compute(T, fatigueOutput)) ]);
     end
 
-    function result = postprocess(~, ~, result)
-      %
-      % Do nothing
-      %
+    function data = encode(this, data)
+      ... Temperature
+      data(:, 1) = data(:, 1) - this.temperature.ambientTemperature;
+      ... All
+      data = log(data);
+    end
+
+    function data = decode(this, data)
+      ... All
+      data = exp(data);
+      ... Temperature
+      data(:, 1) = data(:, 1) + this.temperature.ambientTemperature;
     end
   end
 end
