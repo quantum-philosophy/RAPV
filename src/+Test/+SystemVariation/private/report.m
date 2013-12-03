@@ -47,10 +47,10 @@ function reportOne(quantity, stats)
 
   Plot.distribution(data, 'method', 'smooth', 'range', 'unbounded');
 
-  Plot.vline(nominal, 'Color', Color.pick(2));
-  Plot.vline(expectation, 'Color', Color.pick(3));
-  Plot.vline(expectation + deviation, 'Color', Color.pick(3), 'LineStyle', '--');
-  Plot.vline(expectation - deviation, 'Color', Color.pick(3), 'LineStyle', '--');
+  Plot.vline(nominal, 'number', 2);
+  Plot.vline(expectation, 'number', 3);
+  Plot.vline(expectation + deviation, 'number', 3, 'auxiliary', true);
+  Plot.vline(expectation - deviation, 'number', 3, 'auxiliary', true);
 
   Plot.title(name);
   Plot.legend('Density', 'Nominal', 'Expectation', '+/- Deviation');
