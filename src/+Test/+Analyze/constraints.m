@@ -8,6 +8,7 @@ function constraints(varargin)
       rand(1, taskCount), varargin{:});
 
   surrogate = SystemVariation(options);
+  display(surrogate);
 
   names = surrogate.quantityNames;
   count = surrogate.quantityCount;
@@ -41,7 +42,7 @@ function constraints(varargin)
     fprintf('  Constraint:\n');
     fprintf('    Lower bound: %.2f %s\n', lowerBound, units);
     fprintf('    Upper bound: %.2f %s\n', upperBound, units);
-    fprintf('    Probability: %.4f (initial %.4f)\n', ...
+    fprintf('    Probability: %.2f (initial %.5f)\n', ...
       quantities.probability(i), quantities.initialProbability(i));
   end
 end

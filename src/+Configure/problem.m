@@ -2,7 +2,7 @@ function options = problem(varargin)
   %
   % System simulation
   %
-  options = Configure.systemSimulation('processorCount', 4, ...
+  options = Configure.systemSimulation( ...
     'assetPath', File.join(File.trace, '..', 'Assets'), varargin{:});
 
   %

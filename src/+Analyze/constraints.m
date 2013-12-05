@@ -12,7 +12,7 @@ function quantities = constraints(surrogate, options)
   P = output.P;
 
   output = surrogate.compute(options.dynamicPower);
-  data = surrogate.sample(output, options.objectiveOptions.sampleCount);
+  data = surrogate.sample(output, 1e5);
 
   boundRange = options.objectiveOptions.boundRange;
   boundProbability = options.objectiveOptions.boundProbability;
