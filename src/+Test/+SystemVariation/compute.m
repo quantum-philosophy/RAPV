@@ -1,6 +1,7 @@
 function compute(varargin)
   setup;
-  options = Test.configure(varargin{:});
+
+  options = Configure.problem(varargin{:});
   [ surrogate, output ] = construct(options);
   stats = postprocess(surrogate, output, options);
   report(surrogate, output, stats);

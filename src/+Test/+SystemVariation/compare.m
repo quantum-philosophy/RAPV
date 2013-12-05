@@ -9,11 +9,11 @@ function compare(one, two, varargin)
   one = Options('surrogate', names{1}, one{:});
   two = Options('surrogate', names{2}, two{:});
 
-  options = Test.configure(varargin{:}, one);
+  options = Configure.problem(varargin{:}, one);
   [ oneSurrogate, oneOutput ] = construct(options);
   oneStats = postprocess(oneSurrogate, oneOutput, options);
 
-  options = Test.configure(varargin{:}, two);
+  options = Configure.problem(varargin{:}, two);
   [ twoSurrogate, twoOutput ] = construct(options);
   twoStats = postprocess(twoSurrogate, twoOutput, options);
 
