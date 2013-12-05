@@ -7,6 +7,10 @@ function display(this)
 
   constraints = this.constraints;
 
+  fprintf('  Deterministic constraints on time:\n');
+  fprintf('    Deadline:    %.2f s (initial %.2f s)\n', ...
+    constraints.deadline, constraints.initialDeadline);
+
   for i = 1:count
     nominal = constraints.nominal(i);
     lowerBound = constraints.lowerBound(i);
@@ -29,7 +33,7 @@ function display(this)
       assert(false);
     end
 
-    fprintf('  Constraints for %s:\n', lower(names{i}));
+    fprintf('  Probabilistic constraints on %s:\n', lower(names{i}));
     fprintf('    Nominal:     %.2f %s\n', nominal, units);
     fprintf('    Lower bound: %.2f %s\n', lowerBound, units);
     fprintf('    Upper bound: %.2f %s\n', upperBound, units);

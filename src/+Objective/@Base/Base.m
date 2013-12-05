@@ -1,5 +1,6 @@
 classdef Base < handle
   properties (SetAccess = 'private')
+    power
     surrogate
 
     targetNames
@@ -14,6 +15,7 @@ classdef Base < handle
     function this = Base(varargin)
       options = Options(varargin{:});
 
+      this.power = options.power;
       this.surrogate = options.surrogate;
 
       this.targetNames = options.targetNames;
@@ -35,8 +37,13 @@ classdef Base < handle
       this.sampleCount = options.get('sampleCount', 1e3);
     end
 
-    function fitness = compute(this, Pdyn)
-      output = this.surrogate.compute(Pdyn);
+    function fitness = compute(this, schedule)
+      if duration(schedule) > this.constraints.deadline
+        fitness = Inf(1, this.dimensionCount);
+        return;
+      end
+
+      output = this.surrogate.compute(this.power.compute(schedule));
 
       data = this.surrogate.sample(output, this.sampleCount);
       probability = mean( ...
