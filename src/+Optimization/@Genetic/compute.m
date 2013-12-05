@@ -1,6 +1,5 @@
 function output = compute(this)
-  platform = this.platform;
-  application = this.application;
+  scheduler = this.scheduler;
   objective = this.objective;
 
   geneticOptions = this.geneticOptions;
@@ -8,8 +7,8 @@ function output = compute(this)
   geneticOptions.MutationFcn = @mutate;
   geneticOptions.OutputFcns = @track;
 
-  processorCount = length(platform);
-  taskCount = length(application);
+  processorCount = length(scheduler.platform);
+  taskCount = length(scheduler.application);
   dimensionCount = objective.dimensionCount;
 
   populationSize = geneticOptions.PopulationSize;
@@ -75,10 +74,7 @@ function output = compute(this)
     newFitness = Inf(newCount, dimensionCount);
 
     for i = 1:newCount
-      schedule = Schedule.Dense('platform', platform, ...
-        'application', application, 'mapping', newMapping(i, :), ...
-        'priority', newPriority(i, :));
-
+      schedule = scheduler.compute(newMapping(i, :), newPriority(i, :));
       newFitness(i, :) = objective.compute(schedule);
     end
 

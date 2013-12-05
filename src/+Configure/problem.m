@@ -79,6 +79,5 @@ function options = problem(varargin)
     'sampleCount', 1e3);
 
   options.optimizationOptions = Options( ...
-    'platform', options.platform, ...
-    'application', options.application);
+    'scheduler', options.scheduler);
 end

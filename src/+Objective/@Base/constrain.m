@@ -6,7 +6,8 @@ function constraints = constrain(~, options)
 
   constraints = struct;
 
-  constraints.initialDeadline = duration(options.schedule);
+  constraints.initialDeadline = ...
+    max(options.schedule(4, :) + options.schedule(5, :));
   constraints.deadline = max(options.boundRange( ...
     'time', constraints.initialDeadline));
 

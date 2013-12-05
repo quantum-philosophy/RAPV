@@ -1,7 +1,6 @@
 classdef Base < handle
   properties (SetAccess = 'private')
-    platform
-    application
+    scheduler
     objective
   end
 
@@ -9,8 +8,7 @@ classdef Base < handle
     function this = Base(varargin)
       options = Options(varargin{:});
 
-      this.platform = options.platform;
-      this.application = options.application;
+      this.scheduler = options.scheduler;
       this.objective = options.objective;
     end
   end

@@ -38,7 +38,9 @@ classdef Base < handle
     end
 
     function fitness = compute(this, schedule)
-      if duration(schedule) > this.constraints.deadline
+      duration = max(schedule(4, :) + schedule(5, :));
+
+      if duration > this.constraints.deadline
         fitness = Inf(1, this.dimensionCount);
         return;
       end
