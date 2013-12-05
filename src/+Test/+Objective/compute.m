@@ -1,0 +1,16 @@
+function compute(varargin)
+  setup;
+
+  options = Configure.problem( ...
+    'mapping', @(processorCount, taskCount) ...
+      randi(processorCount, 1, taskCount), ...
+    'priority', @(processorCount, taskCount) ...
+      rand(1, taskCount), varargin{:});
+
+  surrogate = SystemVariation(options);
+  display(surrogate);
+
+  objective = Objective.Expectation( ...
+    'surrogate', surrogate, options.objectiveOptions);
+  display(objective);
+end

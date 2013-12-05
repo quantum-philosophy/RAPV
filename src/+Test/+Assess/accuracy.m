@@ -14,7 +14,7 @@ function accuracy
   %
   % Monte Carlo
   %
-  options = Test.configure('surrogate', 'MonteCarlo', ...
+  options = Configure.problem('surrogate', 'MonteCarlo', ...
     'surrogateOptions', Options('sampleCount', max(sampleCountSet)));
 
   mc = SystemVariation(options);
@@ -39,7 +39,7 @@ function accuracy
   %
   % Polynomial chaos
   %
-  options = Test.configure('surrogate', 'PolynomialChaos');
+  options = Configure.problem('surrogate', 'PolynomialChaos');
 
   for i = 1:orderCount
     options.surrogateOptions.order = orderSet(i);
