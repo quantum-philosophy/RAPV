@@ -41,7 +41,7 @@ function options = problem(varargin)
   function range = boundRange(name, nominal)
     switch lower(name)
     case 'time'
-      range = [ -Inf, 1.05 * nominal ];
+      range = [ -Inf, 1.2 * nominal ];
     case 'temperature'
       range = [ -Inf, Utils.toKelvin(100) ];
     case 'energy'
