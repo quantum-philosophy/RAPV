@@ -13,8 +13,8 @@ function display(this)
 
   for i = 1:count
     nominal = constraints.nominal(i);
-    lowerBound = constraints.lowerBound(i);
-    upperBound = constraints.upperBound(i);
+    lowerBound = constraints.range{i}(1);
+    upperBound = constraints.range{i}(2);
 
     switch lower(names{i})
     case 'temperature'

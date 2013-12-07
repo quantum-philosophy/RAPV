@@ -12,8 +12,7 @@ function constraints = constrain(~, options)
     'time', constraints.initialDeadline));
 
   constraints.nominal = zeros(1, count);
-  constraints.lowerBound = zeros(1, count);
-  constraints.upperBound = zeros(1, count);
+  constraints.range = cell(1, count);
   constraints.probability = zeros(1, count);
   constraints.initialProbability = zeros(1, count);
 
@@ -36,12 +35,12 @@ function constraints = constrain(~, options)
       assert(false);
     end
     range = options.boundRange(names{i}, nominal);
-    initialProbability = mean(range(1) < data(:, i) & data(:, i) < range(2));
+    initialProbability = diff(ksdensity(data(:, i), range, ...
+      'support', 'positive', 'function', 'cdf'));
     probability = options.boundProbability(names{i}, initialProbability);
 
     constraints.nominal(i) = nominal;
-    constraints.lowerBound(i) = range(1);
-    constraints.upperBound(i) = range(2);
+    constraints.range{i} = range;
     constraints.probability(i) = probability;
     constraints.initialProbability(i) = initialProbability;
   end

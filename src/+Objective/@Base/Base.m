@@ -38,23 +38,27 @@ classdef Base < handle
     end
 
     function fitness = compute(this, schedule)
+      dimensionCount = this.dimensionCount;
+      constraints = this.constraints;
+
       duration = max(schedule(4, :) + schedule(5, :));
 
-      if duration > this.constraints.deadline
-        fitness = Inf(1, this.dimensionCount);
+      if duration > constraints.deadline
+        fitness = Inf(1, dimensionCount);
         return;
       end
 
       output = this.surrogate.compute(this.power.compute(schedule));
 
       data = this.surrogate.sample(output, this.sampleCount);
-      probability = mean( ...
-        bsxfun(@gt, data, this.constraints.lowerBound) & ...
-        bsxfun(@lt, data, this.constraints.upperBound), 1);
 
-      if any(probability < this.constraints.probability)
-        fitness = Inf(1, this.dimensionCount);
-        return;
+      for i = 1:dimensionCount
+        probability = diff(ksdensity(data(:, i), constraints.range{i}, ...
+          'support', 'positive', 'function', 'cdf'));
+        if probability < constraints.probability(i)
+          fitness = Inf(1, dimensionCount);
+          return;
+        end
       end
 
       fitness = this.evaluate(data);

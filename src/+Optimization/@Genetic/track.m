@@ -48,7 +48,7 @@ function plotUniobjective(state, flag)
       'Marker', '*', 'Color', Color.pick(1));
     set(h, 'Tag', 'all');
   case { 'iter', 'done' }
-    f = findobj('Tag', 'figure');
+    f = max(findobj('Tag', 'figure'));
 
     Plot.title(f, '%d generations, %d solves, %.2f cached, %.2f discarded', ...
       state.Generation, state.FunEval, ...
@@ -96,7 +96,7 @@ function plotMultiobjective(state, flag)
 
     hold off;
   case { 'iter', 'done' }
-    f = findobj('Tag', 'figure');
+    f = max(findobj('Tag', 'figure'));
 
     Plot.title(f, '%d generations, %d solves, %.2f cached, %.2f discarded', ...
       state.Generation, state.FunEval, ...
