@@ -42,7 +42,7 @@ function options = problem(varargin)
     if nargin < 3, quantile = nominal; end;
     switch lower(name)
     case 'time'
-      range = [ 0, 1.25 * nominal ];
+      range = [ 0, 2 * nominal ];
     case { 'temperature', 'energy' }
       range = [ 0, quantile ];
     case 'lifetime'
