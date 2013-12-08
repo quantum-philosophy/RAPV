@@ -38,36 +38,22 @@ function options = problem(varargin)
   %
   % Optimization
   %
-  function range = boundRange(name, nominal)
+  function range = boundRange(name, nominal, quantile)
+    if nargin < 3, quantile = nominal; end;
     switch lower(name)
     case 'time'
-      range = [ -Inf, 1.2 * nominal ];
-    case 'temperature'
-      range = [ -Inf, Utils.toKelvin(100) ];
-    case 'energy'
-      range = [ -Inf, 1.1 * nominal ];
+      range = [ 0, 1.25 * nominal ];
+    case { 'temperature', 'energy' }
+      range = [ 0, quantile ];
     case 'lifetime'
-      range = [ 0.8 * nominal, Inf ];
+      range = [ quantile, Inf ];
     otherwise
       assert(false);
     end
   end
 
-  function probability = boundProbability(name, initial)
-    if ~(initial > 0 && initial < 1)
-      warning([ 'The initial probability for ', lower(name), ...
-        ' is ', num2str(initial), '.' ]);
-    end
-
+  function probability = boundProbability(~, ~)
     probability = 0.95;
-
-    switch lower(name)
-    case 'temperature'
-    case 'energy'
-    case 'lifetime'
-    otherwise
-      assert(false);
-    end
   end
 
   options.objectiveOptions = Options( ...

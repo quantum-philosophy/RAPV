@@ -1,5 +1,6 @@
 function compute(varargin)
   setup;
+  rng(0);
 
   options = Configure.problem(varargin{:});
 

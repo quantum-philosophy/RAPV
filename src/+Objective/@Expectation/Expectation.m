@@ -6,7 +6,7 @@ classdef Expectation < Objective.Base
   end
 
   methods (Access = 'protected')
-    function fitness = evaluate(this, data)
+    function fitness = computeFitness(this, data)
       %
       % TODO: It should be positive for the energy consumption and
       % negative for the maximal temperature and lifetime.

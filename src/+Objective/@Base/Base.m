@@ -3,11 +3,10 @@ classdef Base < handle
     power
     surrogate
 
-    targetNames
     targetIndex
-    dimensionCount
-
     constraints
+
+    dimensionCount
     sampleCount
   end
 
@@ -18,27 +17,48 @@ classdef Base < handle
       this.power = options.power;
       this.surrogate = options.surrogate;
 
-      this.targetNames = options.targetNames;
-      this.dimensionCount = length(this.targetNames);
+      [ this.targetIndex, this.constraints ] = this.configure(options);
 
-      this.targetIndex = zeros(1, this.dimensionCount);
-      for i = 1:this.dimensionCount
-        found = false;
-        for j = 1:this.surrogate.quantityCount
-          if strcmpi(this.targetNames{i}, this.surrogate.quantityNames{j})
-            found = true;
-            this.targetIndex(i) = j;
-          end
-        end
-        assert(found);
-      end
-
-      this.constraints = this.constrain(options);
+      this.dimensionCount = nnz(this.targetIndex);
       this.sampleCount = options.get('sampleCount', 1e3);
     end
   end
 
   methods (Abstract, Access = 'protected')
-    fitness = evaluate(this, data);
+    fitness = computeFitness(this, data);
+  end
+
+  methods (Access = 'private')
+    function probability = computeProbability(~, data, range)
+      %
+      % NOTE: It is assumed that the support is positive, and
+      % the range is bounded only at one end.
+      %
+      if range(1) <= 0
+        probability = ksdensity(data, range(2), ...
+          'support', 'positive', 'function', 'cdf');
+      elseif isinf(range(2))
+        probability = 1 - ksdensity(data, range(1), ...
+          'support', 'positive', 'function', 'cdf');
+      else
+        assert(false);
+      end
+    end
+
+    function quantile = computeQuantile(~, data, range, probability)
+      %
+      % NOTE: It is assumed that the support is positive, and
+      % the range is bounded only at one end.
+      %
+      if range(1) <= 0
+        quantile = ksdensity(data, probability, ...
+          'support', 'positive', 'function', 'icdf');
+      elseif isinf(range(2))
+        quantile = ksdensity(data, 1 - probability, ...
+          'support', 'positive', 'function', 'icdf');
+      else
+        assert(false);
+      end
+    end
   end
 end

@@ -13,7 +13,7 @@ classdef Genetic < Optimization.Base
 
       geneticOptions.PopulationSize = 20;
       geneticOptions.CrossoverFraction = 0.8;
-      geneticOptions.Generations = 500;
+      geneticOptions.Generations = 100;
       geneticOptions.StallGenLimit = 20;
       geneticOptions.TolFun = 0;
       geneticOptions.SelectionFcn = @selectiontournament;

@@ -1,26 +1,22 @@
 function fitness = compute(this, schedule)
-  dimensionCount = this.dimensionCount;
-  constraints = this.constraints;
-
   duration = max(schedule(4, :) + schedule(5, :));
 
-  if duration > constraints.deadline
-    fitness = Inf(1, dimensionCount);
+  if duration > this.constraints.deadline
+    fitness = Inf(1, this.dimensionCount);
     return;
   end
 
   output = this.surrogate.compute(this.power.compute(schedule));
-
   data = this.surrogate.sample(output, this.sampleCount);
 
-  for i = 1:dimensionCount
-    probability = diff(ksdensity(data(:, i), constraints.range{i}, ...
-      'support', 'positive', 'function', 'cdf'));
-    if probability < constraints.probability(i)
-      fitness = Inf(1, dimensionCount);
+  for i = find(~this.targetIndex)
+    probability = this.computeProbability( ...
+      data(:, i), this.constraints.range{i});
+    if probability < this.constraints.probability(i)
+      fitness = Inf(1, this.dimensionCount);
       return;
     end
   end
 
-  fitness = this.evaluate(data);
+  fitness = this.computeFitness(data);
 end

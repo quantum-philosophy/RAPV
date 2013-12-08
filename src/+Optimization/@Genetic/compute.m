@@ -55,7 +55,7 @@ function output = compute(this)
 
   function fitness = evaluate(chromosomes)
     chromosomeCount = size(chromosomes, 1);
-    fitness = nan(chromosomeCount, dimensionCount);
+    fitness = NaN(chromosomeCount, dimensionCount);
 
     chromosomes = unify(chromosomes);
 
@@ -78,13 +78,13 @@ function output = compute(this)
       newFitness(i, :) = objective.compute(schedule);
     end
 
-    fitness(I, :) = newFitness;
-
-    discardedCount = discardedCount + sum(isinf(max(newFitness, [], 2)));
-
     for i = 1:newCount
       cache.set(chromosomes(I(i), :), newFitness(i, :));
     end
+
+    fitness(I, :) = newFitness;
+
+    discardedCount = discardedCount + sum(isinf(max(fitness, [], 2)));
   end
 
   function [ state, options, onchanged ] = track(options, state, flag)
