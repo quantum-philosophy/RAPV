@@ -7,7 +7,7 @@ As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiti
 The pseudocode of this algorithm is given in \aref{deterministic-solution}.\footnote{Hereafter, we utilize the MATLAB notation to refer to a particular column, \eg, $\m{A}(:, k)$, or a particular row, \eg, $\m{A}(k, :)$, of a matrix $\m{A}$. Also, we shall underline auxiliary vectors, \eg, $\tmp{\v{a}}$, and matrices, \eg, $\tmp{\m{A}}$.}
 \input{include/algorithms/deterministic-solution.tex}
 
-The time complexity of direct solutions of the system is $O(\nsteps^3 \nnodes^3)$ while the one of \aref{deterministic-solution} is only $O(\nsteps \nnodes^2 + \nnodes^3)$.\footnote{The complexity reported in \cite{ukhov2012} is erroneously overestimated to $O(\nsteps \nnodes^3)$.}
+The time complexity of direct solutions of the system is $\bigO(\nsteps^3 \nnodes^3)$ while the one of \aref{deterministic-solution} is only $\bigO(\nsteps \nnodes^2 + \nnodes^3)$.\footnote{The complexity reported in \cite{ukhov2012} is erroneously overestimated to $\bigO(\nsteps \nnodes^3)$.}
 
 In order to account for the leakage-temperature interdependence, \aref{deterministic-solution} is to be repeated for a sequence of total power profiles until the corresponding sequence of temperature profiles converges or some other stopping condition is met (\eg, a maximal temperature constraint is violated).
 Each power profile is computed according to \eref{power-model} with respect to the temperature profile from the previous iteration starting from the ambient temperature.

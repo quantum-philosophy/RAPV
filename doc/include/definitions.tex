@@ -1,18 +1,29 @@
 \usepackage[english]{babel}
 
+%
+% Mathematical symbols, fonts, etc.
+%
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage{mathrsfs}
+\usepackage[mathscr]{euscript}
 \usepackage{cases}
 
+%
+% Tables
+%
 \usepackage{multirow}
 \usepackage{booktabs}
 
+%
+% Graphics
+%
 \usepackage{graphicx}
 
+%
+% Bibliography
+%
 \usepackage[maxnames=1,sorting=none,defernumbers=true]{biblatex}
 \usepackage{csquotes}
-
 \usepackage{url}
 
 %
@@ -57,9 +68,9 @@
 %
 % Text shortcuts
 %
-\newcommand{\ie}{\emph{i.e.}}
-\newcommand{\eg}{\emph{e.g.}}
-\newcommand{\etc}{\emph{etc.}}
+\newcommand{\ie}{i.e.}
+\newcommand{\eg}{e.g.}
+\newcommand{\etc}{etc.}
 
 \newcommand{\cdf}{CDF}
 \newcommand{\cdfs}{CDFs}
@@ -69,11 +80,23 @@
 
 \newcommand{\qoi}{QOI}
 
+\newcommand{\rv}{RV}
+\newcommand{\rvs}{RVs}
+
 %
-% Linear algebra and real analysis
+% Functional analysis
 %
 \newcommand{\real}{\mathbb{R}}
 
+\renewcommand{\d}{d}
+
+\newcommand{\bigO}{\mathcal{O}}
+
+\renewcommand{\L}[1]{L^{#1}}
+
+%
+% Linear algebra
+%
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\mI}{\m{I}}
 \newcommand{\mZero}{\m{0}}
@@ -82,8 +105,6 @@
 \newcommand{\vZero}{\v{0}}
 
 \newcommand{\diag}[1]{\text{diag}\left( #1 \right)}
-
-\renewcommand{\d}{d}
 
 %
 % Probability theory
@@ -138,14 +159,15 @@
 \newcommand{\mV}{\m{V}}
 \newcommand{\mL}{\m{\Lambda}}
 
-\newcommand{\ambient}{\text{a}}
-\newcommand{\dynamic}{\text{d}}
-\newcommand{\static}{\text{s}}
+\newcommand{\ambient}{\text{amb}}
+\newcommand{\dynamic}{\text{dyn}}
+\newcommand{\static}{\text{stat}}
 
 %
 % Uncertain parameters
 %
-\newcommand{\vU}{\v{u}}
+\renewcommand{\u}{u}
+\newcommand{\vU}{\v{\u}}
 \newcommand{\vZ}{\v{z}}
 
 \makeatletter
@@ -158,6 +180,9 @@
 % Quantity of interest
 %
 \newcommand{\mR}{\m{R}}
+
+\newcommand{\Leff}{L_\text{eff}}
+\newcommand{\Tox}{T_\text{ox}}
 
 %
 % Polynomial chaos

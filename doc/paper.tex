@@ -4,9 +4,11 @@
 \bibliography{include/references.bib}
 
 \begin{document}
-  \title{Dynamic Steady-state Temperature Analysis and Reliability Modeling Under Process Variation}
+  \title{Temperature-centric Reliability Analysis and Optimization Under Process Variation}
 
-  \author{}
+  \author{
+    \input{include/authors.tex}
+  }
 
   \maketitle
 
@@ -14,15 +16,26 @@
     \input{include/abstract.tex}
   \end{abstract}
 
-  \section{Introduction and Prior Work} \slabel{introduction}
+  \section{Introduction} \slabel{introduction}
   \input{include/introduction.tex}
 
-  \section{Motivation and Our Contribution}
+  \section{Prior Work} \slabel{prior-work}
+  \input{include/prior-work.tex}
 
-  \section{Temperature Analysis}
+  \section{Our Contribution} \slabel{present-work}
+
+  \section{Preliminaries} \slabel{preliminaries}
+  \input{include/preliminaries.tex}
+
+  \section{Problem Formulation} \slabel{problem-formulation}
+  \input{include/problem-formulation.tex}
+
+  \section{Temperature Analysis} \slabel{temperature-analysis}
   \input{include/temperature-analysis.tex}
 
-  \section{Reliability Modeling}
+  \section{Reliability Analysis} \slabel{reliability-analysis}
+
+  \section{Reliability Optimization}
 
   \section{Experimental Results}
 

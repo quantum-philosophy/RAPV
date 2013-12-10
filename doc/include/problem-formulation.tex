@@ -1,0 +1,11 @@
+Consider a heterogeneous electronic system that consists of $\nprocs$ processing elements and is equipped with a thermal package.
+The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, SoCs, CPUs, ALUs, caches).
+
+Denote by $\specification$ an abstract set containing all the information about the system that is relevant to our analysis.
+The content of $\specification$ is problem specific, and we shall gradually detail it when needed.
+For now, $\specification$ is assumed to include: (a) the floorplans of the active layers of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity and specific heat).
+
+The system depends on a set of parameters that are uncertain at the design stage due to process variation.
+We model such parameters as \rvs\ and denote this set by $\u(\o) = \{ \u_i(\o) \}$.
+In this work, we are only concerned with those parameters that manifest themselves in the deviation of the actual power dissipation from nominal values and, consequently, in the deviation of temperature from the one corresponding to the nominal power consumption.
+The two, and arguably the most important, examples are the effective channel length $\Leff$ and gate-oxide thickness $\Tox$, in which case $\u(\o) = \{ \Leff(\o), \Tox(\o) \}$.
