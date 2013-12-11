@@ -31,10 +31,10 @@ Moreover, the coefficients of a PC expansion immediately yield analytical formul
 The question now to discuss is the computation of $\{ \pcc{\mR}_i \}_{i = 1}^\nterms$ in \eref{polynomial-chaos-expansion}.
 Each $\pcc{\mR}_i$ is the following multidimensional integral:
 \begin{align}
-  \pcc{\mR}_i & = \fExp{\mR(\oTransform{\vZ(\o)}) \, \pcb_i(\vZ(\o))} \nonumber \\
+  \pcc{\mR}_i & = \oExpectation{\mR(\oTransform{\vZ(\o)}) \, \pcb_i(\vZ(\o))} \nonumber \\
   & = \int \mR(\oTransform{\vZ}) \, \pcb_i(\vZ) \, \fPDF(\vZ) \, \d\vZ \elabel{polynomial-chaos-coefficients}
 \end{align}
-where $\fExp{\cdot}$ stands for the mathematical expectation, and $\fPDF(\vZ)$ denotes the \pdf\ of $\vZ(\o)$.\footnote{In case of a discrete distribution, the coefficients are summations with respect to the corresponding probability mass function.}
+where $\fPDF(\vZ)$ denotes the \pdf\ of $\vZ(\o)$.\footnote{In case of a discrete distribution, the coefficients are summations with respect to the corresponding probability mass function.}
 Recall that $\pcc{\mR}_i$ is a matrix and note that the operations in \eref{polynomial-chaos-coefficients} are elementwise.
 
 The integral in \eref{polynomial-chaos-coefficients} should be taken numerically.

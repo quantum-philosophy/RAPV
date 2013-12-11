@@ -1,12 +1,17 @@
+%
+% General
+%
 \usepackage[english]{babel}
 
 %
-% Mathematical symbols, fonts, etc.
+% Mathematical environments, symbols, fonts, etc.
 %
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage[mathscr]{euscript}
 \usepackage{cases}
+
+\usepackage{amsthm}
+\newtheorem{remark}{Remark}
 
 %
 % Tables
@@ -58,12 +63,14 @@
 \newcommand{\tref}[1]{Tab.~\ref{tab:#1}}
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
 \newcommand{\aref}[1]{Alg.~\ref{alg:#1}}
+\newcommand{\xref}[1]{App.~\ref{app:#1}}
 
 \newcommand{\elabel}[1]{\label{equ:#1}}
 \newcommand{\slabel}[1]{\label{sec:#1}}
 \newcommand{\tlabel}[1]{\label{tab:#1}}
 \newcommand{\flabel}[1]{\label{fig:#1}}
 \newcommand{\alabel}[1]{\label{alg:#1}}
+\newcommand{\xlabel}[1]{\label{app:#1}}
 
 %
 % Text shortcuts
@@ -80,19 +87,18 @@
 
 \newcommand{\qoi}{QOI}
 
-\newcommand{\rv}{RV}
-\newcommand{\rvs}{RVs}
-
 %
 % Functional analysis
 %
 \newcommand{\real}{\mathbb{R}}
+\renewcommand{\L}[1]{L^{#1}}
+\newcommand{\domain}{D}
+
+\newcommand{\oInnerProduct}[2]{\langle #1, #2 \rangle}
+\newcommand{\oNorm}[1]{\| #1 \|}
 
 \renewcommand{\d}{d}
-
 \newcommand{\bigO}{\mathcal{O}}
-
-\renewcommand{\L}[1]{L^{#1}}
 
 %
 % Linear algebra
@@ -115,11 +121,10 @@
 
 \renewcommand{\o}{\omega}
 
-\newcommand{\fExp}[1]{\mathbb{E}\left(#1\right)}
-\newcommand{\fVar}[1]{\mathbb{V}\text{ar}\left(#1\right)}
-\newcommand{\fCov}[1]{\mathbb{C}\text{ov}\left(#1\right)}
-\newcommand{\fCorr}[1]{\mathbb{C}\text{orr}\left(#1\right)}
-\newcommand{\fPDF}{\rho}
+\newcommand{\oExpectation}[1]{\mathbb{E}\left[ #1 \right]}
+\newcommand{\oVariance}[1]{\mathbb{V}\text{ar}\left[ #1 \right]}
+
+\newcommand{\fPDF}{f}
 
 %
 % Power and temperature modeling

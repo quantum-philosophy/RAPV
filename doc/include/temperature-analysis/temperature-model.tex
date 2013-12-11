@@ -1,8 +1,8 @@
-Given the thermal specification $\specification$ of the system at hand (see \sref{problem-formulation}), an equivalent thermal RC circuit with $\nnodes$ thermal nodes is constructed \cite{skadron2004}.
-The structure of the circuit depends on the intended level of granularity and, thus, impacts the resulting accuracy.
+Based on the information gathered in $\specification$ (see \sref{problem-formulation}), an equivalent thermal RC circuit of the system is constructed \cite{skadron2004}.
+The circuit comprises $\nnodes$ thermal nodes, and its structure depends on the intended level of granularity that impacts the resulting accuracy.
 For clarity, we assume that each processing element is mapped onto one corresponding node, and the thermal package is represented as a set of additional nodes.
 
-The thermal behavior of the constructed circuit is modeled with the following state-space system \cite{ukhov2012}:
+The thermal dynamics of the system are modeled using the following system of differential-algebraic equations \cite{ukhov2012}:
 \begin{subnumcases}{\elabel{temperature-model}}
   \frac{\d\vX(\t, \o)}{\d\t} = \mA \: \vX(\t, \o) + \mB \: \vP(\t, \o) \elabel{temperature-model-inner} \\
   \vQ(\t, \o) = \mB^T \vX(\t, \o) + \vQ_\ambient \elabel{temperature-model-outer}
@@ -11,9 +11,16 @@ where
 \[
   \mA = -\mCth^{-\frac{1}{2}} \mGth \mCth^{-\frac{1}{2}} \hspace{1em} \text{and} \hspace{1em} \mB = \mCth^{-\frac{1}{2}} \mM.
 \]
-In the above equations, $\vP \in \real^\nprocs$, $\vQ \in \real^\nprocs$, and $\vX \in \real^\nnodes$ are the input power, output temperature, internal state vectors, respectively, $\mM \in \real^{\nnodes \times \nprocs}$ is a matrix mapping the processing elements onto the thermal nodes, $\mCth \in \real^{\nnodes \times \nnodes}$ and $\mGth \in \real^{\nnodes \times \nnodes}$ are a diagonal matrix of the thermal capacitance and a symmetric, positive-definite matrix of the thermal conductance, respectively, and $\vQ_\ambient \in \real^\nprocs$ is a vector of the ambient temperature.
-In general, \eref{temperature-model-inner} does not have a closed-form solution due to the power term, which is an arbitrary function.
+For each time $\t$, $\vP \in \real^\nprocs$, $\vQ \in \real^\nprocs$, and $\vX \in \real^\nnodes$ are the power, temperature, state vectors, respectively.
+$\vQ_\ambient \in \real^\nprocs$ is a vector of the ambient temperature.
+$\mM \in \real^{\nnodes \times \nprocs}$ is a matrix that distributes the power dissipation of the processing elements across the thermal nodes; without loss of generality, $\mM$ is a rectangular diagonal matrix wherein each diagonal element is equal to unity.
+$\mCth \in \real^{\nnodes \times \nnodes}$ and $\mGth \in \real^{\nnodes \times \nnodes}$ are a diagonal matrix of the thermal capacitance and a symmetric, positive-definite matrix of the thermal conductance, respectively.
+\begin{remark}
+In general, \eref{temperature-model-inner} is a system of ordinary differential equations which is non-linear due to the power term defined in \eref{power-model}.
+Consequently, the thermal system in \eref{temperature-model} does not have a straightforward closed-form solution.
+\end{remark}
 
+In order to efficiently solve \eref{temperature-model-inner}, we utilize a numerical method from the family of so-called exponential integrators \cite{hochbruck2010} as it is described in \xref{temperature-model}.
 Let $\dt$ be the sampling interval of the power and temperature profiles, and $\nsteps$ be the total number of such $\dt$-spaced samples. As discussed in \cite{ukhov2012}, the solution of \eref{temperature-model} can then be reduced to the following recurrence for $k = 1, \dots, \nsteps$:
 \begin{equation} \elabel{recurrence}
   \vX_{k + 1} = \mE \: \vX_k + \mF \: \vP_k
