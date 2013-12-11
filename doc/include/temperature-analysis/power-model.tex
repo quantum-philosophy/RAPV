@@ -1,9 +1,10 @@
-Recall that the system is composed of $\nprocs$ processing elements and has a dependency on the outcome of the probability space, $\o \in \outcomes$.
+Recall that the system is composed of $\nprocs$ processing elements and has a dependency on the outcome of the probability space via $\u(\o)$, $\o \in \outcomes$.
 The total dissipation of power is modeled as the following system of $\nprocs$ temporal stochastic process:
 \begin{equation} \elabel{power-model}
-  \vP(\t, \o) = \vP_\dynamic(\t) + \vP_\static(\vQ(\t, \o), \o)
+  \vP(\t, \u) = \vP_\dynamic(\t) + \vP_\static(\vQ(\t, \u), \u)
 \end{equation}
-where, for each time $\t$, $\vP_\dynamic \in \real^\nprocs$ and $\vP_\static \in \real^\nprocs$ are random vectors representing the dynamic and static components of the total power, respectively, and $\vQ \in \real^\nprocs$ is the corresponding random vector of temperature.
-$\vP_\dynamic$ has no dependency on $\o \in \outcomes$ as the influence of process variation on the dynamic power is known to be negligibly small \cite{srivastava2010}.
+where, for each time $\t \geq 0$, $\vP_\dynamic \in \real^\nprocs$ and $\vP_\static \in \real^\nprocs$ are random vectors representing the dynamic and static components of the total power, respectively, and $\vQ \in \real^\nprocs$ is the corresponding random vector of temperature.
+\begin{remark}
+In \eref{power-model}, $\vP_\dynamic$ has no dependency on $\u(\o)$ as the influence of process variation on the dynamic power is known to be negligibly small \cite{srivastava2010}.
 On the other hand, the variability of $\vP_\static$ is substantial and is further magnified by the well-known interdependency between leakage and temperature.
-Although it is not specified explicitly, hereafter, a solo dependency on $\o \in \outcomes$ should be interpreted as the dependency on the set of uncertain parameters $\u(\o), \o \in \outcomes$.
+\end{remark}

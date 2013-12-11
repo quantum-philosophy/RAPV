@@ -4,38 +4,19 @@ For clarity, we assume that each processing element is mapped onto one correspon
 
 The thermal dynamics of the system are modeled using the following system of differential-algebraic equations \cite{ukhov2012}:
 \begin{subnumcases}{\elabel{temperature-model}}
-  \frac{\d\vX(\t, \o)}{\d\t} = \mA \: \vX(\t, \o) + \mB \: \vP(\t, \o) \elabel{temperature-model-inner} \\
-  \vQ(\t, \o) = \mB^T \vX(\t, \o) + \vQ_\ambient \elabel{temperature-model-outer}
+  \frac{\d\vX(\t, \u)}{\d\t} = \mA \: \vX(\t, \u) + \mB \: \vP(\t, \u) \elabel{temperature-model-inner} \\
+  \vQ(\t, \u) = \mB^T \vX(\t, \u) + \vQ_\ambient \elabel{temperature-model-outer}
 \end{subnumcases}
 where
 \[
   \mA = -\mCth^{-\frac{1}{2}} \mGth \mCth^{-\frac{1}{2}} \hspace{1em} \text{and} \hspace{1em} \mB = \mCth^{-\frac{1}{2}} \mM.
 \]
-For each time $\t$, $\vP \in \real^\nprocs$, $\vQ \in \real^\nprocs$, and $\vX \in \real^\nnodes$ are the power, temperature, state vectors, respectively.
+For each time $\t \geq 0$, $\vP \in \real^\nprocs$, $\vQ \in \real^\nprocs$, and $\vX \in \real^\nnodes$ are the power, temperature, state vectors, respectively.
 $\vQ_\ambient \in \real^\nprocs$ is a vector of the ambient temperature.
 $\mM \in \real^{\nnodes \times \nprocs}$ is a matrix that distributes the power dissipation of the processing elements across the thermal nodes; without loss of generality, $\mM$ is a rectangular diagonal matrix wherein each diagonal element is equal to unity.
 $\mCth \in \real^{\nnodes \times \nnodes}$ and $\mGth \in \real^{\nnodes \times \nnodes}$ are a diagonal matrix of the thermal capacitance and a symmetric, positive-definite matrix of the thermal conductance, respectively.
 \begin{remark}
-In general, \eref{temperature-model-inner} is a system of ordinary differential equations which is non-linear due to the power term defined in \eref{power-model}.
-Consequently, the thermal system in \eref{temperature-model} does not have a straightforward closed-form solution.
+Let us fix $\o \in \outcomes$ and consider the above system as deterministic.
+In general, \eref{temperature-model-inner} is a system of ordinary differential equations which is nonlinear due to the power term, given in \eref{power-model} as an arbitrary function.
+Hence, the system in \eref{temperature-model} does not have a general closed-form solution.
 \end{remark}
-
-In order to efficiently solve \eref{temperature-model-inner}, we utilize a numerical method from the family of so-called exponential integrators \cite{hochbruck2010} as it is described in \xref{temperature-model}.
-Let $\dt$ be the sampling interval of the power and temperature profiles, and $\nsteps$ be the total number of such $\dt$-spaced samples. As discussed in \cite{ukhov2012}, the solution of \eref{temperature-model} can then be reduced to the following recurrence for $k = 1, \dots, \nsteps$:
-\begin{equation} \elabel{recurrence}
-  \vX_{k + 1} = \mE \: \vX_k + \mF \: \vP_k
-\end{equation}
-where the subscript $k$ stands for the time moment $k \dt$,
-\[
-  \mE = e^{\mA \dt} \hspace{1em} \text{and} \hspace{1em} \mF = \mA^{-1} (e^{\mA \dt} - \mI) \: \mB.
-\]
-For computational efficiency, the state matrix $\mA$ is factorized using the eigenvalue decomposition as follows \cite{press2007}:
-\begin{equation} \elabel{eigenvalue-decomposition}
-  \mA = \mV \mL \mV^T
-\end{equation}
-where $\mV$ and $\mL = \diag{\lambda_i}$ are an orthogonal matrix of the eigenvectors and a diagonal matrix of the eigenvectors of $\mA$, respectively.
-The matrices $\mE$ and $\mF$ are now trivial to calculate:
-\begin{align*}
-  & \mE = \mV \; \diag{e^{\lambda_i \dt}} \mV^T \text{ and} \\
-  & \mF = \mV \; \diag{ \frac{e^{\lambda_i \dt} - 1}{\lambda_i} } \mV^T \mB.
-\end{align*}

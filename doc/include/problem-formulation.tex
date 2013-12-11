@@ -2,8 +2,12 @@ Consider a heterogeneous electronic system that consists of $\nprocs$ processing
 The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, SoCs, CPUs, ALUs, caches).
 
 Denote by $\specification$ an abstract set containing all the information about the system that is relevant to our analysis; we shall refer to $\specification$ as the system specification.
-The content of $\specification$ is problem specific, and we shall gradually detail it when needed.
+The content of $\specification$ is problem specific, and we shall gradually detail it when it is needed.
 For now, $\specification$ is assumed to include: (a) the floorplans of the active layers of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity and specific heat).
+
+A power profile of the system is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements that correspond to certain moments of time $0 = \t_0 < \t_1 < \dotsc < \t_\nsteps = \tau$.
+Similarly, a temperature profile $\mQ \in \real^{\nprocs \times \nsteps}$ is a matrix containing samples of temperature.
+For clarity, power and temperature profiles are assumed to have a one-to-one temporal correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, \dots, \nsteps$.
 
 The system depends on a set of parameters that are uncertain at the design stage due to process variation.
 We model such parameters using random variables and denote this set by $\u(\o) = \{ \u_i(\o) \}$.
