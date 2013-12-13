@@ -27,7 +27,7 @@
 %
 % Bibliography
 %
-\usepackage[maxnames=1,sorting=none,defernumbers=true]{biblatex}
+\usepackage[maxnames=5,sorting=none,defernumbers=true]{biblatex}
 \usepackage{csquotes}
 \usepackage{url}
 
@@ -75,15 +75,32 @@
 %
 % Text shortcuts
 %
+
+% Latin abbreviation
 \newcommand{\ie}{i.e.}
 \newcommand{\eg}{e.g.}
 \newcommand{\etc}{etc.}
+\newcommand{\apriori}{\emph{a priori}}
 
+% Temperature analysis
+\newcommand{\ta}{temperature analysis}
+\newcommand{\tta}{transient \ta}
+
+\newcommand{\dss}{dynamic steady-state}
+\newcommand{\dssta}{\dss\ \ta}
+
+\newcommand{\sss}{static steady-state}
+\newcommand{\sssta}{\sss\ \ta}
+
+% Probability theory
 \newcommand{\cdf}{CDF}
 \newcommand{\cdfs}{CDFs}
 
 \newcommand{\pdf}{PDF}
 \newcommand{\pdfs}{PDFs}
+
+\newcommand{\rv}{random variable}
+\newcommand{\rvs}{random variables}
 
 \newcommand{\qoi}{QOI}
 
@@ -125,6 +142,8 @@
 \newcommand{\oVariance}[1]{\mathbb{V}\text{ar}\left[ #1 \right]}
 
 \newcommand{\fPDF}{f}
+\newcommand{\fCDF}{F}
+\newcommand{\fSF}{S}
 
 %
 % Power and temperature modeling
@@ -133,7 +152,7 @@
 
 \renewcommand{\t}{t}
 \newcommand{\dt}{\Delta \t}
-\newcommand{\period}{\tau}
+\newcommand{\period}{t}
 
 % Temperature
 \newcommand{\vQ}{\v{q}}
@@ -175,6 +194,11 @@
 \newcommand{\vU}{\v{\u}}
 \newcommand{\vZ}{\v{z}}
 
+\newcommand{\Leff}{L_\text{eff}}
+\newcommand{\Tox}{T_\text{ox}}
+\newcommand{\lifetime}{\tau}
+\newcommand{\T}{\tau}
+
 \makeatletter
 \def\oTransform{\@ifnextchar\bgroup{\oTransformWithOne}{\oTransformWithZero}}
 \def\oTransformWithOne#1{\mathcal{T}\left( #1 \right)}
@@ -185,9 +209,6 @@
 % Quantity of interest
 %
 \newcommand{\mR}{\m{R}}
-
-\newcommand{\Leff}{L_\text{eff}}
-\newcommand{\Tox}{T_\text{ox}}
 
 %
 % Polynomial chaos

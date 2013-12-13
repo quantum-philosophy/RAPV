@@ -1,2 +1,12 @@
-The dynamic steady-state (DSS) temperature analysis was developed in \cite{ukhov2012}.
-The analysis delivers the DSS temperature profile of the system at hand under a certain deterministic workload given as a dynamic power profile.
+Temperature analysis can be broadly classified into two categories: transient and steady-state.
+The latter can be further subdivided into static and dynamic.
+The \tta\ is concerned with studying the thermal behavior of the system as a function of time.
+Intuitively speaking, the analysis takes a power curve and yields the corresponding temperature curve.
+The \sssta\ addresses the hypothetical scenario in which the power dissipation is assumed to be constant, and one is interested in the temperature that the system attains when it reaches a (static) steady state.
+In this case, the analysis takes a single value of power (or a power curve which is immediately averaged out) and output the corresponding single value of temperature.
+The \dssta\ is a combination of the previous two: it is also targeted at a steady state of the system, but this steady state is now a temperature curve rather than a single value.
+The considered scenario is that the system is exposed to a periodic or nearly period workload, and one is interested in the repetitive evolution of temperature over time when the thermal behavior of the system stabilizes and starts exhibiting the same pattern over and over again.
+We refer to this state as a dynamic steady state.
+Consequently, the input to the analysis is a power curve, and the output is the corresponding periodic temperature curve.
+
+The \dssta\ for electronic systems was developed in \cite{ukhov2012}.

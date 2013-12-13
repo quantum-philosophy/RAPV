@@ -16,7 +16,7 @@ $\vQ_\ambient \in \real^\nprocs$ is a vector of the ambient temperature.
 $\mM \in \real^{\nnodes \times \nprocs}$ is a matrix that distributes the power dissipation of the processing elements across the thermal nodes; without loss of generality, $\mM$ is a rectangular diagonal matrix wherein each diagonal element is equal to unity.
 $\mCth \in \real^{\nnodes \times \nnodes}$ and $\mGth \in \real^{\nnodes \times \nnodes}$ are a diagonal matrix of the thermal capacitance and a symmetric, positive-definite matrix of the thermal conductance, respectively.
 \begin{remark}
-Let us fix $\o \in \outcomes$ and consider the above system as deterministic.
+Fix $\o \in \outcomes$ and consider the above system as deterministic.
 In general, \eref{temperature-model-inner} is a system of ordinary differential equations which is nonlinear due to the power term, given in \eref{power-model} as an arbitrary function.
 Hence, the system in \eref{temperature-model} does not have a general closed-form solution.
 \end{remark}

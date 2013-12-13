@@ -1,17 +1,32 @@
 Throughout the manuscript, we shall adhere to the following notation: one-dimensional (scalar) and infinite-dimensional quantities are denoted by regular-weight lower-case letters whereas finite-dimensional vectors and matrices by bold lower-case and bold upper-case letters, respectively.
 
+\subsection{Probability Theory}
 Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{maitre2010}.
-A random variable on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $x: \outcomes \to \real$ (the real line), which we signify by $x(\o)$, $\o \in \outcomes$.
-The expectation and variance of a random variable $x(\o)$ are defined by
+A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $x: \outcomes \to \real$ (the real line), which we signify by $x(\o)$, $\o \in \outcomes$.
+The expectation and variance of a \rv\ $x(\o)$ are defined by
 \begin{align*}
   & \oExpectation{x} := \int_\outcomes x(\o) \d \probabilityMeasure(\o) \hspace{1em} \text{and} \\
   & \oVariance{x} := \oExpectation{(x - \oExpectation{x})^2},
 \end{align*}
 respectively.
-A stochastic process is an infinite collection of random variables $x(\t, \o) = \{ x_\t(\o): \t \in \domain \}$ indexed by a set $\domain \subseteq \real^n$, typically though of as time or space.
-A random vector $\v{x}(\o) = (x_i(\o))$ and a random matrix $\m{X}(\o) = (x_{ij}(\o))$ are a vector and a matrix whose elements are random variables.
-Finally, denote by $\L{2}(\outcomes) := \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ the Hilbert space of square-integrable random variables defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
+The probability distribution of $x(\o)$ is uniquely defined by its cumulative distribution function (\cdf) given as
+\begin{equation*}
+  \fCDF_x(\hat{x}) := \probabilityMeasure(\{ \o \in \outcomes: x(\o) < \hat{x} \}).
+\end{equation*}
+A stochastic process is an infinite collection of \rvs\ $x(\t, \o) = \{ x_\t(\o): \t \in \domain \}$ indexed by a set $\domain \subseteq \real^n$, typically though of as time or space.
+A random vector $\v{x}(\o) = (x_i(\o))$ and a random matrix $\m{X}(\o) = (x_{ij}(\o))$ are a vector and a matrix whose elements are \rvs.
+Finally, denote by $\L{2}(\outcomes) := \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ the Hilbert space of square-integrable \rvs\ defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
 \begin{equation*}
   \oInnerProduct{x}{y} := \oExpectation{x \, y} \hspace{1em} \text{and} \hspace{1em} \oNorm{x} := \oInnerProduct{x}{x}^{1/2}.
 \end{equation*}
-As in the above examples, we shall drop the dependency on $\o \in \outcomes$ when it can easily be recovered from the context.
+As in the above examples, as long as there is no danger of confusion, we shall omit writing the dependency on $\o \in \outcomes$.
+In what follows, $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ will be always implied.
+
+\subsection{Reliability Theory}
+Let $\T(\o)$ be a \rv\ representing the lifetime of a system.
+$\T(\o)$ is the time until a failure after which the system cannot be recovered.
+The survival function is defined as
+\begin{align*}
+  \fSF(\hat{\T}) := \probabilityMeasure(\{ \o \in \outcomes: \T(\o) > \hat{\T} \}) = 1 - \fCDF_\T(\hat{\T})
+\end{align*}
+where $\fCDF_\T(\hat{\T})$ is the \cdf\ of $\T(\o)$.

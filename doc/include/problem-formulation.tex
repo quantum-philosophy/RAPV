@@ -5,11 +5,18 @@ Denote by $\specification$ an abstract set containing all the information about 
 The content of $\specification$ is problem specific, and we shall gradually detail it when it is needed.
 For now, $\specification$ is assumed to include: (a) the floorplans of the active layers of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity and specific heat).
 
-A power profile of the system is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements that correspond to certain moments of time $0 = \t_0 < \t_1 < \dotsc < \t_\nsteps = \tau$.
+A power profile of the system is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements which correspond to certain moments of time $\{ \t_k: k = 1, \dots, \nsteps \}$ that partition a time interval $[0, t]$ as $0 = \t_0 < \t_1 < \dotsc < \t_\nsteps = \period$.
 Similarly, a temperature profile $\mQ \in \real^{\nprocs \times \nsteps}$ is a matrix containing samples of temperature.
 For clarity, power and temperature profiles are assumed to have a one-to-one temporal correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, \dots, \nsteps$.
 
 The system depends on a set of parameters that are uncertain at the design stage due to process variation.
-We model such parameters using random variables and denote this set by $\u(\o) = \{ \u_i(\o) \}$.
+We model such parameters using \rvs\ and denote this set by $\u(\o) = \{ \u_i(\o) \}$.
 In this work, we are only concerned with those parameters that manifest themselves in the deviation of the actual power dissipation from nominal values and, consequently, in the deviation of temperature from the one corresponding to the nominal power consumption.
 The two, and arguably the most important, examples of such uncertain parameters are the effective channel length $\Leff$ and gate-oxide thickness $\Tox$, in which case $\u(\o) = \{ \Leff(\o), \Tox(\o) \}$.
+
+Given $\specification$, we pursue the following major objectives:
+\begin{itemize}
+  \item Extend the probabilistic temperature analysis to include the \dss\ scenario under the uncertainty due to process variation specified by $\u(\o)$.
+  \item Find the survival function of the system under an arbitrary workload given as a dynamic power profile $\vP_\dynamic$ taking into consideration the aforementioned uncertainty.
+  \item Develop a computationally tractable design-space exploration scheme exploiting the probabilistic guarantees delivered by our framework for the reliability analysis.
+\end{itemize}
