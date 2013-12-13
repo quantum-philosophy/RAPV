@@ -28,20 +28,32 @@ Consequently, when it is appropriate, one can easily extract only the (temperatu
 \end{remark}
 
 Let us move on to the \dss\ case.
-In this subsection, we address the case when $\o$ is fixed in \eref{power-model} (and, hence, in \eref{temperature-model}).
-In other words, the parametrization $\vU(\o)$ is known, which we emphasize by $\vU$.
 Assume for now that $\vP_\static$ in \eref{power-model} does not depend on $\vQ$, \ie, there is no interdependency between leakage and temperature.
-Under the dynamic steady-state condition, $\vX_1 = \vX_{\nsteps + 1}$.
-This boundary constraint and the recurrence in \eref{recurrence} yield a large system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
+The \dss\ boundary condition is
+\[
+  \vX_1 = \vX_{\nsteps + 1}.
+\]
+This constraint and \eref{recurrence} yield a block-circulant system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
 As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigenvalue-decomposition}.
-The pseudocode of this algorithm is given in \aref{deterministic-solution}.\footnote{Hereafter, we utilize the MATLAB notation to refer to a particular column, \eg, $\m{A}(:, k)$, or a particular row, \eg, $\m{A}(k, :)$, of a matrix $\m{A}$. Also, we shall underline auxiliary vectors, \eg, $\tmp{\v{a}}$, and matrices, \eg, $\tmp{\m{A}}$.}
+The pseudo code of this algorithm, which delivers the exact solution under the made assumptions, is given in \aref{deterministic-solution}.\footnote{Hereafter, we utilize MATLAB's notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
+Also, in pseudo codes, we shall underline auxiliary vectors and matrices, \eg, $\tmp{\v{a}}$ and $\tmp{\m{A}}$.}
 \input{include/algorithms/deterministic-solution.tex}
 
+In \aref{deterministic-solution}, all the involved matrices have already been defined except for $\mQ_\ambient$, which is a matrix of the ambient temperature.
 The time complexity of direct solutions of the system is $\bigO(\nsteps^3 \nnodes^3)$ while the one of \aref{deterministic-solution} is only $\bigO(\nsteps \nnodes^2 + \nnodes^3)$.\footnote{The complexity reported in \cite{ukhov2012} is erroneously overestimated to $\bigO(\nsteps \nnodes^3)$.}
 
-In order to account for the leakage-temperature interdependence, \aref{deterministic-solution} is to be repeated for a sequence of total power profiles until the corresponding sequence of temperature profiles converges or some other stopping condition is met (\eg, a maximal temperature constraint is violated).
-Each power profile is computed according to \eref{power-model} with respect to the temperature profile from the previous iteration starting from the ambient temperature.
+Let us now bring the leakage-temperature interdependence into the picture.
+To this end, we repeat \aref{deterministic-solution} for a sequence of total power profiles $\{ \mP_k = \mP_\dynamic + \mP_{\static, k} \}$ wherein the static part $\mP_{\static, k}$ is being updated using \eref{power-model} given the temperature profile $\mQ_{k - 1}$ computed at the previous iteration starting from the ambient temperature.
+The procedure stops when the sequence of temperature profiles $\{ \mQ_k \}$ converges in an appropriate norm, or some other stopping condition is satisfied (\eg, a maximal temperature constraint is violated).
 This procedure is illustrated in \aref{deterministic-solution-with-leakage}.
 \input{include/algorithms/deterministic-solution-with-leakage.tex}
 
-In \aref{deterministic-solution-with-leakage}, $\mP_\static(\mQ, \vU)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, j)$th element is the static component of the power dissipation of the $i$th processing element at the $j$th moment of time with respect to the temperature given by the $(i, j)$th element of $\mQ$ and $\vU$.
+In \aref{deterministic-solution-with-leakage}, $\mP_\static(\mQ, \u)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, j)$th element is the static component of the power dissipation of the $i$th processing element at the $j$th moment of time with respect to the temperature given by the $(i, j)$th element of $\mQ$ and $\u$.
+
+\begin{remark}
+A wide-spread approach to account for the leakage-temperature interdependence is to linearize it with respect to temperature.
+As shown in \cite{liu2007}, already with one linear segment, this approximation can deliver sufficiently accurate results.
+One remarkable feature of such a linearization is that no looping-until-convergence is needed in this case; see \cite{ukhov2012}.
+However, this approach assumes that the only varying parameter of leakage is temperature, in which case it is relatively easy to decide on a representative temperature range and undertake a one-dimensional curve-fitting procedure with respect to it.
+In our case, the power model has multiple parameters stepping far from their nominal values, making it difficult, if ever possible, to construct a good linear fit with respect to temperature.
+\end{remark}

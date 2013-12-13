@@ -1,10 +1,10 @@
 \begin{algorithm}
-  \caption{Deterministic analysis. \alabel{deterministic-solution}}
+  \caption{The deterministic \dssta\ with no static dissipation of power. \alabel{deterministic-solution}}
   \begin{algorithmic}[1]
     \vspace{0.4em}
 
-    \Require{A total power profile $\mP$.}
-    \Ensure{The corresponding temperature profile $\mQ$.}
+    \Require{$\mP \in \real^{\nprocs \times \nsteps}$}
+    \Ensure{$\mQ \in \real^{\nprocs \times \nsteps}$}
 
     \vspace{0.5em}
 

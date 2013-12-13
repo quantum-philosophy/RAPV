@@ -1,17 +1,17 @@
 \begin{algorithm}
-  \caption{Deterministic analysis with leakage. \alabel{deterministic-solution-with-leakage}}
+  \caption{The deterministic \dssta\ considering the static power. \alabel{deterministic-solution-with-leakage}}
   \begin{algorithmic}[1]
     \vspace{0.4em}
 
-    \Require{A vector of parameters $\vU$.}
-    \Ensure{The corresponding temperature profile $\mQ$.}
+    \Require{$\mP_\dynamic \in \real^{\nprocs \times \nsteps}$ and $\u$}
+    \Ensure{$\mQ \in \real^{\nprocs \times \nsteps}$ and $\mP \in \real^{\nprocs \times \nsteps}$}
 
     \vspace{0.5em}
 
     \Let{$\mQ$}{$\mQ_\ambient$}
 
     \Repeat
-      \Let{$\mP$}{$\mP_\dynamic + \mP_\static(\mQ, \vU)$}
+      \Let{$\mP$}{$\mP_\dynamic + \mP_\static(\mQ, \u)$}
       \Let{$\mQ$}{run {\bf Algorithm 1} for $\mP$}
     \Until{a stopping condition is satisfied}
 
