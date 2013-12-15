@@ -2,10 +2,31 @@ Due to the inherent complexity, uncertainty quantification problems are typicall
 The theory of polynomial chaos (PC) expansions \cite{maitre2010} is one way to construct such an approximation, in which the approximating functions are polynomials orthogonal with respect to certain probability measures.
 
 \subsubsection{Preprocessing of the uncertain parameters}
-The construction of a PC expansion is based on mutually independent random variables.
-In general, however, the uncertain parameters that comprise $\vU(\o)$ are correlated.
-Hence, an adequate probability transformation should be undertaken \cite{eldred2008}.
-Denote such a transformation by $\vU(\o) = \oTransform{\vZ(\o)}$, which relates $\vU(\o)$ with $\nvars$ independent random variables $\vZ(\o)$.
+Let us refine our definition of $\u(\o) = \{ \u_i(\o): i = 1, \dots, \nparams \}$.
+Each $\u_i(\o)$ is a characteristic of a single transistor (consider, for example, the effective channel length), and, therefore, each device in the electrical circuits at hand can potentially have a different value of this parameter as, in general, the variability due to process variation is not uniform.
+Consequently, each $\u_i(\o)$ can be viewed as a random process $\u_i(\r, \o)$, $\r \in \domain$, defined on an appropriate spatial domain $\domain \subset \real^3$.
+Since this work is system-level oriented, we model each processing element with one variable for each random process.
+More specifically, we let $\u_{ij}(\o) := \u_i(\r_j, \o)$ be the \rv\ representing the $i$th uncertain parameter at the $j$th processing element where $\r_j$ corresponds to the spatial location of the processing element (\eg, the center of mass).
+Then, with a slight abuse of notation, we redefine the uncertain parametrization of the problem as
+\[
+  \u(\o) = \{ \u_{ij}(\o): i = 1, \dots, \nparams, j = 1, \dots, \nprocs \}.
+\]
+\begin{remark}
+Some authors prefer to split the variability of a process parameter at a spacial location into several parts, such as wafer-to-wafer, die-to-die, and within-die; see, \eg, \cite{juan2012}.
+However, from the mathematical standpoint, it is sufficient to consider just one random variable per location which is adequately correlated with the other locations of interest.
+\end{remark}
+
+A description of $\u(\o)$ is an input to our analysis given by the user.
+A proper (complete) way to describe a set of \rvs\ is to specify their joint probability distribution.
+In practice, however, such exhaustive information is often unavailable.
+A more realistic assumption is the knowledge of a set of marginal distributions and a correlation matrix, and we shall orientate our framework towards this practical scenario.
+One should keep in mind, though, that the marginals and correlation matrix are not sufficient to recover the joint distribution in general.
+
+Denote by $\{ \fCDF_{\u_i}(\hat{\u}_i): i = 1, \dots, \nparams \}$ and $\mCorrelation_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal \cdfs\ and correlation matrix of $\{ \u_{ij}(\o) \}$.
+Note that $\fCDF_{\u_i}$ is the marginal of $\nprocs$ \rvs, namely, of $\{ \u_{ij}(\o): j = 1, \dots, \nprocs \}$.
+In general, $\u(\o)$ are dependent, which is not convenient for the forthcoming mathematical treatment.
+Therefore, our first task is to transform $\u(\o)$ into a set of independent \rvs\ by virtue of an adequate probability transformation \cite{eldred2008}.
+Denote such a transformation by $\u(\o) = \oTransform{\z(\o)}$, which relates $\u(\o)$ with $\nvars$ independent \rvs\ $\z(\o) = \{ \z_i(\o): i = 1, \dots, \nvars \}$.
 
 \subsubsection{Choice of a polynomial basis}
 The next step towards a PC expansion is the choice of a suitable polynomial basis $\{ \pcb_i(\vZ) \}_{i = 1}^\infty$.
@@ -18,7 +39,7 @@ For instance, the Hermite polynomials are a natural choice for Gaussian distribu
 The primary uncertain quantity of this paper is the DSS temperature profile, denoted by the random matrix $\mQ(\o) \in \real^{\nprocs \times \nsteps}$,\footnote{As always, the argument $\o$ stands for $\vU(\o)$ or $\oTransform{\vZ(\o)}$.} of the system at hand under a certain workload, represented by the matrix $\mP_\dynamic \in \real^{\nprocs \times \nsteps}$.
 However, due to the reason that will become clear later on, let us denote the quantity of interest by an abstract random matrix $\mR(\o)$.
 The expansion of $\mR(\o)$ is
-\begin{equation} \elabel{polynomial-chaos-expansion}
+\begin{equation} \elab{polynomial-chaos-expansion}
   \mR(\o) = \sum_{i = 1}^\infty \pcc{\mR}_i \, \pcb_i(\vZ(\o))
 \end{equation}
 where $\pcc{\mR}_i$ are the coefficients of the expansion, which are matrix valued and have the same dimensionality as $\mR(\o)$.
@@ -32,7 +53,7 @@ The question now to discuss is the computation of $\{ \pcc{\mR}_i \}_{i = 1}^\nt
 Each $\pcc{\mR}_i$ is the following multidimensional integral:
 \begin{align}
   \pcc{\mR}_i & = \oExpectation{\mR(\oTransform{\vZ(\o)}) \, \pcb_i(\vZ(\o))} \nonumber \\
-  & = \int \mR(\oTransform{\vZ}) \, \pcb_i(\vZ) \, \fPDF(\vZ) \, \d\vZ \elabel{polynomial-chaos-coefficients}
+  & = \int \mR(\oTransform{\vZ}) \, \pcb_i(\vZ) \, \fPDF(\vZ) \, \d\vZ \elab{polynomial-chaos-coefficients}
 \end{align}
 where $\fPDF(\vZ)$ denotes the \pdf\ of $\vZ(\o)$.\footnote{In case of a discrete distribution, the coefficients are summations with respect to the corresponding probability mass function.}
 Recall that $\pcc{\mR}_i$ is a matrix and note that the operations in \eref{polynomial-chaos-coefficients} are elementwise.

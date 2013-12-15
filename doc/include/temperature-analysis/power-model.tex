@@ -1,6 +1,6 @@
 Recall that the system is composed of $\nprocs$ processing elements and has a dependency on the outcome of the probability space via $\u(\o)$, $\o \in \outcomes$.
 The total dissipation of power is modeled as the following system of $\nprocs$ temporal stochastic process:
-\begin{equation} \elabel{power-model}
+\begin{equation} \elab{power-model}
   \vP(\t, \u) = \vP_\dynamic(\t) + \vP_\static(\vQ(\t, \u), \u)
 \end{equation}
 where, for each time $\t \geq 0$, $\vP_\dynamic \in \real^\nprocs$ and $\vP_\static \in \real^\nprocs$ are random vectors representing the dynamic and static components of the total power, respectively, and $\vQ \in \real^\nprocs$ is the corresponding random vector of temperature.

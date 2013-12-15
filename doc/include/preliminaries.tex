@@ -2,18 +2,18 @@ Throughout the manuscript, we shall adhere to the following notation: one-dimens
 
 \subsection{Probability Theory}
 Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{maitre2010}.
-A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $x: \outcomes \to \real$ (the real line), which we signify by $x(\o)$, $\o \in \outcomes$.
-The expectation and variance of a \rv\ $x(\o)$ are defined by
-\begin{align*}
-  & \oExpectation{x} := \int_\outcomes x(\o) \d \probabilityMeasure(\o) \hspace{1em} \text{and} \\
-  & \oVariance{x} := \oExpectation{(x - \oExpectation{x})^2},
-\end{align*}
-respectively.
-The probability distribution of $x(\o)$ is uniquely defined by its cumulative distribution function (\cdf) given as
+A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $x: \outcomes \to \real$ (the real line).
+The distribution of a \rv\ $x(\o)$, $\o \in \outcomes$, is uniquely specified by its cumulative distribution function (\cdf)
 \begin{equation*}
   \fCDF_x(\hat{x}) := \probabilityMeasure(\{ \o \in \outcomes: x(\o) < \hat{x} \}).
 \end{equation*}
-A stochastic process is an infinite collection of \rvs\ $x(\t, \o) = \{ x_\t(\o): \t \in \domain \}$ indexed by a set $\domain \subseteq \real^n$, typically though of as time or space.
+The expectation and variance of $x(\o)$ are defined by
+\begin{align*}
+  & \oExpectation{x} := \int_\outcomes x(\o) \, \d\probabilityMeasure(\o) = \int_\real \hat{x} \, \d \fCDF_x(\hat{x}) \hspace{1em} \text{and} \\
+  & \oVariance{x} := \oExpectation{(x - \oExpectation{x})^2},
+\end{align*}
+respectively.
+A stochastic process is an infinite collection of \rvs\ $x(\r, \o) = \{ x_\r(\o): \r \in \domain \}$ indexed by a set $\domain \subseteq \real^n$, typically though of as time or space.
 A random vector $\v{x}(\o) = (x_i(\o))$ and a random matrix $\m{X}(\o) = (x_{ij}(\o))$ are a vector and a matrix whose elements are \rvs.
 Finally, denote by $\L{2}(\outcomes) := \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ the Hilbert space of square-integrable \rvs\ defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
 \begin{equation*}

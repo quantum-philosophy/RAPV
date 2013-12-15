@@ -1,10 +1,13 @@
-A robust and computationally efficient solution of \eref{temperature-model} for a given $\o \in \outcomes$, or equivalently for a given $\u(\o)$, is an essential part of our probabilistic framework.
+Let us fix $\o \in \outcomes$, meaning that $\u(\o)$ is assumed to be known, and consider the above system as deterministic.
+In general, \eref{temperature-model-inner} is a system of ordinary differential equations which is nonlinear due to the power term, given in \eref{power-model} as an arbitrary function.
+Hence, the system in \eref{temperature-model} does not have a general closed-form solution.
+A robust and computationally efficient solution of \eref{temperature-model} for a given $\o \in \outcomes$ is an essential part of our probabilistic framework.
 In order to attain such a solution, we utilize a numerical method from the family of so-called exponential integrators \cite{hochbruck2010}.
 The procedure is described in \xref{temperature-model}, and here we only use the final result; see also \cite{ukhov2012}.
 
 Recall that we are to analyze a dynamic power profile $\mP_\dynamic$ covering a time interval $[0, \period]$ with $\nsteps$ samples that are evenly spaced in time.
 The transient solution of \eref{temperature-model-inner} is reduced to the following recurrence for $k = 1, \dots, \nsteps$:
-\begin{equation} \elabel{recurrence}
+\begin{equation} \elab{recurrence}
   \vX_k = \mE \: \vX_{k - 1} + \mF \: \vP_k
 \end{equation}
 where the subscript $k$ stands for time $k \dt$, $\vX_0 = \vZero$,
@@ -12,7 +15,7 @@ where the subscript $k$ stands for time $k \dt$, $\vX_0 = \vZero$,
   \mE = e^{\mA \dt}, \hspace{1em} \text{and} \hspace{1em} \mF = \mA^{-1} (e^{\mA \dt} - \mI) \: \mB.
 \]
 For computational efficiency, the state matrix $\mA$ is factorized using the eigenvalue decomposition as follows \cite{press2007}:
-\begin{equation} \elabel{eigenvalue-decomposition}
+\begin{equation} \elab{eigenvalue-decomposition}
   \mA = \mV \mL \mV^T
 \end{equation}
 where $\mV$ and $\mL = \diag{\lambda_i}$ are an orthogonal matrix of the eigenvectors and a diagonal matrix of the eigenvectors of $\mA$, respectively.
@@ -35,12 +38,16 @@ The \dss\ boundary condition is
 \]
 This constraint and \eref{recurrence} yield a block-circulant system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
 As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigenvalue-decomposition}.
-The pseudo code of this algorithm, which delivers the exact solution under the made assumptions, is given in \aref{deterministic-solution}.\footnote{Hereafter, we utilize MATLAB's notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
-Also, in pseudo codes, we shall underline auxiliary vectors and matrices, \eg, $\tmp{\v{a}}$ and $\tmp{\m{A}}$.}
+The pseudo code of this algorithm, which delivers the exact solution under the made assumptions, is given in \aref{deterministic-solution}.
 \input{include/algorithms/deterministic-solution.tex}
 
-In \aref{deterministic-solution}, all the involved matrices have already been defined except for $\mQ_\ambient$, which is a matrix of the ambient temperature.
-The time complexity of direct solutions of the system is $\bigO(\nsteps^3 \nnodes^3)$ while the one of \aref{deterministic-solution} is only $\bigO(\nsteps \nnodes^2 + \nnodes^3)$.\footnote{The complexity reported in \cite{ukhov2012} is erroneously overestimated to $\bigO(\nsteps \nnodes^3)$.}
+Hereafter, we shall adopt MATLAB's notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
+Also, auxiliary vectors and matrices will be underlined.
+$\mQ_\ambient$ is a matrix of the ambient temperature.
+\begin{remark}
+The time complexity of direct solutions of the system of linear equations is $\bigO(\nsteps^3 \nnodes^3)$ while the one of \aref{deterministic-solution} is only $\bigO(\nsteps \nnodes^2 + \nnodes^3)$.
+Note that the complexity of \aref{deterministic-solution} reported in \cite{ukhov2012} was erroneously overestimated.
+\end{remark}
 
 Let us now bring the leakage-temperature interdependence into the picture.
 To this end, we repeat \aref{deterministic-solution} for a sequence of total power profiles $\{ \mP_k = \mP_\dynamic + \mP_{\static, k} \}$ wherein the static part $\mP_{\static, k}$ is being updated using \eref{power-model} given the temperature profile $\mQ_{k - 1}$ computed at the previous iteration starting from the ambient temperature.

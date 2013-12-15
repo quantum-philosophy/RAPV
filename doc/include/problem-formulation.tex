@@ -10,7 +10,7 @@ Similarly, a temperature profile $\mQ \in \real^{\nprocs \times \nsteps}$ is a m
 For clarity, power and temperature profiles are assumed to have a one-to-one temporal correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, \dots, \nsteps$.
 
 The system depends on a set of parameters that are uncertain at the design stage due to process variation.
-We model such parameters using \rvs\ and denote this set by $\u(\o) = \{ \u_i(\o) \}$.
+We model such parameters using \rvs\ and denote this set by $\u(\o) = \{ \u_i(\o): i = 1, \dots, \nparams \}$.
 In this work, we are only concerned with those parameters that manifest themselves in the deviation of the actual power dissipation from nominal values and, consequently, in the deviation of temperature from the one corresponding to the nominal power consumption.
 The two, and arguably the most important, examples of such uncertain parameters are the effective channel length $\Leff$ and gate-oxide thickness $\Tox$, in which case $\u(\o) = \{ \Leff(\o), \Tox(\o) \}$.
 

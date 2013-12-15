@@ -58,6 +58,19 @@
 %
 % References
 %
+\usepackage{xcolor}
+\definecolor{alpha}{rgb}{0.34,0.71,0.91}
+\definecolor{beta} {rgb}{0.90,0.62,0.00}
+\definecolor{gamma}{rgb}{0.51,0.77,0.48}
+
+\usepackage{hyperref}
+\hypersetup{%
+  pdfborderstyle={/S/U/W 1},%
+  linkbordercolor={alpha},%
+  citebordercolor={beta},%
+  urlbordercolor={gamma}%
+}
+
 \newcommand{\eref}[1]{Eq.~(\ref{equ:#1})}
 \newcommand{\sref}[1]{Sec.~\ref{sec:#1}}
 \newcommand{\tref}[1]{Tab.~\ref{tab:#1}}
@@ -65,12 +78,12 @@
 \newcommand{\aref}[1]{Alg.~\ref{alg:#1}}
 \newcommand{\xref}[1]{App.~\ref{app:#1}}
 
-\newcommand{\elabel}[1]{\label{equ:#1}}
-\newcommand{\slabel}[1]{\label{sec:#1}}
-\newcommand{\tlabel}[1]{\label{tab:#1}}
-\newcommand{\flabel}[1]{\label{fig:#1}}
-\newcommand{\alabel}[1]{\label{alg:#1}}
-\newcommand{\xlabel}[1]{\label{app:#1}}
+\newcommand{\elab}[1]{\label{equ:#1}}
+\newcommand{\slab}[1]{\label{sec:#1}}
+\newcommand{\tlab}[1]{\label{tab:#1}}
+\newcommand{\flab}[1]{\label{fig:#1}}
+\newcommand{\alab}[1]{\label{alg:#1}}
+\newcommand{\xlab}[1]{\label{app:#1}}
 
 %
 % Text shortcuts
@@ -145,6 +158,8 @@
 \newcommand{\fCDF}{F}
 \newcommand{\fSF}{S}
 
+\newcommand{\mCorrelation}{\m{\Sigma}}
+
 %
 % Power and temperature modeling
 %
@@ -191,8 +206,12 @@
 % Uncertain parameters
 %
 \renewcommand{\u}{u}
+\newcommand{\z}{z}
+
 \newcommand{\vU}{\v{\u}}
 \newcommand{\vZ}{\v{z}}
+
+\renewcommand{\r}{r}
 
 \newcommand{\Leff}{L_\text{eff}}
 \newcommand{\Tox}{T_\text{ox}}
@@ -201,8 +220,8 @@
 
 \makeatletter
 \def\oTransform{\@ifnextchar\bgroup{\oTransformWithOne}{\oTransformWithZero}}
-\def\oTransformWithOne#1{\mathcal{T}\left( #1 \right)}
-\def\oTransformWithZero{\mathcal{T}}
+\def\oTransformWithOne#1{T\left[ #1 \right]}
+\def\oTransformWithZero{T}
 \makeatother
 
 %
@@ -224,7 +243,8 @@
 \newcommand{\nprocs}{{n_\text{p}}}
 \newcommand{\nsteps}{{n_\text{t}}}
 
-\newcommand{\nvars}{{n_\text{v}}}
+\newcommand{\nparams}{{n_\text{u}}}
+\newcommand{\nvars}{{n_\text{z}}}
 
 \newcommand{\norder}{{n_\text{po}}}
 \newcommand{\nterms}{{n_\text{pt}}}
