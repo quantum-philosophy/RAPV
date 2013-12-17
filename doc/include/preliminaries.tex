@@ -1,7 +1,7 @@
 Throughout the manuscript, we shall adhere to the following notation: one-dimensional (scalar) and infinite-dimensional quantities are denoted by regular-weight lower-case letters whereas finite-dimensional vectors and matrices by bold lower-case and bold upper-case letters, respectively.
 
 \subsection{Probability Theory}
-Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{maitre2010}.
+Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{durrett2010}.
 A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $x: \outcomes \to \real$ (the real line).
 The distribution of a \rv\ $x(\o)$, $\o \in \outcomes$, is uniquely specified by its cumulative distribution function (\cdf)
 \begin{equation*}
@@ -15,12 +15,12 @@ The expectation and variance of $x(\o)$ are defined by
 respectively.
 A stochastic process is an infinite collection of \rvs\ $x(\r, \o) = \{ x_\r(\o): \r \in \domain \}$ indexed by a set $\domain \subseteq \real^n$, typically though of as time or space.
 A random vector $\v{x}(\o) = (x_i(\o))$ and a random matrix $\m{X}(\o) = (x_{ij}(\o))$ are a vector and a matrix whose elements are \rvs.
-Finally, denote by $\L{2}(\outcomes) := \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ the Hilbert space of square-integrable \rvs\ defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
+Let $\L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ denote the Hilbert space of square-integrable \rvs\ \cite{janson1997} defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
 \begin{equation*}
   \oInnerProduct{x}{y} := \oExpectation{x \, y} \hspace{1em} \text{and} \hspace{1em} \oNorm{x} := \oInnerProduct{x}{x}^{1/2}.
 \end{equation*}
-As in the above examples, as long as there is no danger of confusion, we shall omit writing the dependency on $\o \in \outcomes$.
-In what follows, $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ will be always implied.
+As in the above examples, for clarity, we shall occasionally omit spelling out $\o \in \outcomes$.
+In what follows, all the \rvs\ will tacitly have $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ as the underlying probability space.
 
 \subsection{Reliability Theory}
 Let $\T(\o)$ be a \rv\ representing the lifetime of a system.

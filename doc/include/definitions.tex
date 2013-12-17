@@ -153,12 +153,14 @@
 
 \newcommand{\oExpectation}[1]{\mathbb{E}\left[ #1 \right]}
 \newcommand{\oVariance}[1]{\mathbb{V}\text{ar}\left[ #1 \right]}
+\newcommand{\mCorrelation}{\m{K}}
 
 \newcommand{\fPDF}{f}
 \newcommand{\fCDF}{F}
 \newcommand{\fSF}{S}
 
-\newcommand{\mCorrelation}{\m{\Sigma}}
+\newcommand{\GaussianDistribution}[1]{\mathcal{N}\left( #1 \right)}
+\newcommand{\betaDistribution}[1]{\text{Beta}\left( #1 \right)}
 
 %
 % Power and temperature modeling
@@ -205,6 +207,9 @@
 %
 % Uncertain parameters
 %
+\newcommand{\x}{x}
+\newcommand{\X}{X}
+
 \renewcommand{\u}{u}
 \newcommand{\z}{z}
 
@@ -213,9 +218,11 @@
 
 \renewcommand{\r}{r}
 
-\newcommand{\Leff}{L_\text{eff}}
-\newcommand{\Tox}{T_\text{ox}}
-\newcommand{\lifetime}{\tau}
+\newcommand{\effective}{\text{eff}}
+\newcommand{\oxide}{\text{ox}}
+
+\newcommand{\Leff}{\ell_\effective}
+\newcommand{\Tox}{\theta_\oxide}
 \newcommand{\T}{\tau}
 
 \makeatletter
@@ -227,6 +234,8 @@
 %
 % Quantity of interest
 %
+\newcommand{\w}{v}
+
 \newcommand{\mR}{\m{R}}
 
 %

@@ -12,7 +12,6 @@ For clarity, power and temperature profiles are assumed to have a one-to-one tem
 The system depends on a set of parameters that are uncertain at the design stage due to process variation.
 We model such parameters using \rvs\ and denote this set by $\u(\o) = \{ \u_i(\o): i = 1, \dots, \nparams \}$.
 In this work, we are only concerned with those parameters that manifest themselves in the deviation of the actual power dissipation from nominal values and, consequently, in the deviation of temperature from the one corresponding to the nominal power consumption.
-The two, and arguably the most important, examples of such uncertain parameters are the effective channel length $\Leff$ and gate-oxide thickness $\Tox$, in which case $\u(\o) = \{ \Leff(\o), \Tox(\o) \}$.
 
 Given $\specification$, we pursue the following major objectives:
 \begin{itemize}
@@ -20,3 +19,11 @@ Given $\specification$, we pursue the following major objectives:
   \item Find the survival function of the system under an arbitrary workload given as a dynamic power profile $\vP_\dynamic$ taking into consideration the aforementioned uncertainty.
   \item Develop a computationally tractable design-space exploration scheme exploiting the probabilistic guarantees delivered by our framework for the reliability analysis.
 \end{itemize}
+
+In order to give a better intuition about our solutions presented in the sequel, we shall accompany the development of our framework with the development of a concrete application, which will eventually be utilized for the quantitative evaluation of the framework given in \sref{experimental-results}.
+To this end, we have decided to focus on two process parameters, which are arguably the most crucial ones, namely, on the effective channel length $\Leff$ and gate-oxide thickness $\Tox$.
+Consequently, in this example,
+\begin{equation} \elab{application-uncertain-parameters}
+  \u(\o) = \{ \u_1(\o), \u_2(\o) \} = \{ \Leff(\o), \Tox(\o) \}.
+\end{equation}
+Regarding reliability, we shall address the thermal-cycling fatigue as it is naturally connected with the \dssta\ that we develop.
