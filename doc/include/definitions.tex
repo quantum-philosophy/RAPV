@@ -118,19 +118,6 @@
 \newcommand{\qoi}{QOI}
 
 %
-% Functional analysis
-%
-\newcommand{\real}{\mathbb{R}}
-\renewcommand{\L}[1]{L^{#1}}
-\newcommand{\domain}{D}
-
-\newcommand{\oInnerProduct}[2]{\langle #1, #2 \rangle}
-\newcommand{\oNorm}[1]{\| #1 \|}
-
-\renewcommand{\d}{d}
-\newcommand{\bigO}{\mathcal{O}}
-
-%
 % Linear algebra
 %
 \newcommand{\m}[1]{\mathbf{#1}}
@@ -143,13 +130,39 @@
 \newcommand{\diag}[1]{\text{diag}\left( #1 \right)}
 
 %
+% Functional analysis
+%
+\newcommand{\real}{\mathbb{R}}
+\renewcommand{\L}[1]{L^{#1}}
+
+\newcommand{\hilbertSpace}{H}
+
+\newcommand{\polynomial}{\psi}
+\newcommand{\polynomialSpace}{\Psi}
+
+\newcommand{\sigmaAlgebra}{\mathcal{F}}
+\newcommand{\borelSigmaAlgebra}{\mathcal{B}}
+
+\newcommand{\oInnerProduct}[1]{\langle #1 \rangle}
+\newcommand{\oNorm}[1]{\| #1 \|}
+
+\newcommand{\oSpan}[1]{\text{span}\left( #1 \right)}
+
+\renewcommand{\d}{d}
+\newcommand{\domain}{D}
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\multiindex}{{\boldsymbol\alpha}}
+
+%
 % Probability theory
 %
 \newcommand{\outcomes}{\Omega}
-\newcommand{\sigmaAlgebra}{\mathcal{F}}
+\renewcommand{\o}{\omega}
+
 \newcommand{\probabilityMeasure}{\mathcal{P}}
 
-\renewcommand{\o}{\omega}
+\newcommand{\gaussianDistribution}[1]{\mathcal{N}\left( #1 \right)}
+\newcommand{\betaDistribution}[1]{\text{Beta}\left( #1 \right)}
 
 \newcommand{\oExpectation}[1]{\mathbb{E}\left[ #1 \right]}
 \newcommand{\oVariance}[1]{\mathbb{V}\text{ar}\left[ #1 \right]}
@@ -159,8 +172,14 @@
 \newcommand{\fCDF}{F}
 \newcommand{\fSF}{S}
 
-\newcommand{\GaussianDistribution}[1]{\mathcal{N}\left( #1 \right)}
-\newcommand{\betaDistribution}[1]{\text{Beta}\left( #1 \right)}
+%
+% Wiener chaos decomposition
+%
+\newcommand{\chaosSpace}{\mathcal{H}}
+
+\newcommand{\pcb}{\Phi}
+\newcommand{\pcn}{\eta}
+\newcommand{\pcc}[1]{\hat{#1}}
 
 %
 % Power and temperature modeling
@@ -207,11 +226,9 @@
 %
 % Uncertain parameters
 %
-\newcommand{\x}{x}
-\newcommand{\X}{X}
-
 \renewcommand{\u}{u}
-\newcommand{\z}{z}
+\newcommand{\z}{\xi}
+\newcommand{\vz}{{\boldsymbol\xi}}
 
 \newcommand{\vU}{\v{\u}}
 \newcommand{\vZ}{\v{z}}
@@ -239,13 +256,6 @@
 \newcommand{\mR}{\m{R}}
 
 %
-% Polynomial chaos
-%
-\newcommand{\pcb}{\Phi}
-\newcommand{\pcn}{\eta}
-\newcommand{\pcc}[1]{\hat{#1}}
-
-%
 % Numbers
 %
 \newcommand{\nnodes}{{n_\text{n}}}
@@ -253,7 +263,7 @@
 \newcommand{\nsteps}{{n_\text{t}}}
 
 \newcommand{\nparams}{{n_\text{u}}}
-\newcommand{\nvars}{{n_\text{z}}}
+\newcommand{\nvars}{{n_\z}}
 
 \newcommand{\norder}{{n_\text{po}}}
 \newcommand{\nterms}{{n_\text{pt}}}
