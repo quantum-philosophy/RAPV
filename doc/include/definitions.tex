@@ -106,16 +106,8 @@
 \newcommand{\sssta}{\sss\ \ta}
 
 % Probability theory
-\newcommand{\cdf}{CDF}
-\newcommand{\cdfs}{CDFs}
-
-\newcommand{\pdf}{PDF}
-\newcommand{\pdfs}{PDFs}
-
 \newcommand{\rv}{random variable}
 \newcommand{\rvs}{random variables}
-
-\newcommand{\qoi}{QOI}
 
 %
 % Linear algebra
@@ -139,19 +131,18 @@
 
 \newcommand{\polynomial}{\psi}
 \newcommand{\polynomialSpace}{\Psi}
+\newcommand{\coefficient}[1]{\hat{#1}}
 
 \newcommand{\sigmaAlgebra}{\mathcal{F}}
 \newcommand{\borelSigmaAlgebra}{\mathcal{B}}
 
-\newcommand{\oInnerProduct}[1]{\langle #1 \rangle}
-\newcommand{\oNorm}[1]{\| #1 \|}
-
-\newcommand{\oSpan}[1]{\text{span}\left( #1 \right)}
+\newcommand{\norm}[1]{\| #1 \|}
+\newcommand{\innerProduct}[1]{\langle #1 \rangle}
+\newcommand{\hull}[1]{\text{span}\left( #1 \right)}
 
 \renewcommand{\d}{d}
-\newcommand{\domain}{D}
-\newcommand{\bigO}{\mathcal{O}}
-\newcommand{\multiindex}{{\boldsymbol\alpha}}
+\newcommand{\multiindex}[1][\alpha]{{\boldsymbol #1}}
+\newcommand{\complexity}[1]{\mathcal{O}\left( #1 \right)}
 
 %
 % Probability theory
@@ -164,13 +155,14 @@
 \newcommand{\gaussianDistribution}[1]{\mathcal{N}\left( #1 \right)}
 \newcommand{\betaDistribution}[1]{\text{Beta}\left( #1 \right)}
 
-\newcommand{\oExpectation}[1]{\mathbb{E}\left[ #1 \right]}
-\newcommand{\oVariance}[1]{\mathbb{V}\text{ar}\left[ #1 \right]}
-\newcommand{\mCorrelation}{\m{K}}
+\newcommand{\expectation}[1]{\mathbb{E}\left[ #1 \right]}
+\newcommand{\variance}[1]{\mathbb{V}\text{ar}\left[ #1 \right]}
 
-\newcommand{\fPDF}{f}
-\newcommand{\fCDF}{F}
-\newcommand{\fSF}{S}
+\newcommand{\distribution}{F}
+\newcommand{\survival}{S}
+\newcommand{\density}{f}
+
+\newcommand{\mCorr}{\m{K}}
 
 %
 % Wiener chaos decomposition
@@ -182,10 +174,15 @@
 \newcommand{\pcc}[1]{\hat{#1}}
 
 %
-% Power and temperature modeling
+% System modeling
 %
 \newcommand{\specification}{\mathcal{S}}
 
+% Space
+\newcommand{\domain}{D}
+\renewcommand{\r}{r}
+
+% Time
 \renewcommand{\t}{t}
 \newcommand{\dt}{\Delta \t}
 \newcommand{\period}{t}
@@ -194,11 +191,16 @@
 \newcommand{\vQ}{\v{q}}
 \newcommand{\mQ}{\m{Q}}
 
+\newcommand{\ambient}{\text{amb}}
+
 % Power
 \newcommand{\vP}{\v{p}}
 \newcommand{\mP}{\m{P}}
 
 \newcommand{\mM}{\m{M}}
+
+\newcommand{\dynamic}{\text{dyn}}
+\newcommand{\static}{\text{stat}}
 
 % Capacitance and conductance
 \newcommand{\mCth}{\m{C}}
@@ -219,21 +221,14 @@
 \newcommand{\mV}{\m{V}}
 \newcommand{\mL}{\m{\Lambda}}
 
-\newcommand{\ambient}{\text{amb}}
-\newcommand{\dynamic}{\text{dyn}}
-\newcommand{\static}{\text{stat}}
-
 %
 % Uncertain parameters
 %
 \renewcommand{\u}{u}
 \newcommand{\z}{\xi}
-\newcommand{\vz}{{\boldsymbol\xi}}
 
 \newcommand{\vU}{\v{\u}}
 \newcommand{\vZ}{\v{z}}
-
-\renewcommand{\r}{r}
 
 \newcommand{\effective}{\text{eff}}
 \newcommand{\oxide}{\text{ox}}
@@ -252,7 +247,6 @@
 % Quantity of interest
 %
 \newcommand{\w}{v}
-
 \newcommand{\mR}{\m{R}}
 
 %
@@ -264,6 +258,8 @@
 
 \newcommand{\nparams}{{n_\text{u}}}
 \newcommand{\nvars}{{n_\z}}
+
+\newcommand{\ncorder}{{n_\chaosSpace}}
 
 \newcommand{\norder}{{n_\text{po}}}
 \newcommand{\nterms}{{n_\text{pt}}}

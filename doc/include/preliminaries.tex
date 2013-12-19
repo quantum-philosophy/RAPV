@@ -1,23 +1,21 @@
-Throughout the manuscript, we shall adhere to the following notation: one-dimensional (scalar) and infinite-dimensional quantities are denoted by regular-weight lower-case letters whereas finite-dimensional vectors and matrices by bold lower-case and bold upper-case letters, respectively.
-
 \subsection{Probability Theory}
 Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{durrett2010}.
 A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $x: \outcomes \to \real$ (the real line).
-The distribution of a \rv\ $x(\o)$, $\o \in \outcomes$, is uniquely specified by its cumulative distribution function (\cdf)
+A \rv\ $x(\o)$, $\o \in \outcomes$, is uniquely characterized by its (cumulative) distribution function
 \begin{equation*}
-  \fCDF_x(\hat{x}) := \probabilityMeasure(\{ \o \in \outcomes: x(\o) < \hat{x} \}).
+  \distribution_x(\hat{x}) := \probabilityMeasure(\{ \o \in \outcomes: x(\o) \leq \hat{x} \}).
 \end{equation*}
 The expectation and variance of $x(\o)$ are defined by
 \begin{align*}
-  & \oExpectation{x} := \int_\outcomes x(\o) \, \d\probabilityMeasure(\o) = \int_\real \hat{x} \, \d \fCDF_x(\hat{x}) \hspace{1em} \text{and} \\
-  & \oVariance{x} := \oExpectation{(x - \oExpectation{x})^2},
+  & \expectation{x} := \int_\outcomes x(\o) \, \d\probabilityMeasure(\o) = \int_\real \hat{x} \, \d \distribution_x(\hat{x}) \hspace{1em} \text{and} \\
+  & \variance{x} := \expectation{(x - \expectation{x})^2},
 \end{align*}
 respectively.
-A stochastic process is an infinite collection of \rvs\ $x(\r, \o) = \{ x_\r(\o): \r \in \domain \}$ indexed by a set $\domain \subseteq \real^n$, typically though of as time or space.
+A stochastic process is a collection of \rvs\ $x(\r, \o) = \{ x_\r(\o): \r \in \domain \}$ indexed by a set $\domain$, which is typically a subset of $\real^n$ though of as time or space.
 A random vector $\v{x}(\o) = (x_i(\o))$ and a random matrix $\m{X}(\o) = (x_{ij}(\o))$ are a vector and a matrix whose elements are \rvs.
 Let $\L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ denote the Hilbert space of square-integrable \rvs\ \cite{janson1997} defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
 \begin{equation*}
-  \oInnerProduct{x, y} := \oExpectation{x \, y} \hspace{1em} \text{and} \hspace{1em} \oNorm{x} := \oInnerProduct{x, x}^{1/2}.
+  \innerProduct{x, y} := \expectation{x \, y} \hspace{1em} \text{and} \hspace{1em} \norm{x} := \innerProduct{x, x}^{1/2}.
 \end{equation*}
 As in the above examples, for clarity, we shall occasionally omit spelling out $\o \in \outcomes$.
 In what follows, all the \rvs\ will tacitly have $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ as the underlying probability space.
@@ -27,6 +25,6 @@ Let $\T(\o)$ be a \rv\ representing the lifetime of a system.
 $\T(\o)$ is the time until a failure after which the system cannot be recovered.
 The survival function is defined as
 \begin{align*}
-  \fSF(\hat{\T}) := \probabilityMeasure(\{ \o \in \outcomes: \T(\o) > \hat{\T} \}) = 1 - \fCDF_\T(\hat{\T})
+  \survival(\hat{\T}) := \probabilityMeasure(\{ \o \in \outcomes: \T(\o) > \hat{\T} \}) = 1 - \distribution_\T(\hat{\T})
 \end{align*}
-where $\fCDF_\T(\hat{\T})$ is the \cdf\ of $\T(\o)$.
+where $\distribution_\T(\hat{\T})$ is the distribution function of $\T(\o)$.
