@@ -1,4 +1,4 @@
-Let $\hilbertSpace \subset \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be the Gaussian Hilbert space \cite{janson1997} spanned by $\z(\o) = \{ \z_i(\o): i = 1, \dots, \nvars \}$ defined in \eref{independent-random-variables}.
+Let $\hilbertSpace \subset \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be the Gaussian Hilbert space \cite{janson1997} spanned by $\z(\o) = \{ \z_i(\o) \}_{i = 1}^\nvars$ defined in \eref{independent-random-variables}.
 Since the \rvs\ in $\z(\o)$ are independent and standard, this set is an orthonormal basis in $\hilbertSpace$, and $\hilbertSpace$ has $\nvars$ dimensions.
 Let $\polynomialSpace_n(\hilbertSpace)$ be the space of $\nvars$-variate polynomials over $\hilbertSpace$ such that the total order of each polynomial is less or equal to $n$.
 $\polynomialSpace_n(\hilbertSpace)$ can be constructed as a span of $\nvars$-variate Hermite polynomials \cite{maitre2010, eldred2008} as follows:
@@ -22,21 +22,25 @@ Then, by the Cameron-Martin theorem,
 \]
 which is known as the Wiener chaos decomposition.
 Thus, any quantity of interest $\w(\o) \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ admits the following expansion convergent in the mean-square sense as $\ncorder \to \infty$:
-\begin{equation} \elab{wiener-chaos-decomposition}
-  \w = \sum_{\{\multiindex: |\multiindex| \leq \ncorder\}} \innerProduct{\w, \polynomial_{\multiindex}(\z)} \, \polynomial_{\multiindex}(\z).
+\begin{equation} \xelab{wiener-chaos-decomposition}
+  \w(\o) = \sum_{|\multiindex| \leq \ncorder} \innerProduct{\w, \polynomial_{\multiindex}} \, \polynomial_{\multiindex}(\z(\o))
 \end{equation}
-For clarity, we omit $\o$ and use $\polynomial_{\multiindex}(\z)$ as a shortcut for $\polynomial_{\multiindex}(\z_1, \dots, \z_\nvars)$.
-Denote by $\distribution_\z$ the probability measure induced on $\real^\nvars$ by $\z(\o)$, which is standard Gaussian defined by
+where $\polynomial_{\multiindex}(\z(\o)) \equiv \polynomial_{\multiindex}(\z_1(\o), \dots, \z_\nvars(\o))$.
+The cardinality of the index set $\{ \multiindex: |\multiindex| \leq \ncorder \}$ is
 \[
-  \d\distribution_\z(\hat{\z}) = (2 \pi)^{-\nvars/2} \, e^{-\sum_i \hat{\z}_i^2 / 2} \, \d\hat{\z}_1 \cdots \d\hat{\z}_\nvars.
+  \ncterms = { \ncorder + \nvars \choose \nvars }.
 \]
-The inner product in \eref{wiener-chaos-decomposition} performs orthogonal projections of $\w(\o)$ onto the spaces $\chaosSpace_n$, $n = 0, \dots, \ncorder$, and is given by
+Denote by $\d\distribution_\z$ the probability measure induced on $\real^\nvars$ by $\z(\o)$, which is standard Gaussian defined by
 \[
-  \innerProduct{\w, \polynomial_{\multiindex}(\z)} = \int_{\real^{\nvars}} \w(\oTransform[\hat{\z}]) \, \polynomial_{\multiindex}(\hat{\z}) \, \d\distribution_\z(\hat{\z}).
+  \d\distribution_\z(\hat{\z}) = (2 \pi)^{-\nvars/2} \, e^{-\sum_i \hat{\z}_i^2 / 2} \, \d\hat{\z}_1 \cdots \d\hat{\z}_\nvars, \hspace{1em} \hat{\z} = (\hat{\z}_i) \in \real^\nvars.
 \]
-Recall that $\w(\o)$ is a function of $\u(\o)$, and $\oTransform$, defined in \eref{probability-transformation}, bridges $\u(\o)$ with $\z(\o)$.
-Lastly, we note that $\{ \polynomial_{\multiindex}: \forall \multiindex \}$ are orthonormal with respect to $\distribution_\z$:
+The inner product in \xeref{wiener-chaos-decomposition} performs orthogonal projections of $\w(\o)$ onto the spaces $\chaosSpace_n$, $n = 0, \dots, \ncorder$, and is given by
+\begin{equation} \xelab{orthogonal-projection}
+  \coefficient{\w}_{\multiindex} = \innerProduct{\w, \polynomial_{\multiindex}} = \int_{\real^{\nvars}} \w(\transformation[\hat{\z}]) \, \polynomial_{\multiindex}(\hat{\z}) \, \d\distribution_\z(\hat{\z}).
+\end{equation}
+Recall that $\w(\o)$ is a function of $\u(\o)$, and $\transformation$, defined in \eref{probability-transformation}, bridges $\u(\o)$ with $\z(\o)$.
+Lastly, we note that $\{ \polynomial_{\multiindex}: \forall \multiindex \}$ are orthonormal with respect to $\d\distribution_\z$:
 \[
-  \innerProduct{\polynomial_{\multiindex}(\z), \polynomial_{\multiindex[\beta]}(\z)} = \delta_{\multiindex \multiindex[\beta]}
+  \innerProduct{\polynomial_{\multiindex}, \polynomial_{\multiindex[\beta]}} = \delta_{\multiindex \multiindex[\beta]}
 \]
 where $\multiindex$ and $\multiindex[\beta]$ are two arbitrary multi-indexes, $\delta_{\multiindex \multiindex[\beta]} := \prod_i \delta_{\alpha_i \beta_i}$, and $\delta_{ij}$ is the Kronecker delta.

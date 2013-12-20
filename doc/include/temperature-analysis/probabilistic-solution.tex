@@ -1,14 +1,12 @@
 Due to the inherent complexity, uncertainty quantification problems are typically viewed as approximation problems: one constructs a computationally efficient surrogate of the stochastic model under consideration first and then studies this light representation instead.
-In order to construct such an approximation, we appeal to the Wiener chaos decomposition \cite{maitre2010, janson1997, eldred2008}.
-Before we proceed to the construction, $\u(\o)$ should be preprocessed as follows.
+In order to construct such an approximation, we appeal to spectral decompositions \cite{maitre2010, janson1997, eldred2008}.
 
-\subsubsection{Preprocessing of the Uncertain Parameters} \slab{parameter-preprocessing}
-Let us refine our definition of $\u(\o) = \{ \u_i(\o): i = 1, \dots, \nparams \}$.
+Before we proceed to the construction, let us first refine our definition of $\u(\o) = \{ \u_i(\o) \}_{i = 1}^\nparams$.
 Each $\u_i(\o)$ is a characteristic of a single transistor (consider, for example, the effective channel length), and, therefore, each device in the electrical circuits at hand can potentially have a different value of this parameter as, in general, the variability due to process variation is not uniform.
-Consequently, each $\u_i(\o)$ can be viewed as a random process $\u_i(\r, \o)$, $\r \in \domain$, defined on an appropriate spatial domain $\domain \subset \real^3$.
+Consequently, each $\u_i(\o)$ can be viewed as a random process $\u_i(\r, \o)_{\r \in \domain}$ defined on an appropriate spatial domain $\domain \subset \real^3$.
 Since this work is system-level oriented, we model each processing element with one variable for each such random process.
-More specifically, we let $\u_{ij}(\o) := \u_i(\r_j, \o)$ be the \rv\ representing the $i$th uncertain parameter at the $j$th processing element where $\r_j$ stands for the spatial location of the processing element (\eg, the center of mass).
-Consequently, we redefine the uncertain parametrization of the problem as
+More specifically, we let $\u_{ij}(\o) = \u_i(\r_j, \o)$ be the \rv\ representing the $i$th uncertain parameter at the $j$th processing element where $\r_j$ stands for the spatial location of the processing element (\eg, the center of mass).
+Thus, we redefine the parametrization of the problem as
 \begin{equation} \elab{uncertain-parameters}
   \u(\o) = \{ \u_{ij}(\o): i = 1, \dots, \nparams, j = 1, \dots, \nprocs \}.
 \end{equation}
@@ -22,15 +20,16 @@ A proper (complete) way to describe a set of \rvs\ is to specify their joint pro
 In practice, however, such exhaustive information is often unavailable, in particular, due to the high dimensionality in the presence of prominent dependencies inherent to the considered problem.
 A more realistic assumption is the knowledge of the marginal distributions and correlation matrix of $\u(\o)$.
 For concreteness, we shall orientate our framework towards the practical scenario; one should keep in mind though that, in general, the marginals and correlation matrix are not sufficient to recover the joint distribution.
-Denote by $\{ \distribution_{\u_i}(\hat{\u}_i): i = 1, \dots, \nparams \}$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of $\{ \u_{ij}(\o) \}$ in \eref{uncertain-parameters}, respectively.
-Note that $\distribution_{\u_i}$ is the marginal of $\{ \u_{ij}(\o): j = 1, \dots, \nprocs \}$.
+Denote by $\{ \distribution_{\u_i}(\hat{\u}_i) \}_{i = 1}^\nparams$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of $\{ \u_{ij}(\o) \}$ in \eref{uncertain-parameters}, respectively.
+Note that $\distribution_{\u_i}$ is the marginal of $\nprocs$ \rvs, namely, of $\{ \u_{ij}(\o) \}_{j = 1}^\nprocs$.
 
-Having specified $\u(\o)$, our foremost task is to transform $\u(\o)$ into a set of mutually independent \rvs\ as independence is a prerequisite of the forthcoming mathematical treatment.
+\subsubsection{Parameter Preprocessing} \slab{parameter-preprocessing}
+Our foremost task is to transform $\u(\o)$ into a set of mutually independent \rvs\ as independence is a prerequisite of the forthcoming mathematical treatment.
 To this end, an adequate probability transformation should be undertaken depending on the available information; see \cite{eldred2008} for an overview.
 One transformation for which the assumed knowledge about $\u(\o)$ is sufficient is the Nataf transformation \cite{li2008}.
 Denote this transformation by
 \begin{equation} \elab{probability-transformation}
-  \u(\o) = \oTransform{\z(\o)},
+  \u(\o) = \transformation{\z(\o)},
 \end{equation}
 which relates the $\nparams \nprocs$ uncertain parameters $\u(\o) = \{ \u_{ij}(\o) \}$ with $\nvars$ independent \rvs
 \begin{equation} \elab{independent-random-variables}
@@ -40,10 +39,10 @@ Regardless of the marginals, $\z_i(\o) \sim \gaussianDistribution{0, 1}$, $i = 1
 Refer to \xref{nataf-transformation} for further details about the Nataf transformation.
 
 As we shall discuss later on, the stochastic dimensionality $\nvars$ of the problem has a considerable impact of the computational complexity of our framework.
-Therefore, an important part of the preprocessing stage is model-order reduction.
-To this end, without introducing additional transformations, we let $\oTransform$ be augmented with such a reduction procedure.
+Therefore, an important part of the preprocessing stage is model order reduction.
+To this end, without introducing additional transformations, we let $\transformation$ be augmented with such a reduction procedure.
 Thus, $\nvars \leq \nparams \nprocs$.
-For clarity, this duty of $\oTransform$ is further discussed in \xref{model-order-reduction}.
+For clarity, this duty of $\transformation$ is further discussed in \xref{model-order-reduction}.
 
 Let us turn to the illustrative application.
 Recall that we exemplify our framework considering the effective channel length and gate-oxide thickness with the notation given in \eref{application-uncertain-parameters}.
@@ -54,41 +53,27 @@ With this in mind, we model the two process parameters using the four-parametric
 \end{equation*}
 where $i \in \{ 1, 2 \}$; $j = 1, \dots, \nprocs$; $\alpha_i$ and $\beta_i$ control the shape of the distributions; and $a_i$ and $b_i$ define their supports.
 
-\subsubsection{Wiener Chaos Decomposition}
-Let $\w(\o) := \w(\u(\o))$ be a quantity of interest dependent on $\u(\o)$.
-Consider $\w(\o)$ as, for instance, the energy consumption, maximal temperature, or temperature profile of the system over a certain period of time.
-Then, in the first two cases, $\w(\o)$ is a random variable while a random matrix in the last one.
+\subsubsection{Spectral Decomposition}
+Let
+\[
+  \w(\o) \equiv \w(\u(\o)) \equiv \w(\transformation{\z(\o)})
+\]
+be a quantity of interest which is dependent on $\u(\o)$.
+Think of $\w(\o)$ as, for instance, the energy consumption, maximal temperature, or temperature profile of the system over a certain period of time.
+Then, in the first two cases, $\w(\o)$ would be a random variable while a random matrix in the last one.
 In order to give a computationally efficient probabilistic characterization of $\w(\o)$, we utilize the Wiener chaos decomposition.
-The mathematical foundation of this spectral decomposition is outlined in \xref{wiener-chaos-decomposition}; here we leap directly to the final result.
+The mathematical foundation of this spectral approach is outlined in \xref{wiener-chaos-decomposition}; here we leap directly to the final result.
 
 Assume $\w(\o) \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$.
-Then $\w(\o)$ can be approximated using the following decomposition:
-\begin{equation} \elab{polynomial-chaos-expansion}
-  \w(\o) = \sum_{\{\multiindex: |\multiindex| \leq \ncorder\}} \coefficient{\w}_i \, \polynomial_{\multiindex}(\z(\o))
+Then $\w(\o)$ can be approximated using the following expansion:
+\begin{equation} \elab{wiener-chaos-decomposition}
+  \w(\o) = \sum_{|\multiindex| \leq \ncorder} \coefficient{\w}_{\multiindex} \, \polynomial_{\multiindex}(\z(\o))
 \end{equation}
-where $\ncorder$ is the expansion order; $\multiindex = (\alpha_i)$ is a multi-index with $|\multiindex| := \sum_i \alpha_i$; and $\polynomial_{\multiindex}(\z(\o)) := \polynomial_{\multiindex}(\z_1(\o), \dots, \z_\nvars(\o))$ is an $\nvars$-variate Hermite polynomial constructed as a product of normalized one-dimensional Hermite polynomials of orders specified by the corresponding elements of $\multiindex$.
+where $\ncorder$ is the expansion order; $\multiindex = (\alpha_i)$ is a multi-index with $|\multiindex| := \sum_i \alpha_i$; and $\polynomial_{\multiindex}(\z(\o)) \equiv \polynomial_{\multiindex}(\z_1(\o), \dots, \z_\nvars(\o))$ is an $\nvars$-variate Hermite polynomial constructed as a product of normalized one-dimensional Hermite polynomials of orders specified by the corresponding elements of $\multiindex$.
+The compositional function in \eref{wiener-chaos-decomposition} is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
+Consequently, having constructed such an expansion, various statistics about $\w(\o)$ can be estimated at no effort.
+Moreover, the decomposition yields analytical formulae for the expected value and variance of $\w(\o)$.
+The primary question now is the calculation of the coefficients $\{ \coefficient{\w}_{\multiindex} \}$, which are the only unknowns in \eref{wiener-chaos-decomposition}.
 
-The next step towards a PC expansion is the choice of a suitable polynomial basis $\{ \pcb_i(\vZ) \}_{i = 1}^\infty$.
-Each $\pcb_i(\vZ)$ is a real-valued polynomial in terms of $\nvars$ variables (recall that $\vZ(\o) \in \real^\nvars$).
-This choice depends mainly on the probability distributions of $\vZ(\o)$.
-For instance, the Hermite polynomials are a natural choice for Gaussian distributions.
-The primary uncertain quantity of this paper is the DSS temperature profile, denoted by the random matrix $\mQ(\o) \in \real^{\nprocs \times \nsteps}$, of the system at hand under a certain workload, represented by the matrix $\mP_\dynamic \in \real^{\nprocs \times \nsteps}$.
-For practical computations, \eref{polynomial-chaos-expansion} is truncated to preserve only $\nterms$ first polynomial terms.
-The result is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
-Consequently, such quantities as CDFs and PDFs can be estimated at no effort.
-Moreover, the coefficients of a PC expansion immediately yield analytical formulae for the expected value and variance of the expanded quantity.
-
-\subsubsection{Computation of the expansion coefficients}
-The question now to discuss is the computation of $\{ \pcc{\mR}_i \}_{i = 1}^\nterms$ in \eref{polynomial-chaos-expansion}.
-Each $\pcc{\mR}_i$ is the following multidimensional integral:
-\begin{align}
-  \pcc{\mR}_i & = \expectation{\mR(\oTransform{\vZ(\o)}) \, \pcb_i(\vZ(\o))} \nonumber \\
-  & = \int \mR(\oTransform{\vZ}) \, \pcb_i(\vZ) \, \density(\vZ) \, \d\vZ \elab{polynomial-chaos-coefficients}
-\end{align}
-where $\density(\vZ)$ denotes the PDF of $\vZ(\o)$.\footnote{In case of a discrete distribution, the coefficients are summations with respect to the corresponding probability mass function.}
-Recall that $\pcc{\mR}_i$ is a matrix and note that the operations in \eref{polynomial-chaos-coefficients} are elementwise.
-
-The integral in \eref{polynomial-chaos-coefficients} should be taken numerically.
-In numerical integration, an integral of a function is approximated by a summation over the function values computed at a set of prescribed points and multiplied by the corresponding set of prescribed weights.
-Such pairs of points and weights are called quadrature rules \cite{press2007}.
-When $\mR(\o)$ is $\mQ(\o)$, for any $\vZ$ in the support of the probability distribution of $\vZ(\o)$, the needed $\mQ(\oTransform{\vZ})$ can be evaluated using \aref{deterministic-solution-with-leakage} with $\vU = \oTransform{\vZ}$.
+\subsubsection{Spectral Projection}
+As shown in \xeref{orthogonal-projection} in \xref{wiener-chaos-decomposition}, each $\coefficient{\w}_{\multiindex}$ is an $\nvars$-dimensional integral, and the integral should be taken numerically.

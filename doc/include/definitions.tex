@@ -77,6 +77,7 @@
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
 \newcommand{\aref}[1]{Alg.~\ref{alg:#1}}
 \newcommand{\xref}[1]{App.~\ref{app:#1}}
+\newcommand{\xeref}[1]{Eq.~(\ref{xequ:#1})}
 
 \newcommand{\elab}[1]{\label{equ:#1}}
 \newcommand{\slab}[1]{\label{sec:#1}}
@@ -84,6 +85,7 @@
 \newcommand{\flab}[1]{\label{fig:#1}}
 \newcommand{\alab}[1]{\label{alg:#1}}
 \newcommand{\xlab}[1]{\label{app:#1}}
+\newcommand{\xelab}[1]{\label{xequ:#1}}
 
 %
 % Text shortcuts
@@ -119,7 +121,7 @@
 \renewcommand{\v}[1]{\mathbf{#1}}
 \newcommand{\vZero}{\v{0}}
 
-\newcommand{\diag}[1]{\text{diag}\left( #1 \right)}
+\newcommand{\diagonal}[1]{\text{diag}\left( #1 \right)}
 
 %
 % Functional analysis
@@ -172,6 +174,12 @@
 \newcommand{\pcb}{\Phi}
 \newcommand{\pcn}{\eta}
 \newcommand{\pcc}[1]{\hat{#1}}
+
+%
+% Sparse grid integration
+%
+\newcommand{\point}{\zeta}
+\newcommand{\weight}{\varphi}
 
 %
 % System modeling
@@ -227,9 +235,6 @@
 \renewcommand{\u}{u}
 \newcommand{\z}{\xi}
 
-\newcommand{\vU}{\v{\u}}
-\newcommand{\vZ}{\v{z}}
-
 \newcommand{\effective}{\text{eff}}
 \newcommand{\oxide}{\text{ox}}
 
@@ -238,16 +243,15 @@
 \newcommand{\T}{\tau}
 
 \makeatletter
-\def\oTransform{\@ifnextchar\bgroup{\oTransformWithOne}{\oTransformWithZero}}
-\def\oTransformWithOne#1{T\left[ #1 \right]}
-\def\oTransformWithZero{T}
+\def\transformation{\@ifnextchar\bgroup{\transformationWithOne}{\transformationWithZero}}
+\def\transformationWithOne#1{T\left[ #1 \right]}
+\def\transformationWithZero{T}
 \makeatother
 
 %
 % Quantity of interest
 %
 \newcommand{\w}{v}
-\newcommand{\mR}{\m{R}}
 
 %
 % Numbers
@@ -259,7 +263,7 @@
 \newcommand{\nparams}{{n_\text{u}}}
 \newcommand{\nvars}{{n_\z}}
 
-\newcommand{\ncorder}{{n_\chaosSpace}}
+\newcommand{\ncorder}{{n_\mathcal{H}}}
+\newcommand{\ncterms}{{n_\mathcal{C}}}
 
-\newcommand{\norder}{{n_\text{po}}}
-\newcommand{\nterms}{{n_\text{pt}}}
+\newcommand{\nqorder}{{n_\mathcal{Q}}}

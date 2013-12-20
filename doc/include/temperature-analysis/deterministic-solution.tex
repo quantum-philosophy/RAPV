@@ -18,11 +18,11 @@ For computational efficiency, the state matrix $\mA$ is factorized using the eig
 \begin{equation} \elab{eigenvalue-decomposition}
   \mA = \mV \mL \mV^T
 \end{equation}
-where $\mV$ and $\mL = \diag{\lambda_i}$ are an orthogonal matrix of the eigenvectors and a diagonal matrix of the eigenvectors of $\mA$, respectively.
+where $\mV$ and $\mL = \diagonal{\lambda_i}$ are an orthogonal matrix of the eigenvectors and a diagonal matrix of the eigenvectors of $\mA$, respectively.
 The matrices $\mE$ and $\mF$ are then
 \begin{align*}
-  & \mE = \mV \; \diag{e^{\lambda_i \dt}} \mV^T \text{ and} \\
-  & \mF = \mV \; \diag{ \frac{e^{\lambda_i \dt} - 1}{\lambda_i} } \mV^T \mB.
+  & \mE = \mV \; \diagonal{e^{\lambda_i \dt}} \mV^T \text{ and} \\
+  & \mF = \mV \; \diagonal{ \frac{e^{\lambda_i \dt} - 1}{\lambda_i} } \mV^T \mB.
 \end{align*}
 To sum up, the derivation up to this point is sufficient to for the \tta\ via \eref{recurrence} followed by \eref{temperature-model-outer}.
 \begin{remark}
