@@ -3,7 +3,7 @@
   \begin{algorithmic}[1]
     \vspace{0.4em}
 
-    \Require{$\mP_\dynamic \in \real^{\nprocs \times \nsteps}$ and $\u$}
+    \Require{$\mP_\dynamic \in \real^{\nprocs \times \nsteps}$ and $\vu$}
     \Ensure{$\mQ \in \real^{\nprocs \times \nsteps}$ and $\mP \in \real^{\nprocs \times \nsteps}$}
 
     \vspace{0.5em}
@@ -11,7 +11,7 @@
     \Let{$\mQ$}{$\mQ_\ambient$}
 
     \Repeat
-      \Let{$\mP$}{$\mP_\dynamic + \mP_\static(\mQ, \u)$}
+      \Let{$\mP$}{$\mP_\dynamic + \mP_\static(\mQ, \vu)$}
       \Let{$\mQ$}{run {\bf Algorithm 1} for $\mP$}
     \Until{a stopping condition is satisfied}
 

@@ -1,8 +1,9 @@
 As shown in \xeref{orthogonal-projection}, each $\coefficient{\w}_{\multiindex}$ is an $\nvars$-dimensional integral, which, in general, should be computed numerically.
-This task is accomplished by virtue of an adequate quadrature rule \cite{press2007}, which is essentially a set of points $\{ \point_i \in \real^\nvars \}_{i = 1}^\nqorder$ accompanied by a set of weights $\{ \weight_i \in \real \}_{i = 1}^\nqorder$.
+This task is accomplished by virtue of an adequate quadrature rule \cite{press2007}.
+A quadrature rule is essentially a set of $\nvars$-dimensional points accompanied by scalar weights, which we denote by a set of tuples $\{ (\point_i \in \real^\nvars, \weight_i \in \real) \}_{i = 1}^\nqorder$.
 The integral is approximated by the sum of the integrand values evaluated at the quadrature points and multiplied by the corresponding weights:
 \begin{equation} \xelab{non-intrusive-orthogonal-projection}
   \coefficient{\w}_{\multiindex} = \sum_{i = 1}^\nqorder \w(\transformation{\point_i}) \, \polynomial_{\multiindex}(\point_i) \, \weight_i.
 \end{equation}
-The quadrature should be chosen to be suitable for integration with respect to the standard Gaussian measure $\d\distribution_\z$ in \xeref{orthogonal-projection}, which is not explicitly present in \xeref{non-intrusive-orthogonal-projection} as it taken into account by the weights.
+The quadrature should be chosen to be suitable for integration with respect to the standard Gaussian measure $\d\distribution_\z$ in \xeref{orthogonal-projection}, which is not explicitly present in \xeref{non-intrusive-orthogonal-projection} as it is taken into account by the weights.
 To elaborate, the rule that we are primarily interested in is the Gauss-Hermite rule.

@@ -1,4 +1,4 @@
-Let us fix $\o \in \outcomes$, meaning that $\u(\o)$ is assumed to be known, and consider the above system as deterministic.
+Let us fix $\o \in \outcomes$, meaning that $\vu(\o)$ is assumed to be known, and consider the above system as deterministic.
 In general, \eref{temperature-model-inner} is a system of ordinary differential equations which is nonlinear due to the power term, given in \eref{power-model} as an arbitrary function.
 Hence, the system in \eref{temperature-model} does not have a general closed-form solution.
 A robust and computationally efficient solution of \eref{temperature-model} for a given $\o \in \outcomes$ is an essential part of our probabilistic framework.
@@ -55,7 +55,7 @@ The procedure stops when the sequence of temperature profiles $\{ \mQ_k \}$ conv
 This procedure is illustrated in \aref{deterministic-solution-with-leakage}.
 \input{include/algorithms/deterministic-solution-with-leakage.tex}
 
-In \aref{deterministic-solution-with-leakage}, $\mP_\static(\mQ, \u)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, j)$th element is the static component of the power dissipation of the $i$th processing element at the $j$th moment of time with respect to the temperature given by the $(i, j)$th element of $\mQ$ and $\u$.
+In \aref{deterministic-solution-with-leakage}, $\mP_\static(\mQ, \vu)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, k)$th element is the static component of the power dissipation of the $i$th processing element at the $k$th moment of time with respect to the temperature given by the $(i, k)$th element of $\mQ$ and $\vu$.
 
 \begin{remark}
 A wide-spread approach to account for the leakage-temperature interdependence is to linearize it with respect to temperature.

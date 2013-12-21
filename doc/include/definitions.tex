@@ -127,6 +127,7 @@
 % Functional analysis
 %
 \newcommand{\real}{\mathbb{R}}
+\renewcommand{\natural}{\mathbb{N}_0}
 \renewcommand{\L}[1]{L^{#1}}
 
 \newcommand{\hilbertSpace}{H}
@@ -143,7 +144,7 @@
 \newcommand{\hull}[1]{\text{span}\left( #1 \right)}
 
 \renewcommand{\d}{d}
-\newcommand{\multiindex}[1][\alpha]{{\boldsymbol #1}}
+\newcommand{\multiindex}[1][\alpha]{\boldsymbol #1}
 \newcommand{\complexity}[1]{\mathcal{O}\left( #1 \right)}
 
 %
@@ -178,7 +179,7 @@
 %
 % Sparse grid integration
 %
-\newcommand{\point}{\zeta}
+\newcommand{\point}{{\boldsymbol\zeta}}
 \newcommand{\weight}{\varphi}
 
 %
@@ -233,7 +234,9 @@
 % Uncertain parameters
 %
 \renewcommand{\u}{u}
+\newcommand{\vu}{\v{u}}
 \newcommand{\z}{\xi}
+\newcommand{\vz}{{\boldsymbol\xi}}
 
 \newcommand{\effective}{\text{eff}}
 \newcommand{\oxide}{\text{ox}}
