@@ -10,13 +10,13 @@ Analogously, a temperature profile $\mQ \in \real^{\nprocs \times \nsteps}$ is a
 For clarity, power and temperature profiles are assumed to have a one-to-one correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, \dots, \nsteps$.
 
 The system depends on a set of parameters that are uncertain at the design stage due to process variation.
-We model such parameters using \rvs\ and denote them by the random vector $\vu(\o) = (\u_i(\o))_{i = 1}^\nparams$.
+We model such parameters using \rvs\ and denote them by the random vector $\vu = (\u_i)_{i = 1}^\nparams: \outcomes \to \real^\nparams$.
 In this work, we are only concerned with those parameters that manifest themselves in the deviation of the actual power dissipation from nominal values and, consequently, in the deviation of temperature from the one corresponding to the nominal power consumption.
 
 Given $\specification$, we pursue the following major objectives:
 \begin{itemize}
-  \item Extend the probabilistic temperature analysis to include the \dss\ scenario under the uncertainty due to process variation specified by $\vu(\o)$.
-  \item Find the survival function of the system under an arbitrary workload given as a dynamic power profile $\vP_\dynamic$ taking into consideration the aforementioned uncertainty.
+  \item Extend the probabilistic temperature analysis to include the \dss\ scenario under the uncertainty due to process variation specified by $\vu$.
+  \item Find the survival function of the system under an arbitrary workload given as a dynamic power profile $\mP_\dynamic$ taking into consideration the aforementioned uncertainty.
   \item Develop a computationally tractable design-space exploration scheme exploiting the probabilistic guarantees delivered by our framework for the reliability analysis.
 \end{itemize}
 
@@ -24,6 +24,6 @@ In order to give a better intuition about our solutions presented in the sequel,
 To this end, we have decided to focus on two process parameters, which are arguably the most crucial ones, namely, on the effective channel length $\Leff$ and gate-oxide thickness $\Tox$.
 Consequently, in this example,
 \begin{equation} \elab{application-uncertain-parameters}
-  \vu(\o) = (\u_1(\o), \u_2(\o)) = (\Leff(\o), \Tox(\o)).
+  \vu = (\u_1, \u_2) = (\Leff, \Tox): \outcomes \to \real^2.
 \end{equation}
 Regarding reliability, we shall address the thermal-cycling fatigue as it is naturally connected with the \dssta\ that we develop.

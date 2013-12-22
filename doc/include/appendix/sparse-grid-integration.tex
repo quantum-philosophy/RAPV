@@ -1,9 +1,30 @@
 As shown in \xeref{orthogonal-projection}, each $\coefficient{\w}_{\multiindex}$ is an $\nvars$-dimensional integral, which, in general, should be computed numerically.
-This task is accomplished by virtue of an adequate quadrature rule \cite{press2007}.
-A quadrature rule is essentially a set of $\nvars$-dimensional points accompanied by scalar weights, which we denote by a set of tuples $\{ (\point_i \in \real^\nvars, \weight_i \in \real) \}_{i = 1}^\nqorder$.
-The integral is approximated by the sum of the integrand values evaluated at the quadrature points and multiplied by the corresponding weights:
+This task is accomplished by virtue of an adequate $\nvars$-dimensional quadrature rule \cite{press2007}, which is essentially a set of $\nvars$-dimensional points accompanied by scalar weights.
+Since we are interested in integration with respect to the standard Gaussian measure over $\real^\nvars$ (see \xeref{standard-gaussian-measure}), we shall rely on the Gauss-Hermite family of rules, which is a subset of a broader category known as Gaussian quadratures.
+The construction of high-dimensional quadratures should be undertaken with a great care since a liner increase of $\nvars$ can lead to an exponential growth of the number of points.
+In what follows, we address this crucial aspect.
+
+Let $f: \real^\nvars \to \real$ be a function to integrate and $\{ (\point_i \in \real^\nvars, \weight_i \in \real) \}_{i = 1}^\nqorder$ be the points and weights of the chosen quadrature.
+The corresponding approximation of the integral is defined by the following linear functional:
+\[
+  \quadrature{\nvars}{\nqlevel}{f} := \sum_{i = 1}^\nqorder f(\point_i) \, \weight_i \approx \int_{\real^\nvars} f(\point) \, \d \point
+\]
+where $\nqlevel \in \natural$ denotes the accuracy level, which is the index of the rule in the corresponding family of rules with increasing precision.
+The precision typically refers to the maximal total order of polynomials that the rule integrates exactly.
+The number of points $\nqorder$ that the rule has can be deduced from the pair $(\nvars, \nqlevel)$, which we shall occasionally emphasize by writing $\nqorder(\nvars, \nqlevel)$.
+For the chosen quadrature in one dimension, we have that $\nqorder = \nqlevel + 1$ and the corresponding precision is $2 \nqorder - 1$ or, equivalently, $2 \nqlevel + 1$, which is a remarkable property of Gaussian quadratures.
+
+The foundation of a multidimensional rule $\quadrature$ is a set of one-dimensional ones $\{ \quadrature{1}{i} \}_{i = 0}^\nqlevel$.
+A straightforward technique to construct $\quadrature$ is the tensor product of $\nvars$ copies of $\quadrature{1}{\nqlevel}$:
+\[
+  \quadrature = \bigotimes_{i = 1}^\nvars \quadrature{1}{\nqlevel},
+\]
+which is referred to as the full-tensor product construction.
+However, in this case, $\nqorder(\nvars, \nqlevel) = \nqorder(1, \nqlevel)^\nvars$, \ie, the growth of the number of points is exponential.
+Moreover, it can be shown that the vast majority of points obtained via this approach do not contribute to the asymptotic accuracy.
+Recall that our approximating functions are polynomials whose total order is constrained according to a certain strategy.
+
+The integral in \xeref{orthogonal-projection} is then approximated by the sum of the integrand values evaluated at the quadrature points and multiplied by the corresponding weights:
 \begin{equation} \xelab{non-intrusive-orthogonal-projection}
   \coefficient{\w}_{\multiindex} = \sum_{i = 1}^\nqorder \w(\transformation{\point_i}) \, \polynomial_{\multiindex}(\point_i) \, \weight_i.
 \end{equation}
-The quadrature should be chosen to be suitable for integration with respect to the standard Gaussian measure $\d\distribution_\z$ in \xeref{orthogonal-projection}, which is not explicitly present in \xeref{non-intrusive-orthogonal-projection} as it is taken into account by the weights.
-To elaborate, the rule that we are primarily interested in is the Gauss-Hermite rule.

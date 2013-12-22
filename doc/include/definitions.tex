@@ -8,10 +8,12 @@
 %
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage{cases}
 
 \usepackage{amsthm}
 \newtheorem{remark}{Remark}
+
+\usepackage{cases}
+\usepackage{bm}
 
 %
 % Tables
@@ -127,7 +129,7 @@
 % Functional analysis
 %
 \newcommand{\real}{\mathbb{R}}
-\renewcommand{\natural}{\mathbb{N}_0}
+\renewcommand{\natural}[1][0]{\mathbb{N}_{#1}}
 \renewcommand{\L}[1]{L^{#1}}
 
 \newcommand{\hilbertSpace}{H}
@@ -143,9 +145,12 @@
 \newcommand{\innerProduct}[1]{\langle #1 \rangle}
 \newcommand{\hull}[1]{\text{span}\left( #1 \right)}
 
-\renewcommand{\d}{d}
-\newcommand{\multiindex}[1][\alpha]{\boldsymbol #1}
+\newcommand{\multiindex}[1][\alpha]{\bm{#1}}
 \newcommand{\complexity}[1]{\mathcal{O}\left( #1 \right)}
+
+\newcommand{\x}{x}
+\newcommand{\vx}{\v{x}}
+\renewcommand{\d}{d}
 
 %
 % Probability theory
@@ -153,7 +158,7 @@
 \newcommand{\outcomes}{\Omega}
 \renewcommand{\o}{\omega}
 
-\newcommand{\probabilityMeasure}{\mathcal{P}}
+\newcommand{\probabilityMeasure}{\mathbb{P}}
 
 \newcommand{\gaussianDistribution}[1]{\mathcal{N}\left( #1 \right)}
 \newcommand{\betaDistribution}[1]{\text{Beta}\left( #1 \right)}
@@ -172,15 +177,19 @@
 %
 \newcommand{\chaosSpace}{\mathcal{H}}
 
-\newcommand{\pcb}{\Phi}
-\newcommand{\pcn}{\eta}
-\newcommand{\pcc}[1]{\hat{#1}}
-
 %
 % Sparse grid integration
 %
-\newcommand{\point}{{\boldsymbol\zeta}}
-\newcommand{\weight}{\varphi}
+\newcommand{\point}{\vx}
+\newcommand{\weight}{w}
+
+\makeatletter
+\def\quadrature{\@ifnextchar\bgroup{\quadratureSome}{\quadratureNone}}
+\def\quadratureNone{\quadratureTwo{\nvars}{\nqlevel}}
+\def\quadratureSome#1#2{\@ifnextchar\bgroup{\quadratureThree{#1}{#2}}{\quadratureTwo{#1}{#2}}}
+\def\quadratureTwo#1#2{\mathcal{Q}^{#1}_{#2}}
+\def\quadratureThree#1#2#3{\quadratureTwo{#1}{#2}\left[#3\right]}
+\makeatother
 
 %
 % System modeling
@@ -197,13 +206,13 @@
 \newcommand{\period}{t}
 
 % Temperature
-\newcommand{\vQ}{\v{q}}
+\newcommand{\vq}{\v{q}}
 \newcommand{\mQ}{\m{Q}}
 
 \newcommand{\ambient}{\text{amb}}
 
 % Power
-\newcommand{\vP}{\v{p}}
+\newcommand{\vp}{\v{p}}
 \newcommand{\mP}{\m{P}}
 
 \newcommand{\mM}{\m{M}}
@@ -216,8 +225,8 @@
 \newcommand{\mGth}{\m{G}}
 
 % State-space system
-\newcommand{\vX}{\v{x}}
-\newcommand{\mX}{\m{X}}
+\newcommand{\vs}{\v{s}}
+\newcommand{\mS}{\m{S}}
 
 \newcommand{\mA}{\m{A}}
 \newcommand{\mB}{\m{B}}
@@ -235,8 +244,14 @@
 %
 \renewcommand{\u}{u}
 \newcommand{\vu}{\v{u}}
+
 \newcommand{\z}{\xi}
-\newcommand{\vz}{{\boldsymbol\xi}}
+\newcommand{\vz}{\bm{\xi}}
+\newcommand{\mZ}{\bm{\Xi}}
+
+\newcommand{\h}{\zeta}
+\newcommand{\vh}{\bm{\zeta}}
+\newcommand{\mH}{\m{Z}}
 
 \newcommand{\effective}{\text{eff}}
 \newcommand{\oxide}{\text{ox}}
@@ -247,8 +262,8 @@
 
 \makeatletter
 \def\transformation{\@ifnextchar\bgroup{\transformationWithOne}{\transformationWithZero}}
-\def\transformationWithOne#1{T\left[ #1 \right]}
-\def\transformationWithZero{T}
+\def\transformationWithOne#1{\transformationWithZero\left[ #1 \right]}
+\def\transformationWithZero{\mathbb{T}}
 \makeatother
 
 %
@@ -270,3 +285,4 @@
 \newcommand{\ncterms}{{n_\mathcal{C}}}
 
 \newcommand{\nqorder}{{n_\mathcal{Q}}}
+\newcommand{\nqlevel}{{l_\mathcal{Q}}}

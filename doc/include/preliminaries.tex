@@ -1,30 +1,28 @@
 \subsection{Probability Theory}
 Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{durrett2010}.
-A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $x: \outcomes \to \real$ (the real line).
-A \rv\ $x(\o)$, $\o \in \outcomes$, is uniquely characterized by its (cumulative) distribution function
+A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $\h: \outcomes \to \real$.
+A \rv\ $\h$, is uniquely characterized by its (cumulative) distribution function defined by
 \begin{equation*}
-  \distribution_x(\hat{x}) := \probabilityMeasure(\{ \o \in \outcomes: x(\o) \leq \hat{x} \}).
+  \distribution_\h(\x) := \probabilityMeasure(\{ \o \in \outcomes: \h(\o) \leq \x \}).
 \end{equation*}
-The expectation and variance of $x(\o)$ are defined by
+The expectation and variance of $\h(\o)$ are given by
 \begin{align*}
-  & \expectation{x} := \int_\outcomes x(\o) \, \d\probabilityMeasure(\o) = \int_\real \hat{x} \, \d \distribution_x(\hat{x}) \hspace{1em} \text{and} \\
-  & \variance{x} := \expectation{(x - \expectation{x})^2},
+  & \expectation{\h} := \int_\outcomes \h(\o) \, \d\probabilityMeasure(\o) = \int_\real \x \, \d \distribution_\h(\x) \hspace{1em} \text{and} \\
+  & \variance{\h} := \expectation{(\h - \expectation{\h})^2},
 \end{align*}
 respectively.
-A stochastic process is a collection of \rvs\ $x(\r, \o) = \{ x_\r(\o) \}_{\r \in \domain}$ indexed by a set $\domain$, which is typically a subset of $\real^n$ though of as time or space.
-A random vector $\v{x}(\o) = (x_i(\o))$ and a random matrix $\m{X}(\o) = (x_{ij}(\o))$ are a vector and a matrix whose elements are \rvs.
+A random vector $\vh = (\h_i)$ and matrix $\mH = (\h_{ij})$ are a vector and matrix whose elements are \rvs.
 Let $\L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ denote the Hilbert space of square-integrable \rvs\ \cite{janson1997} defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
 \begin{equation*}
-  \innerProduct{x, y} := \expectation{x \, y} \hspace{1em} \text{and} \hspace{1em} \norm{x} := \innerProduct{x, x}^{1/2}.
+  \innerProduct{\h_1, \h_2} := \expectation{\h_1 \, \h_2} \hspace{1em} \text{and} \hspace{1em} \norm{\h} := \innerProduct{\h, \h}^{1/2}.
 \end{equation*}
-As in the above examples, for clarity, we shall occasionally omit spelling out $\o \in \outcomes$.
 In what follows, all the \rvs\ will tacitly have $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ as the underlying probability space.
 
 \subsection{Reliability Theory}
-Let $\T(\o)$ be a \rv\ representing the lifetime of a system.
-$\T(\o)$ is the time until a failure after which the system cannot be recovered.
+Let $\T: \outcomes \to \real$ be a \rv\ representing the lifetime of a system.
+$\T$ is the time until a failure after which the system cannot be recovered.
 The survival function is defined as
 \begin{align*}
-  \survival(\hat{\T}) := \probabilityMeasure(\{ \o \in \outcomes: \T(\o) > \hat{\T} \}) = 1 - \distribution_\T(\hat{\T})
+  \survival(\t) := \probabilityMeasure(\{ \o \in \outcomes: \T(\o) > \t \}) = 1 - \distribution_\T(\t)
 \end{align*}
-where $\distribution_\T(\hat{\T})$ is the distribution function of $\T(\o)$.
+where $\distribution_\T$ is the distribution function of $\T$.

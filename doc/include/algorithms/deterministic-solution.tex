@@ -15,13 +15,13 @@
       \Let{$\tmp{\v{a}}$}{$\mE \; \tmp{\v{a}} + \tmp{\m{A}}(:, k)$}
     \EndFor
 
-    \Let{$\mX(:, 1)$}{$\mV \; \diagonal{\left( 1 - e^{\nsteps \dt \lambda_i} \right)^{-1}} \; \mV^T \; \tmp{\v{a}}$}
+    \Let{$\mS(:, 1)$}{$\mV \; \diagonal{\left( 1 - e^{\nsteps \dt \lambda_i} \right)^{-1}} \; \mV^T \; \tmp{\v{a}}$}
 
     \For{$k \gets 2 \textrm{ to } \nsteps$}
-      \Let{$\m{X}(:, k)$}{$\mE \; \mX(:, k - 1) + \tmp{\m{A}}(:, k - 1)$}
+      \Let{$\m{X}(:, k)$}{$\mE \; \mS(:, k - 1) + \tmp{\m{A}}(:, k - 1)$}
     \EndFor
 
-    \Let{$\mQ$}{$\mB^T \mX + \mQ_\ambient$}
+    \Let{$\mQ$}{$\mB^T \mS + \mQ_\ambient$}
 
     \vspace{0.4em}
   \end{algorithmic}

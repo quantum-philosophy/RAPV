@@ -1,16 +1,16 @@
-Let us fix $\o \in \outcomes$, meaning that $\vu(\o)$ is assumed to be known, and consider the above system as deterministic.
+Let us fix $\o \in \outcomes$, meaning that $\vu$ is assumed to be known, and consider the above system as deterministic.
 In general, \eref{temperature-model-inner} is a system of ordinary differential equations which is nonlinear due to the power term, given in \eref{power-model} as an arbitrary function.
 Hence, the system in \eref{temperature-model} does not have a general closed-form solution.
-A robust and computationally efficient solution of \eref{temperature-model} for a given $\o \in \outcomes$ is an essential part of our probabilistic framework.
+A robust and computationally efficient solution of \eref{temperature-model} for a given $\vu$ is an essential part of our probabilistic framework.
 In order to attain such a solution, we utilize a numerical method from the family of so-called exponential integrators \cite{hochbruck2010}.
 The procedure is described in \xref{temperature-model}, and here we only use the final result; see also \cite{ukhov2012}.
 
 Recall that we are to analyze a dynamic power profile $\mP_\dynamic$ covering a time interval $[0, \period]$ with $\nsteps$ samples that are evenly spaced in time.
 The transient solution of \eref{temperature-model-inner} is reduced to the following recurrence for $k = 1, \dots, \nsteps$:
 \begin{equation} \elab{recurrence}
-  \vX_k = \mE \: \vX_{k - 1} + \mF \: \vP_k
+  \vs_k = \mE \: \vs_{k - 1} + \mF \: \vp_k
 \end{equation}
-where the subscript $k$ stands for time $k \dt$, $\vX_0 = \vZero$,
+where the subscript $k$ stands for time $k \dt$, $\vs_0 = \vZero$,
 \[
   \mE = e^{\mA \dt}, \hspace{1em} \text{and} \hspace{1em} \mF = \mA^{-1} (e^{\mA \dt} - \mI) \: \mB.
 \]
@@ -31,10 +31,10 @@ Consequently, when it is appropriate, one can easily extract only the (temperatu
 \end{remark}
 
 Let us move on to the \dss\ case.
-Assume for now that $\vP_\static$ in \eref{power-model} does not depend on $\vQ$, \ie, there is no interdependency between leakage and temperature.
+Assume for now that $\vp_\static$ in \eref{power-model} does not depend on $\vq$, \ie, there is no interdependency between leakage and temperature.
 The \dss\ boundary condition is
 \[
-  \vX_1 = \vX_{\nsteps + 1}.
+  \vs_1 = \vs_{\nsteps + 1}.
 \]
 This constraint and \eref{recurrence} yield a block-circulant system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
 As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigenvalue-decomposition}.
@@ -55,7 +55,7 @@ The procedure stops when the sequence of temperature profiles $\{ \mQ_k \}$ conv
 This procedure is illustrated in \aref{deterministic-solution-with-leakage}.
 \input{include/algorithms/deterministic-solution-with-leakage.tex}
 
-In \aref{deterministic-solution-with-leakage}, $\mP_\static(\mQ, \vu)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, k)$th element is the static component of the power dissipation of the $i$th processing element at the $k$th moment of time with respect to the temperature given by the $(i, k)$th element of $\mQ$ and $\vu$.
+In \aref{deterministic-solution-with-leakage}, $\mP_\static(\vu, \mQ)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, k)$th element is the static component of the power dissipation of the $i$th processing element at the $k$th moment of time with respect to $\vu$ and the temperature given by the $(i, k)$th entry of $\mQ$.
 
 \begin{remark}
 A wide-spread approach to account for the leakage-temperature interdependence is to linearize it with respect to temperature.
