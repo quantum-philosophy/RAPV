@@ -21,7 +21,7 @@ A proper (complete) way to describe a set of \rvs\ is to specify their joint pro
 In practice, however, such exhaustive information is often unavailable, in particular, due to the high dimensionality in the presence of prominent dependencies inherent to the considered problem.
 A more realistic assumption is the knowledge of the marginal distributions and correlation matrix of $\u$.
 For concreteness, we shall orientate our framework towards the practical scenario; one should keep in mind though that, in general, the marginals and correlation matrix are not sufficient to recover the joint distribution.
-Denote by $\{ \distribution_{\u_i}(\hat{\u}_i) \}_{i = 1}^{\nparams \nprocs}$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of $\vu$ in \eref{uncertain-parameters}, respectively.
+Denote by $\{ \distribution_{\u_i} \}_{i = 1}^{\nparams \nprocs}$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of $\vu$ in \eref{uncertain-parameters}, respectively.
 Note that the number of distinct marginals is only $\nparams$ since $\nprocs$ components of the random vector $\vu$ correspond to the same uncertain parameter.
 
 \subsubsection{Parameter Preprocessing} \slab{parameter-preprocessing}
@@ -60,21 +60,21 @@ Let
   \w \equiv \w(\vu) \equiv \w(\transformation{\vz})
 \]
 be a quantity of interest which is dependent on $\vu$.
-Think of $\w$ as, for instance, the energy consumption, maximal temperature, or temperature profile of the system over a certain period of time.
+One can think of $\w$ as, for instance, the energy consumption, maximal temperature, or temperature profile of the system over a certain period of time.
 Then, in the first two cases, $\w$ would be a random variable while a random matrix in the last one.
 In order to give a computationally efficient probabilistic characterization of $\w$, we utilize the Wiener chaos decomposition.
-The mathematical foundation of this spectral approach is outlined in \xref{wiener-chaos-decomposition}; here we leap directly to the final result.
+The mathematical foundation of this spectral approach is outlined in \xref{spectral-decomposition}; here we leap directly to the final result.
 
 Assume $\w \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$.
 Then $\w(\o)$ can be approximated using the following expansion:
-\begin{equation} \elab{wiener-chaos-decomposition}
-  \w = \sum_{|\multiindex| \leq \ncorder} \coefficient{\w}_{\multiindex} \, \polynomial_{\multiindex}(\vz)
+\begin{equation} \elab{spectral-decomposition}
+  \chaos{\nvars}{\nclevel}{\w} = \sum_{\multiindex \in \chaosMultiindexSet{\nclevel}} \coefficient{\w}_{\multiindex} \, \polynomial_{\multiindex}(\vz)
 \end{equation}
-where $\ncorder$ is the expansion order; $\multiindex = (\alpha_i)$ is a multi-index with $|\multiindex| := \sum_i \alpha_i$; and $\polynomial_{\multiindex}(\vz)$ is an $\nvars$-variate Hermite polynomial constructed as a product of normalized one-dimensional Hermite polynomials of orders specified by the corresponding elements of $\multiindex$.
-The compositional function in \eref{wiener-chaos-decomposition} is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
+where $\nclevel$ is the expansion level; $\multiindex = (\alpha_i)$ is a multi-index; $\chaosMultiindexSet{\nclevel}$ is an admissible index set; and $\polynomial_{\multiindex}(\vz)$ is an $\nvars$-variate Hermite polynomial constructed as a product of normalized one-dimensional Hermite polynomials of orders specified by the corresponding elements of $\multiindex$.
+The compositional function in \eref{spectral-decomposition} is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
 Consequently, having constructed such an expansion, various statistics about $\w$ can be estimated at no effort.
 Moreover, the decomposition immediately yields analytical formulae for the expected value and variance of $\w$.
-The primary question now is the calculation of the coefficients $\{ \coefficient{\w}_{\multiindex} \}$, which are the only unknowns in \eref{wiener-chaos-decomposition}.
+The primary question now is the calculation of the coefficients $\{ \coefficient{\w}_{\multiindex} \}$, which are the only unknowns in \eref{spectral-decomposition}.
 
 \subsubsection{Spectral Projection}
-As shown in \xeref{orthogonal-projection} in \xref{wiener-chaos-decomposition}, each $\coefficient{\w}_{\multiindex}$ is an $\nvars$-dimensional integral, and the integral should be taken numerically.
+As shown in \xeref{orthogonal-projection} in \xref{spectral-decomposition}, each $\coefficient{\w}_{\multiindex}$ is an $\nvars$-dimensional integral, and the integral should be taken numerically.
