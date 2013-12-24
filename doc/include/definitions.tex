@@ -78,6 +78,7 @@
 \newcommand{\tref}[1]{Tab.~\ref{tab:#1}}
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
 \newcommand{\aref}[1]{Alg.~\ref{alg:#1}}
+\newcommand{\rref}[1]{Remark~\ref{rem:#1}}
 \newcommand{\xref}[1]{App.~\ref{app:#1}}
 \newcommand{\xeref}[1]{Eq.~(\ref{xequ:#1})}
 
@@ -86,6 +87,7 @@
 \newcommand{\tlab}[1]{\label{tab:#1}}
 \newcommand{\flab}[1]{\label{fig:#1}}
 \newcommand{\alab}[1]{\label{alg:#1}}
+\newcommand{\rlab}[1]{\label{rem:#1}}
 \newcommand{\xlab}[1]{\label{app:#1}}
 \newcommand{\xelab}[1]{\label{xequ:#1}}
 
@@ -98,6 +100,7 @@
 \newcommand{\eg}{e.g.}
 \newcommand{\etc}{etc.}
 \newcommand{\apriori}{\emph{a priori}}
+\newcommand{\perse}{\emph{per se}}
 
 % Temperature analysis
 \newcommand{\ta}{temperature analysis}
@@ -141,11 +144,15 @@
 \newcommand{\sigmaAlgebra}{\mathcal{F}}
 \newcommand{\borelSigmaAlgebra}{\mathcal{B}}
 
-\newcommand{\norm}[1]{\| #1 \|}
+\newcommand{\norm}[2][]{\| #2 \|_{#1}}
 \newcommand{\innerProduct}[1]{\langle #1 \rangle}
 \newcommand{\hull}[1]{\text{span}\left( #1 \right)}
 
 \newcommand{\multiindex}[1][\alpha]{\bm{#1}}
+\newcommand{\multiindexSet}[2][]{\mathcal{A}_{#1}\left( #2 \right)}
+
+\newcommand{\cardinality}[1]{\# #1}
+
 \newcommand{\complexity}[1]{\mathcal{O}\left( #1 \right)}
 
 \newcommand{\x}{x}
@@ -177,6 +184,16 @@
 %
 \newcommand{\chaosSpace}{\mathcal{H}}
 
+\makeatletter
+\def\chaos{\@ifnextchar\bgroup{\chaosSome}{\chaosNone}}
+\def\chaosNone{\chaosTwo{\nvars}{\ncorder}}
+\def\chaosSome#1#2{\@ifnextchar\bgroup{\chaosThree{#1}{#2}}{\chaosTwo{#1}{#2}}}
+\def\chaosTwo#1#2{\mathcal{C}^{#1}_{#2}}
+\def\chaosThree#1#2#3{\chaosTwo{#1}{#2}\left[#3\right]}
+\makeatother
+
+\newcommand{\chaosMultiindexSet}[1]{\multiindexSet{#1}}
+
 %
 % Sparse grid integration
 %
@@ -190,6 +207,8 @@
 \def\quadratureTwo#1#2{\mathcal{Q}^{#1}_{#2}}
 \def\quadratureThree#1#2#3{\quadratureTwo{#1}{#2}\left[#3\right]}
 \makeatother
+
+\newcommand{\quadratureMultiindexSet}[1]{\multiindexSet{#1}}
 
 %
 % System modeling
@@ -281,8 +300,7 @@
 \newcommand{\nparams}{{n_\text{u}}}
 \newcommand{\nvars}{{n_\z}}
 
-\newcommand{\ncorder}{{n_\mathcal{H}}}
-\newcommand{\ncterms}{{n_\mathcal{C}}}
+\newcommand{\nclevel}{{l_\mathcal{C}}}
 
-\newcommand{\nqorder}{{n_\mathcal{Q}}}
 \newcommand{\nqlevel}{{l_\mathcal{Q}}}
+\newcommand{\nqorder}{{n_\mathcal{Q}}}

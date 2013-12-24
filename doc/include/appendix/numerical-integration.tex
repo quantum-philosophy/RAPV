@@ -1,30 +1,40 @@
 As shown in \xeref{orthogonal-projection}, each $\coefficient{\w}_{\multiindex}$ is an $\nvars$-dimensional integral, which, in general, should be computed numerically.
-This task is accomplished by virtue of an adequate $\nvars$-dimensional quadrature rule \cite{press2007}, which is essentially a set of $\nvars$-dimensional points accompanied by scalar weights.
-Since we are interested in integration with respect to the standard Gaussian measure over $\real^\nvars$ (see \xeref{standard-gaussian-measure}), we shall rely on the Gauss-Hermite family of rules, which is a subset of a broader category known as Gaussian quadratures.
-The construction of high-dimensional quadratures should be undertaken with a great care since a liner increase of $\nvars$ can lead to an exponential growth of the number of points.
+This task is accomplished by virtue of an adequate $\nvars$-dimensional quadrature, which is essentially a set of $\nvars$-dimensional points accompanied by scalar weights.
+Since we are interested in integration with respect to the standard Gaussian measure over $\real^\nvars$ (see \xeref{standard-gaussian-measure}), we shall rely on the Gauss-Hermite family of quadrature rules \cite{maitre2010}, which is a subset of a broader family known as Gaussian quadratures.
+The construction of high-dimensional rules should be undertaken with a great care as, without special treatments, the number of points grows exponentially.
 In what follows, we address this crucial aspect.
 
-Let $f: \real^\nvars \to \real$ be a function to integrate and $\{ (\point_i \in \real^\nvars, \weight_i \in \real) \}_{i = 1}^\nqorder$ be the points and weights of the chosen quadrature.
-The corresponding approximation of the integral is defined by the following linear functional:
+Let $f: \real^\nvars \to \real$ and define the quadrature-based approximation of the integral of $f$ by the linear functional
 \[
-  \quadrature{\nvars}{\nqlevel}{f} := \sum_{i = 1}^\nqorder f(\point_i) \, \weight_i \approx \int_{\real^\nvars} f(\point) \, \d \point
+  \quadrature{\nvars}{\nqlevel}{f} := \sum_{i = 1}^\nqorder f(\point_i) \, \weight_i
 \]
-where $\nqlevel \in \natural$ denotes the accuracy level, which is the index of the rule in the corresponding family of rules with increasing precision.
-The precision typically refers to the maximal total order of polynomials that the rule integrates exactly.
-The number of points $\nqorder$ that the rule has can be deduced from the pair $(\nvars, \nqlevel)$, which we shall occasionally emphasize by writing $\nqorder(\nvars, \nqlevel)$.
-For the chosen quadrature in one dimension, we have that $\nqorder = \nqlevel + 1$ and the corresponding precision is $2 \nqorder - 1$ or, equivalently, $2 \nqlevel + 1$, which is a remarkable property of Gaussian quadratures.
+where $\{ (\point_i \in \real^\nvars, \weight_i \in \real) \}_{i = 1}^\nqorder$ are the points and weights of the chosen quadrature.
+\rref{elementwise-operations} applies in this context as well.
+The subscript $\nqlevel \in \natural$ denotes the level of the rule, which is its index in the corresponding family of rules with increasing precision.
+The precision refers to the maximal total order of polynomials that the quadrature integrates exactly.
+The number of points $\nqorder$ can be deduced from the pair $(\nvars, \nqlevel)$, which we shall occasionally emphasize by writing $\nqorder(\nvars, \nqlevel)$.
+For the Gauss-Hermite quadrature rules in one dimension, we have that $\nqorder = \nqlevel + 1$ and the precision is $2 \nqorder - 1$ or, equivalently, $2 \nqlevel + 1$, which is a remarkable property of Gaussian quadratures.
 
-The foundation of a multidimensional rule $\quadrature$ is a set of one-dimensional ones $\{ \quadrature{1}{i} \}_{i = 0}^\nqlevel$.
-A straightforward technique to construct $\quadrature$ is the tensor product of $\nvars$ copies of $\quadrature{1}{\nqlevel}$:
-\[
+The foundation of a multidimensional rule $\quadrature$ is a set of one-dimensional counterparts $\{ \quadrature{1}{i} \}_{i = 0}^\nqlevel$.
+A straightforward construction is the tensor product of $\nvars$ copies of $\quadrature{1}{\nqlevel}$:
+\begin{equation} \xelab{full-tensor-product-grid}
   \quadrature = \bigotimes_{i = 1}^\nvars \quadrature{1}{\nqlevel},
-\]
-which is referred to as the full-tensor product construction.
-However, in this case, $\nqorder(\nvars, \nqlevel) = \nqorder(1, \nqlevel)^\nvars$, \ie, the growth of the number of points is exponential.
-Moreover, it can be shown that the vast majority of points obtained via this approach do not contribute to the asymptotic accuracy.
-Recall that our approximating functions are polynomials whose total order is constrained according to a certain strategy.
-
-The integral in \xeref{orthogonal-projection} is then approximated by the sum of the integrand values evaluated at the quadrature points and multiplied by the corresponding weights:
-\begin{equation} \xelab{non-intrusive-orthogonal-projection}
-  \coefficient{\w}_{\multiindex} = \sum_{i = 1}^\nqorder \w(\transformation{\point_i}) \, \polynomial_{\multiindex}(\point_i) \, \weight_i.
 \end{equation}
+which is referred to as the full-tensor product.
+In this case, $\nqorder(\nvars, \nqlevel) = \nqorder(1, \nqlevel)^\nvars$, \ie, the growth of the number of points is exponential.
+Moreover, it can be shown that most of the points obtained via this construction are an excess as the full-tensor product does not take into account the fact that the integrands under consideration are polynomials whose total order is constrained according to a certain strategy.
+
+An alternative construction is the Smolyak algorithm \cite{maitre2010, eldred2008}.
+Intuitively, the algorithm combines $\{ \quadrature{1}{i} \}_{i = 0}^\nqlevel$ such that $\quadrature$ is tailored to be exact only for a specific polynomial subspace.
+Define $\Delta_0 := \quadrature{1}{0}$ and $\Delta_i := \quadrature{1}{i} - \quadrature{1}{i - 1}$ for $i \geq 1$.
+Then Smolyak's approximating formula is
+\begin{equation} \xelab{smolyak-sparse-grid}
+  \quadrature = \sum_{\multiindex \in \quadratureMultiindexSet{\nqlevel}} \Delta_{\alpha_1} \otimes \cdots \otimes \Delta_{\alpha_\nvars},
+\end{equation}
+where $\multiindex$ is a multi-index, and $\quadratureMultiindexSet{\nqlevel}$ is as defined in \xeref{total-order-index-set}.
+It can be seen that the construction is a summation of cherry-picked tensor products of one-dimensional quadrature rules.
+\xeref{smolyak-sparse-grid} is well suited for grasping the structure of the resulting sparse grids; more implementation-oriented versions of the Smolyak formula can be found in the cited literature.
+\begin{remark}
+Although we use the same notation in \xeref{full-tensor-product-grid} and \xeref{smolyak-sparse-grid}, it should be understood that the two constructions are generally different.
+The latter reduces to the former if $\quadratureMultiindexSet{\nqlevel}$ is set to $\{ \multiindex: \max \multiindex \leq \nqlevel \}$ with $\max \multiindex := \max_i \alpha_i$.
+\end{remark}

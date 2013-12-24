@@ -58,9 +58,10 @@ This procedure is illustrated in \aref{deterministic-solution-with-leakage}.
 In \aref{deterministic-solution-with-leakage}, $\mP_\static(\vu, \mQ)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, k)$th element is the static component of the power dissipation of the $i$th processing element at the $k$th moment of time with respect to $\vu$ and the temperature given by the $(i, k)$th entry of $\mQ$.
 
 \begin{remark}
-A wide-spread approach to account for the leakage-temperature interdependence is to linearize it with respect to temperature.
-As shown in \cite{liu2007}, already with one linear segment, this approximation can deliver sufficiently accurate results.
-One remarkable feature of such a linearization is that no looping-until-convergence is needed in this case; see \cite{ukhov2012}.
-However, this approach assumes that the only varying parameter of leakage is temperature, in which case it is relatively easy to decide on a representative temperature range and undertake a one-dimensional curve-fitting procedure with respect to it.
-In our case, the power model has multiple parameters stepping far from their nominal values, making it difficult, if ever possible, to construct a good linear fit with respect to temperature.
+A widespread approach to account for leakage is to linearize it with respect to temperature.
+As shown in \cite{liu2007}, already one linear segment can deliver sufficiently accurate results.
+One notable feature of such a linearization is that no looping-until-convergence is needed in this case; see \cite{ukhov2012}.
+However, this technique assumes that the only varying parameter of leakage is temperature, and all other parameters have nominal values.
+In that case, it is relatively easy to decide on a representative temperature range and undertake a one-dimensional curve-fitting procedure with respect to it.
+In our case, the power model has multiple parameters stepping far from their nominal values, making it difficult to construct a good linear fit with respect to temperature.
 \end{remark}
