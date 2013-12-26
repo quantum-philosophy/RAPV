@@ -1,0 +1,18 @@
+The technique used to solve the thermal model in \eref{thermal-model} belongs to the family of exponential integrators \cite{hochbruck2010}.
+More specifically, we rely on a one-step member from that family.
+In what follows, for compactness, we shall omit $\u$.
+
+Multiplying both sides of \eref{thermal-model-inner} by $e^{- \mA \t}$ and noting that
+\[
+  e^{-\mA \t} \frac{\d\vs(\t)}{\d\t} = \frac{\d\, e^{-\mA \t} \vs(\t)}{\d\t} + e^{-\mA \t} \mA \vs(\t),
+\]
+we obtain the exact solution of \eref{thermal-model-inner} over a time interval $\dt = \t_k - \t_{k - 1}$ given as follows:
+\[
+  \vs(\t_k) = e^{\mA \dt} \vs(\t_{k - 1}) + \int_0^{\dt} e^{\mA (\dt - \tau)} \mB \: \vp(\t_k + \tau, \vs(\t_k + \tau)) \: \d\tau.
+\]
+The integral on the right-hand side is approximated by assuming that, within $\dt$, the power dissipation does not change and is equal to the power dissipation at $\t_k$.
+Thus, we have
+\[
+  \vs(\t_k) = e^{\mA \dt} \vs(\t_{k - 1}) + \mA^{-1}(e^{\mA \dt} - \mI) \mB \: \vp(\t_{k - 1}, \vs(\t_{k - 1})),
+\]
+which leads to the recurrence in \eref{recurrence}.

@@ -1,0 +1,5 @@
+$\vu$ should be preprocessed in order to extract a set of mutually independent random variables $\vz$, and this task is accomplished by virtue of the Nataf transformation.
+Here we describe the algorithm in brief and refer the interested reader to \cite{li2008} for additional details.
+The transformation is typically presented in two steps.
+First, $\vu \in \real^{\nparams \nprocs}$ are morphed into correlated Gaussian variables, denoted by $\vz \in \real^{\nparams \nprocs}$, using the knowledge of the marginal distributions and covariance matrix of $\vu$.
+Second, the obtained correlated Gaussian variables are mapped into independent standard Gaussian variables, denoted by $\vz \in \real^{\nparams \nprocs}$, using one of several available techniques such as the Cholesky decomposition.

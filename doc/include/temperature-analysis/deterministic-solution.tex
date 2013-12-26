@@ -3,7 +3,7 @@ In general, \eref{thermal-model-inner} is a system of ordinary differential equa
 Hence, the system in \eref{thermal-model} does not have a general closed-form solution.
 A robust and computationally efficient solution of \eref{thermal-model} for a given $\vu$ is an essential part of our probabilistic framework.
 In order to attain such a solution, we utilize a numerical method from the family of so-called exponential integrators \cite{hochbruck2010}.
-The procedure is described in \xref{thermal-model}, and here we only use the final result; see also \cite{ukhov2012}.
+The procedure is described in \xref{temperature-solution}, and here we only use the final result; see also \cite{ukhov2012}.
 
 Recall that we are to analyze a dynamic power profile $\mP_\dynamic$ covering a time interval $[0, \period]$ with $\nsteps$ samples that are evenly spaced in time.
 The transient solution of \eref{thermal-model-inner} is reduced to the following recurrence for $k = 1, \dots, \nsteps$:

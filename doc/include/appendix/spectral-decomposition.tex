@@ -43,7 +43,7 @@ Denote by $\d\distribution_\z$ the probability measure induced on $\real^\nvars$
 \begin{equation} \xelab{standard-gaussian-measure}
   \d\distribution_\z(\point) = (2 \pi)^{-\nvars/2} \, e^{-\norm[2]{\point}^2 / 2} \, \d\point.
 \end{equation}
-The inner product in \xeref{spectral-decomposition} performs orthogonal projections of $\w$ onto the spaces $\chaosSpace_n$, $n = 0, \dots, \nclevel$, and is given by
+The inner product in \xeref{spectral-decomposition} projects $\w$ onto the corresponding polynomial subspaces and is given by
 \begin{equation} \xelab{orthogonal-projection}
   \coefficient{\w}_{\multiindex} = \innerProduct{\w, \polynomial_{\multiindex}} = \int_{\real^{\nvars}} \w(\transformation[\point]) \, \polynomial_{\multiindex}(\point) \, \d\distribution_\z(\point).
 \end{equation}

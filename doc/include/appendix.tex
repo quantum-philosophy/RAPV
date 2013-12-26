@@ -1,16 +1,14 @@
-\subsection{Thermal Modeling} \xlab{thermal-model}
+\subsection{Temperature Solution} \xlab{temperature-solution}
+\input{include/appendix/temperature-solution.tex}
 
 \subsection{Probability Transformation} \xlab{probability-transformation}
+\input{include/appendix/probability-transformation.tex}
 
 \subsection{Model Order Reduction} \xlab{model-order-reduction}
+\input{include/appendix/model-order-reduction.tex}
 
 \subsection{Spectral Decomposition} \xlab{spectral-decomposition}
 \input{include/appendix/spectral-decomposition.tex}
 
 \subsection{Numerical Integration} \xlab{numerical-integration}
 \input{include/appendix/numerical-integration.tex}
-
-\subsection{Dimensional Adaptation} \xlab{dimensional-adaptation}
-The sparse grids obtained via the Smolyak algorithm when $\quadratureMultiindexSet{\nqlevel} = \{ \multiindex: \norm[1]{\multiindex} \leq \nqlevel \}$ are known as isotropic since all dimensions are treated identically.
-An important generalization of the above construction is the so-called anisotropic Smolyak algorithm \cite{nobile2008}.
-The main difference between the isotropic and anisotropic versions lies in the constraints imposed on $\quadratureMultiindexSet{\nqlevel}$.
