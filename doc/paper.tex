@@ -1,15 +1,10 @@
 \documentclass[conference]{IEEEtran}
 \input{include/definitions.tex}
 
-\bibliography{include/references.bib}
+\title{Temperature-centric Reliability Analysis and Optimization Under Process Variation}
+\author{\input{include/authors.tex}}
 
 \begin{document}
-  \title{Temperature-centric Reliability Analysis and Optimization Under Process Variation}
-
-  \author{
-    \input{include/authors.tex}
-  }
-
   \maketitle
 
   \begin{abstract}
@@ -46,7 +41,8 @@
   \section{Conclusion} \slab{conclusion}
   \input{include/conclusion.tex}
 
-  \printbibliography
+  \bibliographystyle{IEEEtran}
+  \bibliography{IEEEabrv,include/references}
 
   \appendix
   \input{include/appendix.tex}
