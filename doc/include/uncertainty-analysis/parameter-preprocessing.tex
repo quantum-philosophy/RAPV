@@ -1,0 +1,28 @@
+Our foremost task is to transform $\vu$ into mutually independent \rvs\ as independence is a prerequisite of the forthcoming mathematical treatment.
+To this end, an adequate probability transformation should be undertaken depending on the available information; see \cite{eldred2008} for an overview.
+One transformation for which the assumed knowledge about $\vu$ is sufficient is the Nataf transformation \cite{li2008}.
+Denote this transformation by
+\begin{equation} \elab{probability-transformation}
+  \vu = \transformation{\vz},
+\end{equation}
+which relates $\nparams \nprocs$ dependent \rvs, \ie, $\vu$, with $\nvars$ independent \rvs
+\begin{equation} \elab{independent-random-variables}
+  \vz = (\z_i)_{i = 1}^\nvars.
+\end{equation}
+Regardless of the marginals, $\z_i \sim \gaussianDistribution{0, 1}$, $i = 1, \dots, \nvars$, that is, each $\z_i$ has the standard Gaussian distribution.
+Refer to \xref{probability-transformation} for further details about the Nataf transformation.
+
+As we shall discuss later on, the stochastic dimensionality $\nvars$ of the problem has a considerable impact of the computational complexity of our framework.
+Therefore, an important part of the preprocessing stage is model order reduction.
+To this end, without introducing additional transformations, we let $\transformation$ be augmented with such a reduction procedure.
+Thus, $\nvars \leq \nparams \nprocs$.
+This duty of $\transformation$ is further discussed in \xref{model-order-reduction}.
+
+Let us turn to the illustrative application.
+Recall that we exemplify our framework considering the effective channel length and gate-oxide thickness with the notation given in \eref{application-uncertain-parameters}.
+Both parameters correspond to Euclidean distances; they take values on bounded intervals of the positive part of the real line.
+With this in mind, we model the two process parameters using the four-parametric family of beta distributions:
+\begin{equation*}
+  \u_i \sim \distribution_{\u_i} = \betaDistribution{a_i, b_i, c_i, d_i}
+\end{equation*}
+where $i = 1, \dots, \nparams \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond their supports.

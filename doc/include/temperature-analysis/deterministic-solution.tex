@@ -12,7 +12,7 @@ The transient solution of \eref{thermal-model-inner} is reduced to the following
 \end{equation}
 where the subscript $k$ stands for time $k \dt$, $\vs_0 = \vZero$,
 \[
-  \mE = e^{\mA \dt}, \hspace{1em} \text{and} \hspace{1em} \mF = \mA^{-1} (e^{\mA \dt} - \mI) \: \mB.
+  \mE = e^{\mA \dt}, \hspace{1em} \text{and} \hspace{1em} \mF = \mA^{-1} (e^{\mA \dt} - \mOne) \: \mB.
 \]
 For computational efficiency, the state matrix $\mA$ is factorized using the eigenvalue decomposition as follows:
 \begin{equation} \elab{eigenvalue-decomposition}
@@ -42,7 +42,7 @@ The pseudo code of this algorithm, which delivers the exact solution under the m
 \input{include/algorithms/deterministic-solution.tex}
 
 Hereafter, we shall adopt MATLAB's notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
-Also, auxiliary vectors and matrices will be underlined.
+Also, auxiliary variables will be written with hats.
 $\mQ_\ambient$ is a matrix of the ambient temperature.
 \begin{remark}
 The time complexity of direct solutions of the system of linear equations is $\complexity{\nsteps^3 \nnodes^3}$ while the one of \aref{deterministic-solution} is only $\complexity{\nsteps \nnodes^2 + \nnodes^3}$.

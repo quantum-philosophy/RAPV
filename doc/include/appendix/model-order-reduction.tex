@@ -1,11 +1,11 @@
 In this section, we discuss the model order reduction procedure performed by $\transformation$ in \sref{parameter-preprocessing}.
 Let $\mCov_\z$ be the covariance matrix of the standardized random vector $\vz$ (which is the result of the first step of the Nataf transformation outlined in \xref{probability-transformation}).
-Since any covariance matrix is real and symmetric, $\mCov_\z$ admits the eigenvalue decomposition as $\mCov_\z = \m{V} \m{\Lambda} \m{V}^T$ (see \sref{thermal-model} for the notation).
-$\vz$ can then be represented as $\vz = \m{V} \m{\Lambda}^\frac{1}{2} \vz$ where the vector $\vz$ is standardized and uncorrelated, which is also independent as $\vz$ is Gaussian.
+Since any covariance matrix is real and symmetric, $\mCov_\z$ admits the eigenvalue decomposition as $\mCov_\z = \mV \mL \mV^T$ (see \sref{thermal-model} for the notation).
+$\vz$ can then be represented as $\vz = \mV \mL^\frac{1}{2} \vz$ where the vector $\vz$ is standardized and uncorrelated, which is also independent as $\vz$ is Gaussian.
 
 The decomposition above provides means for model order reduction.
 The intuition is that, due to the correlations possessed by $\vz \in \real^{\nparams \nprocs}$, it can be recovered from a small subset $\vz \in \real^\nvars$ of $\vz\in \real^{\nparams \nprocs}$, $\nvars \ll \nparams \nprocs$.
-Such redundancies can be revealed by analyzing the eigenvalues $\lambda_i$ stored in $\m{\Lambda}$.
+Such redundancies can be revealed by analyzing the eigenvalues $\lambda_i$ stored in $\mL$.
 Assume $\lambda_i$, $\forall i$, are arranged in a non-increasing order and let $\tilde{\lambda}_i = \lambda_i / \sum_j \lambda_j$.
 Gradually summing up the arranged and normalized eigenvalues $\tilde{\lambda}_i$, we can identify a subset of them that has the cumulative sum greater than a certain threshold.
 When this threshold is sufficiently high (close to one), the rest of the eigenvalues and the corresponding eigenvectors can be dropped as being insignificant, reducing the number of stochastic dimensions.

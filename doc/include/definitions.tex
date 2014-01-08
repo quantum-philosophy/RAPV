@@ -67,13 +67,19 @@
 
 % Temperature analysis
 \newcommand{\ta}{temperature analysis}
+\newcommand{\Ta}{Temperature analysis}
 \newcommand{\tta}{transient \ta}
+\newcommand{\Tta}{Transient \ta}
 
 \newcommand{\dss}{dynamic steady-state}
+\newcommand{\Dss}{Dynamic steady-state}
 \newcommand{\dssta}{\dss\ \ta}
+\newcommand{\Dssta}{\Dss\ \ta}
 
 \newcommand{\sss}{static steady-state}
+\newcommand{\Sss}{Static steady-state}
 \newcommand{\sssta}{\sss\ \ta}
+\newcommand{\Sssta}{\Sss\ \ta}
 
 % Probability theory
 \newcommand{\rv}{random variable}
@@ -89,7 +95,9 @@
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
-\newcommand{\tmp}[1]{\underline{#1}}
+\newcommand{\tmp}[1]{\widehat{#1}}
+
+\newcommand{\complexity}[1]{\mathcal{O}\left( #1 \right)}
 
 %
 % Mathematics
@@ -104,10 +112,15 @@
 \usepackage{bm}
 
 %
+% Set theory
+%
+\newcommand{\cardinality}[1]{\# #1}
+
+%
 % Linear algebra
 %
 \newcommand{\m}[1]{\mathbf{#1}}
-\newcommand{\mI}{\m{I}}
+\newcommand{\mOne}{\m{I}}
 \newcommand{\mZero}{\m{0}}
 
 \renewcommand{\v}[1]{\mathbf{#1}}
@@ -116,7 +129,7 @@
 \newcommand{\diagonal}[1]{\text{diag}\left( #1 \right)}
 
 %
-% Functional analysis
+% Real analysis and functional analysis
 %
 \newcommand{\real}{\mathbb{R}}
 \renewcommand{\natural}[1][0]{\mathbb{N}_{#1}}
@@ -129,7 +142,6 @@
 \newcommand{\coefficient}[1]{\hat{#1}}
 
 \newcommand{\sigmaAlgebra}{\mathcal{F}}
-\newcommand{\borelSigmaAlgebra}{\mathcal{B}}
 
 \newcommand{\norm}[2][]{\| #2 \|_{#1}}
 \newcommand{\innerProduct}[1]{\langle #1 \rangle}
@@ -137,10 +149,7 @@
 
 \newcommand{\multiindex}[1][\alpha]{\bm{#1}}
 \newcommand{\multiindexSet}[2][]{\mathcal{A}_{#1}\left( #2 \right)}
-
-\newcommand{\cardinality}[1]{\# #1}
-
-\newcommand{\complexity}[1]{\mathcal{O}\left( #1 \right)}
+\newcommand{\multiindexWeight}[1][c]{\bm{#1}}
 
 \newcommand{\x}{x}
 \newcommand{\vx}{\v{x}}
@@ -168,7 +177,7 @@
 \newcommand{\mCov}{\bm{\Sigma}}
 
 %
-% Wiener chaos decomposition
+% Spectral decomposition
 %
 \newcommand{\chaosSpace}{\mathcal{H}}
 
@@ -183,7 +192,7 @@
 \newcommand{\chaosMultiindexSet}[1]{\multiindexSet{#1}}
 
 %
-% Sparse grid integration
+% Numerical integration
 %
 \newcommand{\point}{\vx}
 \newcommand{\weight}{w}
@@ -281,6 +290,8 @@
 %
 % Numbers
 %
+\newcommand{\level}{l}
+
 \newcommand{\nnodes}{{n_\text{n}}}
 \newcommand{\nprocs}{{n_\text{p}}}
 \newcommand{\nsteps}{{n_\text{t}}}
@@ -288,7 +299,7 @@
 \newcommand{\nparams}{{n_\text{u}}}
 \newcommand{\nvars}{{n_\z}}
 
-\newcommand{\nclevel}{{l_\mathcal{C}}}
+\newcommand{\nclevel}{{\level_\mathcal{C}}}
 
-\newcommand{\nqlevel}{{l_\mathcal{Q}}}
+\newcommand{\nqlevel}{{\level_\mathcal{Q}}}
 \newcommand{\nqorder}{{n_\mathcal{Q}}}

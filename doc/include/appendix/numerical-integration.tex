@@ -29,12 +29,12 @@ Intuitively, the algorithm combines $\{ \quadrature{1}{i} \}_{i = 0}^\nqlevel$ s
 Define $\Delta_0 := \quadrature{1}{0}$ and $\Delta_i := \quadrature{1}{i} - \quadrature{1}{i - 1}$ for $i \geq 1$.
 Then Smolyak's approximating formula is
 \begin{equation} \xelab{smolyak-sparse-grid}
-  \quadrature = \bigoplus_{\multiindex \in \quadratureMultiindexSet{\nqlevel}} \Delta_{\alpha_1} \otimes \cdots \otimes \Delta_{\alpha_\nvars},
+  \quadrature = \bigoplus_{\multiindex \in \quadratureMultiindexSet{\nqlevel}} \Delta_{\alpha_1} \otimes \cdots \otimes \Delta_{\alpha_\nvars}.
 \end{equation}
-where $\multiindex$ is a multi-index, and $\quadratureMultiindexSet{\nqlevel}$ is as defined in \xeref{total-order-index-set}.
+In the original (isotropic) formulation of the Smolyak algorithm, $\quadratureMultiindexSet{\nqlevel}$ is the same as the one defined in \xeref{isotropic-total-order-index-set}; the resulting sparse grid is exact for polynomials of total order $2 \nqlevel + 1$ (analogous to the integration in one dimension).
 It can be seen that the construction is a summation of cherry-picked tensor products of one-dimensional quadrature rules.
 \xeref{smolyak-sparse-grid} is well suited for grasping the structure of the resulting sparse grids; more implementation-oriented versions of the Smolyak formula can be found in the cited literature.
 \begin{remark}
 Although we use the same notation in \xeref{full-tensor-product-grid} and \xeref{smolyak-sparse-grid}, it should be understood that the two constructions are generally different.
-The latter reduces to the former if $\quadratureMultiindexSet{\nqlevel}$ is set to $\{ \multiindex: \max \multiindex \leq \nqlevel \}$ with $\max \multiindex := \max_i \alpha_i$.
+The latter reduces to the former if $\quadratureMultiindexSet{\nqlevel}$ is set to $\{ \multiindex: \max_i \alpha_i \leq \nqlevel \}$.
 \end{remark}

@@ -13,6 +13,6 @@ we obtain the exact solution of \eref{thermal-model-inner} over a time interval 
 The integral on the right-hand side is approximated by assuming that, within $\dt$, the power dissipation does not change and is equal to the power dissipation at $\t_k$.
 Thus, we have
 \[
-  \vs(\t_k) = e^{\mA \dt} \vs(\t_{k - 1}) + \mA^{-1}(e^{\mA \dt} - \mI) \mB \: \vp(\t_{k - 1}, \vs(\t_{k - 1})),
+  \vs(\t_k) = e^{\mA \dt} \vs(\t_{k - 1}) + \mA^{-1}(e^{\mA \dt} - \mOne) \mB \: \vp(\t_{k - 1}, \vs(\t_{k - 1})),
 \]
 which leads to the recurrence in \eref{recurrence}.

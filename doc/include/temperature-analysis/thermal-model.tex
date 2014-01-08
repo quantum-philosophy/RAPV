@@ -4,7 +4,7 @@ For clarity, we assume that each processing element is mapped onto one correspon
 
 The thermal dynamics of the system are modeled using the following system of differential-algebraic equations \cite{ukhov2012}:
 \begin{subnumcases}{\elab{thermal-model}}
-  \frac{\d\vs(\t, \vu)}{\d\t} = \mA \: \vs(\t, \vu) + \mB \: \vp(\t, \vu, \vq(\t, \vu)) \elab{thermal-model-inner} \\
+  \frac{\d \, \vs(\t, \vu)}{\d\t} = \mA \: \vs(\t, \vu) + \mB \: \vp(\t, \vu, \vq(\t, \vu)) \elab{thermal-model-inner} \\
   \vq(\t, \vu) = \mB^T \vs(\t, \vu) + \vq_\ambient \elab{thermal-model-outer}
 \end{subnumcases}
 where

@@ -31,65 +31,10 @@ Denote by $\{ \distribution_{\u_i} \}_{i = 1}^{\nparams \nprocs}$ and $\mCorr_\u
 Note that the number of distinct marginals is only $\nparams$ since $\nprocs$ components of $\vu$ correspond to the same uncertain parameter.
 
 \subsection{Parameter Preprocessing} \slab{parameter-preprocessing}
-Our foremost task is to transform $\vu$ into mutually independent \rvs\ as independence is a prerequisite of the forthcoming mathematical treatment.
-To this end, an adequate probability transformation should be undertaken depending on the available information; see \cite{eldred2008} for an overview.
-One transformation for which the assumed knowledge about $\vu$ is sufficient is the Nataf transformation \cite{li2008}.
-Denote this transformation by
-\begin{equation} \elab{probability-transformation}
-  \vu = \transformation{\vz},
-\end{equation}
-which relates $\nparams \nprocs$ dependent \rvs, \ie, $\vu$, with $\nvars$ independent \rvs
-\begin{equation} \elab{independent-random-variables}
-  \vz = (\z_i)_{i = 1}^\nvars.
-\end{equation}
-Regardless of the marginals, $\z_i \sim \gaussianDistribution{0, 1}$, $i = 1, \dots, \nvars$, that is, each $\z_i$ has the standard Gaussian distribution.
-Refer to \xref{probability-transformation} for further details about the Nataf transformation.
-
-As we shall discuss later on, the stochastic dimensionality $\nvars$ of the problem has a considerable impact of the computational complexity of our framework.
-Therefore, an important part of the preprocessing stage is model order reduction.
-To this end, without introducing additional transformations, we let $\transformation$ be augmented with such a reduction procedure.
-Thus, $\nvars \leq \nparams \nprocs$.
-This duty of $\transformation$ is further discussed in \xref{model-order-reduction}.
-
-Let us turn to the illustrative application.
-Recall that we exemplify our framework considering the effective channel length and gate-oxide thickness with the notation given in \eref{application-uncertain-parameters}.
-Both parameters correspond to ordinary (Euclidean) distances; they take strictly positive values in bounded domains.
-With this in mind, we model the two process parameters using the four-parametric family of beta distributions:
-\begin{equation*}
-  \u_i \sim \distribution_{\u_i} = \betaDistribution{a_i, b_i, c_i, d_i}
-\end{equation*}
-where $i = 1, \dots, \nparams \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond their supports.
+\input{include/uncertainty-analysis/parameter-preprocessing.tex}
 
 \subsection{Surrogate Construction}
-Let $\w \equiv \w(\vu) \equiv \w(\transformation{\vz})$ be a quantity of interest dependent on $\vu$.
-In order to give a computationally efficient probabilistic characterization of $\w$, we utilize non-intrusive spectral decompositions based on orthogonal polynomials.
-The corresponding mathematical foundation is outlined in \xref{spectral-decomposition} and \xref{numerical-integration}, and here we leap directly to the main results obtained in those sections.
-
-Assuming $\w \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$, \ie, the variance of $\w$ is finite.
-Then $\w$ can be expanded into the following series:
-\begin{equation} \elab{spectral-decomposition}
-  \w \approx \chaos{\nvars}{\nclevel}{\w} := \sum_{\multiindex \in \chaosMultiindexSet{\nclevel}} \coefficient{\w}_{\multiindex} \, \polynomial_{\multiindex}(\vz)
-\end{equation}
-where $\nclevel$ is the expansion level; $\multiindex = (\alpha_i)$ is a multi-index; $\chaosMultiindexSet{\nclevel}$ is an index set to be discussed shortly; and $\polynomial_{\multiindex}(\vz)$ is an $\nvars$-variate Hermite polynomial constructed as a product of normalized one-dimensional Hermite polynomials of orders specified by the corresponding elements of $\multiindex$.
-
-As discussed in \xref{spectral-decomposition}, each coefficient $\coefficient{\w}_{\multiindex}$ in \eref{spectral-decomposition} is an $\nvars$-dimensional integral of the product of $\w$ with $\polynomial_{\multiindex}$, and this integral should be computed numerically.
-To this end, we construct a quadrature rule and calculate $\coefficient{\w}_{\multiindex}$ as
-\[
-  \coefficient{\w}_{\multiindex} \approx \quadrature{\nvars}{\nqlevel}{\w \, \polynomial_{\multiindex}} := \sum_{i = 1}^\nqorder \w(\transformation{\point_i}) \, \polynomial_{\multiindex}(\point_i) \, \weight_i
-\]
-where $\nqlevel$ is the quadrature level, and $\{ (\point_i \in \real^\nvars, \weight_i \in \real) \}_{i = 1}^\nqorder$ are the points and weights of the quadrature.
-The multivariate quadrature operator $\quadrature$ is based on a set of univariate operators and is constructed as follows:
-\begin{equation} \elab{smolyak-sparse-grid}
-  \quadrature = \bigoplus_{\multiindex \in \quadratureMultiindexSet{\nqlevel}} \Delta_{\alpha_1} \otimes \cdots \otimes \Delta_{\alpha_\nvars}.
-\end{equation}
-The notation used the above equation is not important for the present discussion and can be found in \xref{numerical-integration}.
-The important aspect to note is the structure of this operator, namely, the index set $\quadratureMultiindexSet{\nqlevel}$.
-
-The standard choice for $\multiindexSet{l}$ in \eref{spectral-decomposition} and \eref{smolyak-sparse-grid} is $\{ \multiindex: \norm[1]{\multiindex} \leq l \}$, which is referred to as isotropy since all dimensions are constrained identically.
-An important generalization of the above construction is the so-called anisotropic Smolyak algorithm \cite{nobile2008}.
-The main difference between the isotropic and anisotropic versions lies in the constraints imposed on $\quadratureMultiindexSet{\nqlevel}$.
+\input{include/uncertainty-analysis/surrogate-construction.tex}
 
 \subsection{Post-processing}
-The function given by \eref{spectral-decomposition} is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
-Thus, having constructed such an expansion, various statistics about $\w$ can be estimated at no effort.
-Moreover, \eref{spectral-decomposition} yields analytical formulae for the expected value and variance of $\w$.
+\input{include/uncertainty-analysis/post-processing.tex}

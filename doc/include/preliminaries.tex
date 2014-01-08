@@ -1,7 +1,7 @@
 \subsection{Probability Theory}
 Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{durrett2010}.
 A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $\h: \outcomes \to \real$.
-A \rv\ $\h$, is uniquely characterized by its (cumulative) distribution function defined by
+A \rv\ $\h$ is uniquely characterized by its (cumulative) distribution function defined by
 \begin{equation*}
   \distribution_\h(\x) := \probabilityMeasure(\{ \o \in \outcomes: \h(\o) \leq \x \}).
 \end{equation*}
@@ -20,7 +20,7 @@ In what follows, all the \rvs\ will tacitly have $(\outcomes, \sigmaAlgebra, \pr
 
 \subsection{Reliability Theory}
 Let $\T: \outcomes \to \real$ be a \rv\ representing the lifetime of a system.
-$\T$ is the time until a failure after which the system cannot be recovered.
+The lifetime is the time until the system experiences a failure after which it cannot be recovered.
 The survival function is defined as
 \begin{align*}
   \survival(\t) := \probabilityMeasure(\{ \o \in \outcomes: \T(\o) > \t \}) = 1 - \distribution_\T(\t)
