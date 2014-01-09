@@ -51,7 +51,38 @@ Specifically, we let
 where $\anisotropyKnob \in [0, 1]$ is a tuning parameter.
 The isotropic scenario can be recovered by setting $\anisotropyKnob = 0$; the other values of $\anisotropyKnob$ correspond to various levels of anisotropy with the maximum attained by setting $\anisotropyKnob = 1$.
 
-To summarize, in order to give a probabilistic characterization of a quantity of interest, we perform chaotic expansions as shown in \eref{spectral-decomposition}.
+Let us sum up what we have at this point.
+In order to give a probabilistic characterization of a quantity of interest, we perform chaotic expansions as shown in \eref{spectral-decomposition}.
 The coefficients of such expansions are evaluated by Gaussian quadratures as shown in \eref{numerical-integration}.
 The quadratures are constructed using the Smolyak formula given in \eref{smolyak-sparse-grid}.
-The index sets used in both \eref{spectral-decomposition} and \eref{smolyak-sparse-grid} are the one in \eref{anisotropic-total-order-index-set} wherein the anisotropic weights are set according to \eref{dimension-anisotropy}.
+The index sets used in both \eref{spectral-decomposition} and \eref{smolyak-sparse-grid} are the one given in \eref{anisotropic-total-order-index-set} wherein the anisotropic weights are set according to \eref{dimension-contribution} and \eref{dimension-anisotropy}.
+
+The pair of $\vz$ and $\dimensionAnisotropy$ uniquely characterizes the uncertainty quantification problem at hand.
+Once these two components have been identified, and the desired approximation level $\level = \nclevel = \nqlevel$ has been specified, the corresponding polynomial basis and quadrature rule stay the same for all quantities that one might be interested in studying.
+This observation is of high importance as a lot of preparatory work can and should be done only once and then stored/tabulated for future uses.
+In particular, the construction of the expansion in \eref{spectral-decomposition} can be reduced one matrix multiplication as follows.
+
+Let $\ncorder = \cardinality{\multiindexSet{\level}}$ be the cardinality of $\multiindexSet{\level}$, which is also the number of polynomial terms and, hence, coefficients in \eref{spectral-decomposition}.
+Assume the multi-indices contained in $\multiindexSet{\level}$ are arranged in a vector $(\multiindex_i)_{i = 1}^\ncorder$, which gives a certain ordering.
+Now, let
+\begin{equation} \elab{projection-matrix}
+  \projection = \big( \pi_{ij} = \polynomial_{\multiindex_i}(\point_j) \, \weight_j \big)_{i = 1, \, j = 1}^{i = \ncorder, \, j = \nqorder},
+\end{equation}
+that is, $\pi_{ij}$ is the polynomial corresponding to the $i$th multi-index evaluated at the $j$th quadrature point and multiplied by the $j$th quadrature weight.
+We refer to $\projection$ as the projection matrix.
+The coefficients in \eref{spectral-decomposition} can now be computed as
+\begin{equation} \elab{coefficient-evaluation}
+  \coefficient{\vw} = \projection \, \vw
+\end{equation}
+where
+\begin{equation} \elab{quantity-evaluation}
+  \coefficient{\vw} = (\coefficient{\w}_i)_{i = 1}^\ncorder \hspace{1em} \text{and} \hspace{1em} \vw = \big( \w_i = \w(\transformation{\point_i}) \big)_{i = 1}^\nqorder,
+\end{equation}
+that is, $\w_i$ is $\w$ evaluated at the $i$th quadrature node.
+It can be seen that \eref{coefficient-evaluation} is just a matrix version of \eref{numerical-integration}.
+$\projection$ is the one that should be precomputed and tabulated.
+
+\begin{remark} \rlab{multiple-dimensions}
+It is worth noting that $\w$ can be (and will be in our application) multidimensional, and all the derivations given throughout the paper are directly applicable to this scenario.
+More specifically, such operations as those in \eref{spectral-decomposition} and \eref{numerical-integration} should be undertaken elementwise, and, in \eref{quantity-evaluation}, $\coefficient{\vw}$, $\vw$, and $\w_i$ are generally two matrices and a row vector, respectively.
+\end{remark}
