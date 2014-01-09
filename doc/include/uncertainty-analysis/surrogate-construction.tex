@@ -22,21 +22,32 @@ The multivariate quadrature operator $\quadrature$ is based on a set of univaria
 The notation used in the above equation is not essential for the present discussion and can be found in \xref{numerical-integration}.
 The important aspect to note, though, is the structure of this operator, namely, the index set $\quadratureMultiindexSet{\nqlevel}$.
 
-The standard choice of $\multiindexSet{\nclevel}$ in \eref{spectral-decomposition} is $\{ \multiindex: \norm[1]{\multiindex} \leq \nclevel \}$ where $\norm[1]{\multiindex} := \sum_i |\alpha_i|$, which is called an isotropic total-order index set.
+The standard choice of $\multiindexSet{\nclevel}$ in \eref{spectral-decomposition} is $\{ \multiindex: \norm[1]{\multiindex} \leq \nclevel \}$, which is called an isotropic total-order index set.
 \emph{Isotropic} refers to the fact that all dimensions are trimmed identically, and \emph{total-order} to the structure of the corresponding polynomial space.
 In \eref{numerical-integration}, $\polynomial_{\multiindex}$ is a polynomial of total order at most $\nclevel$, and $\w$ is modeled as such a polynomial.
 Hence, the integrand in \eref{numerical-integration} is a polynomial of total order at most $2 \nclevel$.
-Keeping this aspect in mind, one usually chooses a quadrature rule such that the rule is exact for polynomials of total order $2 \nclevel$ \cite{eldred2008}.
-In this work, we employ Gaussian quadratures for integration, in which case a quadrature of level $\nqlevel$ is exact for integrating polynomials of total order $2 \nqlevel + 1$.
-Hence, it is sufficient to keep $\nclevel$ and $\nqlevel$ equal.
+Having this aspect in mind, one usually constructs a quadrature rule such that it is exact for polynomials of total order $2 \nclevel$ \cite{eldred2008}.
+In this work, we employ Gaussian quadratures for integration, in which case a quadrature of level $\nqlevel$ is exact for integrating polynomials of total order $2 \nqlevel + 1$ (see \xref{numerical-integration}).
+Therefore, it is sufficient to keep $\nclevel$ and $\nqlevel$ equal.
 More generally, the index sets $\multiindexSet{\nclevel}$ and $\multiindexSet{\nqlevel}$ should be synchronized; in what follows, we shall denote both by $\multiindexSet{\level}$.
 
 In the context of sparse grids, an important generalization of the construction in \eref{smolyak-sparse-grid} is the so-called anisotropic Smolyak algorithm \cite{nobile2008}.
 The main difference between the isotropic and anisotropic versions lies in the constraints imposed on $\quadratureMultiindexSet{\level}$.
-An anisotropic total-order index set is
+An anisotropic total-order index set is as follows:
 \begin{equation} \elab{anisotropic-total-order-index-set}
-  \chaosMultiindexSet{\level} = \left\{ \multiindex: \: \innerProduct{\multiindexWeight, \multiindex} \leq \nclevel \, \min_i c_i \right\}
+  \chaosMultiindexSet{\level} = \left\{ \multiindex: \innerProduct{\dimensionAnisotropy, \multiindex} \leq \nclevel \, \min_i c_i \right\}
 \end{equation}
-where $\multiindexWeight = (c_i) \in \real^\nvars_+$ is a vector assigning weights to each dimension, and $\innerProduct{\cdot, \cdot}$ is the standard inner product on $\real^\nvars$.
-The index set in \eref{anisotropic-total-order-index-set} plugged into \eref{smolyak-sparse-grid} results in a sparse grid which is exact for polynomials constrained using the same index set.
-Consequently, we use \eref{anisotropic-total-order-index-set} in both \eref{spectral-decomposition} and \eref{numerical-integration} (via \eref{smolyak-sparse-grid}).
+where $\dimensionAnisotropy = (c_i) \in \real^\nvars_+$ is a vector assigning importance coefficients, or weights, to each dimension, and $\innerProduct{\cdot, \cdot}$ is the standard inner product on $\real^\nvars$.
+Equation \eref{anisotropic-total-order-index-set} plugged into \eref{smolyak-sparse-grid} results in a sparse grid which is exact for the polynomial space which is tailored using the same index set.
+Therefore, we utilized \eref{anisotropic-total-order-index-set} in both \eref{spectral-decomposition} and \eref{numerical-integration} (via \eref{smolyak-sparse-grid}).
+
+The above approach allows one to leverage the highly anisotropic behaviors inherent for many practical problems \cite{nobile2008}.
+It provides a great control over the computational time associated with the construction of spectral decompositions: a carefully chosen importance vector $\dimensionAnisotropy$ in \eref{anisotropic-total-order-index-set} can significantly reduce the number of polynomial terms in \eref{spectral-decomposition} and the number of quadrature points needed in \eref{numerical-integration} to compute the coefficients of those terms.
+The question to discuss now is the choice of $\dimensionAnisotropy$.
+In this regard, we rely on the variance contributions of the dimensions given by  $\dimensionContribution$ in \eref{dimension-contribution}.
+Specifically, we let
+\begin{equation} \elab{dimension-anisotropy}
+  \dimensionAnisotropy = \dimensionContribution^\anisotropyKnob := (\lambda_i^\anisotropyKnob)_{i = 1}^\nvars
+\end{equation}
+where $\anisotropyKnob \in [0, 1]$ is a tuning parameter.
+The isotropic scenario can be recovered by setting $\anisotropyKnob = 0$; the other values of $\anisotropyKnob$ correspond to various levels of anisotropy with the maximum attained by setting $\anisotropyKnob = 1$.

@@ -5,7 +5,7 @@ $\vz$ can then be represented as $\vz = \mV \mL^\frac{1}{2} \vz$ where the vecto
 
 The decomposition above provides means for model order reduction.
 The intuition is that, due to the correlations possessed by $\vz \in \real^{\nparams \nprocs}$, it can be recovered from a small subset $\vz \in \real^\nvars$ of $\vz\in \real^{\nparams \nprocs}$, $\nvars \ll \nparams \nprocs$.
-Such redundancies can be revealed by analyzing the eigenvalues $\lambda_i$ stored in $\mL$.
-Assume $\lambda_i$, $\forall i$, are arranged in a non-increasing order and let $\tilde{\lambda}_i = \lambda_i / \sum_j \lambda_j$.
-Gradually summing up the arranged and normalized eigenvalues $\tilde{\lambda}_i$, we can identify a subset of them that has the cumulative sum greater than a certain threshold.
-When this threshold is sufficiently high (close to one), the rest of the eigenvalues and the corresponding eigenvectors can be dropped as being insignificant, reducing the number of stochastic dimensions.
+Such redundancies can be revealed by analyzing the eigenvalues $\dimensionContribution = (\lambda_i)_{i = 1}^{\nparams \nprocs}$ located on the diagonal of $\mL$, which are all non-negative.
+Without loss of generality, we let $\lambda_i \geq \lambda_j$ whenever $i < j$ and assume $\norm[1]{\dimensionContribution} = 1$.
+Then we can identify the smallest $\nvars$ such that $\sum_{i = 1}^\nvars \lambda_i$ is greater than a certain threshold chosen from the interval $(0, 1]$.
+When this threshold is sufficiently high (close to one), the rest of the eigenvalues and the corresponding eigenvectors can be dropped as being insignificant, reducing the number of stochastic dimensions to $\nvars$.

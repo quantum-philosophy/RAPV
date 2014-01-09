@@ -23,19 +23,6 @@
 %
 % References
 %
-\usepackage{xcolor}
-\definecolor{alpha}{rgb}{0.34,0.71,0.91}
-\definecolor{beta} {rgb}{0.90,0.62,0.00}
-\definecolor{gamma}{rgb}{0.51,0.77,0.48}
-
-\usepackage{hyperref}
-\hypersetup{%
-  pdfborderstyle={/S/U/W 1},%
-  linkbordercolor={alpha},%
-  citebordercolor={beta},%
-  urlbordercolor={gamma}%
-}
-
 \newcommand{\eref}[1]{(\ref{equ:#1})}
 \newcommand{\sref}[1]{Sec.~\ref{sec:#1}}
 \newcommand{\tref}[1]{Table~\ref{tab:#1}}
@@ -149,7 +136,6 @@
 
 \newcommand{\multiindex}[1][\alpha]{\bm{#1}}
 \newcommand{\multiindexSet}[2][]{\mathcal{A}_{#1}\left( #2 \right)}
-\newcommand{\multiindexWeight}[1][c]{\bm{#1}}
 
 \newcommand{\x}{x}
 \newcommand{\vx}{\v{x}}
@@ -260,6 +246,10 @@
 %
 \renewcommand{\u}{u}
 \newcommand{\vu}{\v{u}}
+
+\newcommand{\dimensionContribution}{\bm{\lambda}}
+\newcommand{\dimensionAnisotropy}{\mathbf{c}}
+\newcommand{\anisotropyKnob}{\gamma}
 
 \newcommand{\z}{\xi}
 \newcommand{\vz}{\bm{\xi}}
