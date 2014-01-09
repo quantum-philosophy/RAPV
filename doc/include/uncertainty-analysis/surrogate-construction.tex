@@ -35,11 +35,10 @@ In the context of sparse grids, an important generalization of the construction 
 The main difference between the isotropic and anisotropic versions lies in the constraints imposed on $\quadratureMultiindexSet{\level}$.
 An anisotropic total-order index set is as follows:
 \begin{equation} \elab{anisotropic-total-order-index-set}
-  \chaosMultiindexSet{\level} = \left\{ \multiindex: \innerProduct{\dimensionAnisotropy, \multiindex} \leq \nclevel \, \min_i c_i \right\}
+  \chaosMultiindexSet{\level} = \left\{ \multiindex: \innerProduct{\dimensionAnisotropy, \multiindex} \leq \level \, \min_i c_i \right\}
 \end{equation}
 where $\dimensionAnisotropy = (c_i) \in \real^\nvars_+$ is a vector assigning importance coefficients, or weights, to each dimension, and $\innerProduct{\cdot, \cdot}$ is the standard inner product on $\real^\nvars$.
 Equation \eref{anisotropic-total-order-index-set} plugged into \eref{smolyak-sparse-grid} results in a sparse grid which is exact for the polynomial space which is tailored using the same index set.
-Therefore, we utilized \eref{anisotropic-total-order-index-set} in both \eref{spectral-decomposition} and \eref{numerical-integration} (via \eref{smolyak-sparse-grid}).
 
 The above approach allows one to leverage the highly anisotropic behaviors inherent for many practical problems \cite{nobile2008}.
 It provides a great control over the computational time associated with the construction of spectral decompositions: a carefully chosen importance vector $\dimensionAnisotropy$ in \eref{anisotropic-total-order-index-set} can significantly reduce the number of polynomial terms in \eref{spectral-decomposition} and the number of quadrature points needed in \eref{numerical-integration} to compute the coefficients of those terms.
@@ -51,3 +50,8 @@ Specifically, we let
 \end{equation}
 where $\anisotropyKnob \in [0, 1]$ is a tuning parameter.
 The isotropic scenario can be recovered by setting $\anisotropyKnob = 0$; the other values of $\anisotropyKnob$ correspond to various levels of anisotropy with the maximum attained by setting $\anisotropyKnob = 1$.
+
+To summarize, in order to give a probabilistic characterization of a quantity of interest, we perform chaotic expansions as shown in \eref{spectral-decomposition}.
+The coefficients of such expansions are evaluated by Gaussian quadratures as shown in \eref{numerical-integration}.
+The quadratures are constructed using the Smolyak formula given in \eref{smolyak-sparse-grid}.
+The index sets used in both \eref{spectral-decomposition} and \eref{smolyak-sparse-grid} are the one in \eref{anisotropic-total-order-index-set} wherein the anisotropic weights are set according to \eref{dimension-anisotropy}.

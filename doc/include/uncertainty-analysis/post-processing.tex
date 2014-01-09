@@ -1,3 +1,8 @@
 The function given by \eref{spectral-decomposition} is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
-Thus, having constructed such an expansion, various statistics about $\w$ can be estimated at no effort.
-Moreover, \eref{spectral-decomposition} yields analytical formulae for the expected value and variance of $\w$.
+Thus, having constructed such an expansion, various statistics about $\w$ can be estimated with no effort.
+Moreover, \eref{spectral-decomposition} yields analytical formulae for the expected value and variance of $\w$ solely based on the coefficients of \eref{spectral-decomposition}:
+\begin{equation} \elab{probabilistic-moments}
+  \expectation{\w} = \coefficient{\w}_\vZero \hspace{1em} \text{and} \hspace{1em} \variance{\w} = \sum_{\multiindex \in \multiindexSet{\level} \setminus \{ \vZero \}} \coefficient{\w}_{\multiindex}^2
+\end{equation}
+where $\vZero = (0)$ is a multi-index with all entries equal to zero.
+Such quantities as the cumulative distribution and probability density functions can be estimated by sampling \eref{spectral-decomposition}; each sample is a trivial evaluation of a polynomial.
