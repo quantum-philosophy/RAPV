@@ -39,8 +39,6 @@ The \dss\ boundary condition is
 This constraint and \eref{recurrence} yield a block-circulant system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
 As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigenvalue-decomposition}.
 The pseudo code of this algorithm, which delivers the exact solution under the made assumptions, is given in \aref{deterministic-solution}.
-\input{include/algorithms/deterministic-solution.tex}
-
 Hereafter, we shall adopt MATLAB's notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
 Also, auxiliary variables will be written with hats.
 $\mQ_\ambient$ is a matrix of the ambient temperature.
@@ -48,6 +46,7 @@ $\mQ_\ambient$ is a matrix of the ambient temperature.
 The time complexity of direct solutions of the system of linear equations is $\complexity{\nsteps^3 \nnodes^3}$ while the one of \aref{deterministic-solution} is only $\complexity{\nsteps \nnodes^2 + \nnodes^3}$.
 Note that the complexity of \aref{deterministic-solution} reported in \cite{ukhov2012} was erroneously overestimated.
 \end{remark}
+\input{include/algorithms/deterministic-solution.tex}
 
 Let us now bring the leakage-temperature interdependence into the picture.
 To this end, we repeat \aref{deterministic-solution} for a sequence of total power profiles $\{ \mP_k = \mP_\dynamic + \mP_{\static, k} \}$ wherein the static part $\mP_{\static, k}$ is being updated using \eref{power-model} given the temperature profile $\mQ_{k - 1}$ computed at the previous iteration starting from the ambient temperature.
