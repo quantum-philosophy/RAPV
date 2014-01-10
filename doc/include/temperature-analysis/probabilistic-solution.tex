@@ -1,0 +1,7 @@
+In this section, we apply the general framework for uncertainty analysis presented in \sref{uncertainty-analysis} to a particular quantity of interest $\w$.
+Specifically, $\w$ is now a temperature profile $\mQ$.
+Since $\mQ$ is an $\nprocs \times \nsteps$ matrix, $\w$ can be viewed as a function that returns $\nprocs \times \nsteps$ matrices, in which case each coefficient $\coefficient{\w}_{\multiindex}$ in \eref{spectral-decomposition} is also such a matrix.
+It is convenient, however, to consider $\w$ as a function that outputs a row vector with $\nprocs \nsteps$ elements instead.
+In this case, the projection given in \eref{coefficient-evaluation} stays unchanged and should be interpreted as follows.
+$\vw$ is a $\nqorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the temperature profile computed at the $i$th quadrature point and reshaped into a row vector.
+Similarly, $\coefficient{\vw}$ is a $\ncorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is a flattened version of the $i$th expansion coefficient $\coefficient{\w}_{\multiindex_i}$ (recall that a certain ordering is assumed to be imposed on the multi-indices).

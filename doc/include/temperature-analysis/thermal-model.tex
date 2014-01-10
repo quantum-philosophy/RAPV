@@ -2,7 +2,7 @@ Based on the information gathered in $\specification$ (see \sref{problem-formula
 The circuit comprises $\nnodes$ thermal nodes, and its structure depends on the intended level of granularity that impacts the resulting accuracy.
 For clarity, we assume that each processing element is mapped onto one corresponding node, and the thermal package is represented as a set of additional nodes.
 
-The thermal dynamics of the system are modeled using the following system of differential-algebraic equations \cite{ukhov2012}:
+The thermal dynamics of the system are modeled using the following system of differential-algebraic equations \cite{ukhov2012, ukhov2014}:
 \begin{subnumcases}{\elab{thermal-model}}
   \frac{\d \, \vs(\t, \vu)}{\d\t} = \mA \: \vs(\t, \vu) + \mB \: \vp(\t, \vu, \vq(\t, \vu)) \elab{thermal-model-inner} \\
   \vq(\t, \vu) = \mB^T \vs(\t, \vu) + \vq_\ambient \elab{thermal-model-outer}
