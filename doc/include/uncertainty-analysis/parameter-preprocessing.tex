@@ -14,7 +14,7 @@ Refer to \xref{probability-transformation} for further details about the Nataf t
 
 As we shall discuss later on, the stochastic dimensionality $\nvars$ of the problem has a considerable impact of the computational complexity of our framework.
 Therefore, an important part of the preprocessing stage is model order reduction.
-To this end, we preserve only those dimensions whose contribution to the total variance of $\u$ is the most significant, which is identified by the eigenvalues of $\mCorr_\u$:
+To this end, we preserve only those dimensions whose contribution to the total variance of $\vu$ is the most significant, which is identified by the eigenvalues of $\mCorr_\u$:
 \begin{equation} \elab{dimension-contribution}
   \dimensionContribution = (\lambda_i)_{i = 1}^{\nparams \nprocs}, \hspace{1em} \norm[1]{\dimensionContribution} = 1,
 \end{equation}

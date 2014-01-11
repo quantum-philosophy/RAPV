@@ -86,6 +86,9 @@ It can be seen that \eref{coefficient-evaluation} is just a matrix version of \e
 $\projection$ is the one that should be precomputed and tabulated.
 
 \begin{remark} \rlab{multiple-dimensions}
-It is worth noting that $\w$ can be (and will be in our application) multidimensional, and all the derivations given throughout the paper are directly applicable to this scenario.
-More specifically, such operations as those in \eref{spectral-decomposition} and \eref{numerical-integration} should be undertaken elementwise, and, in \eref{quantity-evaluation}, $\coefficient{\vw}$, $\vw$, and $\w_i$ are generally two matrices and a row vector, respectively.
+It is worth noting that $\w$ can be (and will be in our application) multidimensional.
+In such a case, we shall consider $\w$ as a random vector with an appropriate number of elements.
+Then such operations as those in \eref{spectral-decomposition} and \eref{numerical-integration} should generally be undertaken elementwise.
+Also, it will be convenient to assume that $\w$ is a row vector.
+In particular, the projection in \eref{quantity-evaluation} will need no modifications by letting $\coefficient{\vw}$, $\vw$, and $\w_i$ be two matrices and a row vector, respectively.
 \end{remark}
