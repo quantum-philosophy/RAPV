@@ -15,7 +15,7 @@
       \Let{$\tmp{\v{a}}$}{$\mE \; \tmp{\v{a}} + \tmp{\m{A}}(:, k)$}
     \EndFor
 
-    \Let{$\mS(:, 1)$}{$\mV \; \diagonal{\left( 1 - e^{\nsteps \dt \lambda_i} \right)^{-1}} \; \mV^T \; \tmp{\v{a}}$}
+    \Let{$\mS(:, 1)$}{$\mEDV \; \diagonal{\left( 1 - e^{\nsteps \dt \lambda_i} \right)^{-1}} \; \mEDV^T \; \tmp{\v{a}}$}
 
     \For{$k \gets 2 \textrm{ to } \nsteps$}
       \Let{$\mS(:, k)$}{$\mE \; \mS(:, k - 1) + \tmp{\m{A}}(:, k - 1)$}
