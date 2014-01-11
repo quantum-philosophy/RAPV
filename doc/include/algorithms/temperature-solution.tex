@@ -1,5 +1,5 @@
 \begin{algorithm}
-  \caption{Deterministic \dssta\ considering the static power \alab{deterministic-solution}}
+  \caption{Deterministic \dssta\ considering the static power \alab{temperature-solution}}
   \begin{algorithmic}[1]
     \vspace{0.4em}
 
@@ -12,9 +12,10 @@
 
     \Repeat
       \Let{$\mP$}{$\mP_\dynamic + \mP_\static(\vu, \mQ)$}
-      \Let{$\mQ$}{call {\bf \aref{deterministic-solution-without-leakage}} for $\mP$}
+      \Let{$\mQ$}{call {\bf \aref{temperature-solution-without-leakage}} for $\mP$}
     \Until{a stopping condition is satisfied}
 
     \vspace{0.4em}
   \end{algorithmic}
 \end{algorithm}
+\vspace{-0.5em}

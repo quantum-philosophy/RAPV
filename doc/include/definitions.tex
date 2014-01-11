@@ -77,13 +77,17 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
-\usepackage{float}
-\newfloat{algorithm}{t}{lop}
+% To make algorithms float
+% \usepackage{float}
+% \newfloat{algorithm}{t}{lop}
 
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
-
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% To have aligned comments
+\usepackage{eqparbox}
+\renewcommand{\algorithmiccomment}[1]{\hfill\eqparbox{COMMENT}{\% #1}}
 
 \newcommand{\tmp}[1]{\widehat{#1}}
 

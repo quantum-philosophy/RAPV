@@ -38,22 +38,24 @@ The \dss\ boundary condition is
 \]
 This constraint and \eref{recurrence} yield a block-circulant system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
 As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigendecomposition}.
-The pseudocode of this algorithm, which delivers the exact solution under the made assumptions, is given in \aref{deterministic-solution-without-leakage}.
+The pseudocode of this algorithm, which delivers the exact solution under the made assumptions, is given in \aref{temperature-solution-without-leakage}.
+\input{include/algorithms/temperature-solution-without-leakage.tex}
+
 Hereafter, we shall adopt MATLAB's \cite{matlab} notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
 Also, auxiliary variables will be written with hats.
 $\mQ_\ambient$ is a matrix of the ambient temperature.
 \begin{remark}
-The time complexity of direct solutions of the system of linear equations is $\complexity{\nsteps^3 \nnodes^3}$ while the one of \aref{deterministic-solution-without-leakage} is only $\complexity{\nsteps \nnodes^2 + \nnodes^3}$.
-Note that the complexity of \aref{deterministic-solution-without-leakage} reported in \cite{ukhov2012} was overestimated.
+The time complexity of direct solutions of the system of linear equations is $\complexity{\nsteps^3 \nnodes^3}$ while the one of \aref{temperature-solution-without-leakage} is only $\complexity{\nsteps \nnodes^2 + \nnodes^3}$.
+Note that the complexity of \aref{temperature-solution-without-leakage} reported in \cite{ukhov2012} was overestimated.
 \end{remark}
-\input{include/algorithms/deterministic-solution-without-leakage.tex}
 
-\input{include/algorithms/deterministic-solution.tex}
 Let us now bring the leakage-temperature interdependence into the picture.
-To this end, we repeat \aref{deterministic-solution-without-leakage} for a sequence of total power profiles $\{ \mP_k = \mP_\dynamic + \mP_{\static, k} \}$ wherein the static part $\mP_{\static, k}$ is being updated using \eref{power-model} given the temperature profile $\mQ_{k - 1}$ computed at the previous iteration starting from the ambient temperature.
+To this end, we repeat \aref{temperature-solution-without-leakage} for a sequence of total power profiles $\{ \mP_k = \mP_\dynamic + \mP_{\static, k} \}$ wherein the static part $\mP_{\static, k}$ is being updated using \eref{power-model} given the temperature profile $\mQ_{k - 1}$ computed at the previous iteration starting from the ambient temperature.
 The procedure stops when the sequence of temperature profiles $\{ \mQ_k \}$ converges in an appropriate norm, or some other stopping condition is satisfied (\eg, a maximal temperature constraint is violated).
-This procedure is illustrated in \aref{deterministic-solution}.
-In this algorithm, $\mP_\static(\vu, \mQ)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, k)$th element is the static component of the power dissipation of the $i$th processing element at the $k$th moment of time with respect to $\vu$ and the temperature given by the $(i, k)$th entry of $\mQ$.
+This procedure is illustrated in \aref{temperature-solution}.
+\input{include/algorithms/temperature-solution.tex}
+
+In \aref{temperature-solution}, $\mP_\static(\vu, \mQ)$ should be understood as a call to a subroutine that returns an $\nprocs \times \nsteps$ matrix wherein the $(i, k)$th element is the static component of the power dissipation of the $i$th processing element at the $k$th moment of time with respect to $\vu$ and the temperature given by the $(i, k)$th entry of $\mQ$.
 
 \begin{remark}
 A widespread approach to account for leakage is to linearize it with respect to temperature.
