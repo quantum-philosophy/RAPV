@@ -50,6 +50,7 @@
 \newcommand{\eg}{e.g.}
 \newcommand{\etc}{etc.}
 \newcommand{\apriori}{\emph{a priori}}
+\newcommand{\perse}{\emph{per se}}
 
 % Temperature analysis
 \newcommand{\ta}{temperature analysis}
@@ -78,8 +79,8 @@
 \usepackage{algpseudocode}
 
 % To make algorithms float
-% \usepackage{float}
-% \newfloat{algorithm}{t}{lop}
+\usepackage{float}
+\newfloat{algorithm}{t}{lop}
 
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -118,6 +119,7 @@
 \newcommand{\mZero}{\m{0}}
 
 \renewcommand{\v}[1]{\mathbf{#1}}
+\newcommand{\vOne}{\v{1}}
 \newcommand{\vZero}{\v{0}}
 
 % Eigendecomposition
@@ -168,7 +170,6 @@
 \newcommand{\variance}[1]{\mathbb{V}\text{ar}\left[ #1 \right]}
 
 \newcommand{\distribution}{F}
-\newcommand{\survival}{S}
 \newcommand{\density}{f}
 
 \newcommand{\mCorr}{\m{K}}
@@ -218,38 +219,9 @@
 
 % Time
 \renewcommand{\t}{t}
+\newcommand{\vt}{\bm{t}}
 \newcommand{\dt}{\Delta \t}
 \newcommand{\period}{t}
-
-% Temperature
-\newcommand{\vq}{\v{q}}
-\newcommand{\mQ}{\m{Q}}
-
-\newcommand{\ambient}{\text{amb}}
-
-% Power
-\newcommand{\vp}{\v{p}}
-\newcommand{\mP}{\m{P}}
-
-\newcommand{\mM}{\m{M}}
-
-\newcommand{\dynamic}{\text{dyn}}
-\newcommand{\static}{\text{stat}}
-
-% Capacitance and conductance
-\newcommand{\mCth}{\m{C}}
-\newcommand{\mGth}{\m{G}}
-
-% State-space system
-\newcommand{\vs}{\v{s}}
-\newcommand{\mS}{\m{S}}
-
-\newcommand{\mA}{\m{A}}
-\newcommand{\mB}{\m{B}}
-
-% Recurrence
-\newcommand{\mE}{\m{E}}
-\newcommand{\mF}{\m{F}}
 
 %
 % Uncertain parameters
@@ -274,7 +246,6 @@
 
 \newcommand{\Leff}{\ell_\effective}
 \newcommand{\Tox}{\theta_\oxide}
-\newcommand{\T}{\tau}
 
 \makeatletter
 \def\transformation{\@ifnextchar\bgroup{\transformationWithOne}{\transformationWithZero}}
@@ -288,6 +259,51 @@
 \newcommand{\w}{v}
 \newcommand{\vw}{\v{v}}
 \newcommand{\mW}{\vw}
+
+%
+% Power analysis
+%
+\newcommand{\vp}{\v{p}}
+\newcommand{\mP}{\m{P}}
+
+\newcommand{\mM}{\m{M}}
+
+\newcommand{\dynamic}{\text{dyn}}
+\newcommand{\static}{\text{stat}}
+
+%
+% Temperature analysis
+%
+\newcommand{\vq}{\v{q}}
+\newcommand{\mQ}{\m{Q}}
+
+\newcommand{\ambient}{\text{amb}}
+
+% Capacitance and conductance
+\newcommand{\mCth}{\m{C}}
+\newcommand{\mGth}{\m{G}}
+
+% State-space system
+\newcommand{\vs}{\v{s}}
+\newcommand{\mS}{\m{S}}
+
+\newcommand{\mA}{\m{A}}
+\newcommand{\mB}{\m{B}}
+
+% Recurrence
+\newcommand{\mE}{\m{E}}
+\newcommand{\mF}{\m{F}}
+
+%
+% Reliability analysis
+%
+\newcommand{\survival}{R}
+
+\newcommand{\T}{\tau}
+\newcommand{\vT}{\bm{\tau}}
+
+\renewcommand{\wr}{\theta}
+\newcommand{\vwr}{\bm{\theta}}
 
 %
 % Numbers

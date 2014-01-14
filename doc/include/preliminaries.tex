@@ -1,4 +1,3 @@
-\subsection{Probability Theory}
 Let $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ be a complete probability space, where $\outcomes$ is a set of outcomes, $\sigmaAlgebra \subseteq 2^\outcomes$ is a $\sigma$-algebra on $\outcomes$, and $\probabilityMeasure: \sigmaAlgebra \to [0, 1]$ is a probability measure \cite{durrett2010}.
 A \rv\ on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ is an $\sigmaAlgebra$-measurable function $\h: \outcomes \to \real$.
 A \rv\ $\h$ is uniquely characterized by its (cumulative) distribution function defined by
@@ -17,12 +16,3 @@ Let $\L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ denote the Hilbert sp
   \innerProduct{\h_1, \h_2} := \expectation{\h_1 \, \h_2} \hspace{1em} \text{and} \hspace{1em} \norm{\h} := \innerProduct{\h, \h}^{1/2}.
 \end{equation*}
 In what follows, all the \rvs\ will tacitly have $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ as the underlying probability space.
-
-\subsection{Reliability Theory}
-Let $\T: \outcomes \to \real$ be a \rv\ representing the lifetime of a system.
-The lifetime is the time until the system experiences a failure after which it cannot be recovered.
-The survival function is defined as
-\begin{align*}
-  \survival(\t) := \probabilityMeasure(\{ \o \in \outcomes: \T(\o) > \t \}) = 1 - \distribution_\T(\t)
-\end{align*}
-where $\distribution_\T$ is the distribution function of $\T$.

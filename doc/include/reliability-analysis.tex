@@ -1,0 +1,33 @@
+Electronic systems are naturally exposed to a wide range of failure mechanisms.
+The most dominant examples include electromigration, time-dependent dielectric breakdown, stress migration, and thermal cycling \cite{xiang2010}; see \cite{jedec2011} for an exhaustive overview.
+The lifetime with respect to each mechanism is typically modeled using log-normal and Weibull distributions, including mixtures of the two families.
+Depending on the type of fatigue, each such model has a number of parameters.
+In particular, all of the aforementioned mechanisms have exponential dependencies on the operating temperature.
+
+Let $\T: \outcomes \to \real$ be a \rv\ representing the lifetime of the considered system.
+The lifetime is the time until the system experiences a fault after which the system no longer meets its requirements.
+$\T$ is a function of the individual lifetimes of the processing elements, which are denoted by a random vector $\vT = (\T_i): \outcomes \to \real^\nprocs$.
+Let $\distribution_\T(\cdot | \vwr)$ be the distribution of $\vT$ where $\vwr = (\wr_i)$ is a vector of parameters.
+The survival function of the system is defined as
+\[
+  \survival_\T(\t | \vwr) = 1 - \distribution_\T(\t | \vwr).
+\]
+Similarly, we shall denote by $\{ \distribution_{\T_i}(\cdot | \vwr) \}_{i = 1}^\nprocs$ and $\{ \survival_{\T_i}(\cdot | \vwr) \}_{i = 1}^\nprocs$ the marginal distributions and individual survival functions of the processing elements, respectively.
+
+In the context of reliability analysis, our main objective is to take the state-of-the-art reliability models to the next level by relaxing the assumptions on their parametrization $\vwr$ and enriching this parametrization via probabilistic temperature analysis considering process variation.
+To elaborate, our idea is based on the observation that the major part of the time associated with reliability analysis is ascribed to the evaluation of the parameters collected in $\vwr$ whereas a typical reliability model \perse, that is, when $\vwr$ is known, has a negligible cost.
+Therefore, we propose to use the spectral decompositions developed in \sref{uncertainty-analysis} and \sref{temperature-analysis} in order to construct surrogate representations of $\vwr$.
+In contrast to the straightforward use of MC sampling, such light representations make the subsequent analysis highly efficient from the computational perspective.
+
+The structure of $\T$ with respect to $\{ \T_i \}_{i = 1}^\nprocs$ is problem specific, and it can be especially diverse in the context of fault-tolerant systems.
+Likewise, the corresponding probabilistic models of failures depend on the fatigues that each particular system is suffering from.
+Our approach provides a great flexibility in this regard since it does not make any assumptions on the utilized reliability model; it is only concerned with the corresponding parametrization $\vwr$.
+Hence, the proposed solution is readily applicable to any model that the user considers to be the most adequate for the problem at hand.
+
+Despite its generality, the proposed technique can be better appreciated considering an example.
+To this end, we turn to our application and shall focus on the thermal-cycling fatigue as it has arguably the most prominent dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
+We also assume that any fault of any processing element makes the whole system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given $\vwr$.
+Consequently, in this scenario,
+\begin{equation} \elab{reliability-assumptions}
+  \T = \min_{i = 1}^\nprocs \T_i \hspace{1em} \text{and} \hspace{1em} \survival_\T(\t | \vwr) = \prod_{i = 1}^\nprocs \survival_{\T_i}(\t | \vwr).
+\end{equation}

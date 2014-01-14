@@ -8,7 +8,7 @@ Multiplying both sides of \eref{thermal-model-inner} by $e^{- \mA \t}$ and notin
 \]
 we obtain the exact solution of \eref{thermal-model-inner} over a time interval $\dt = \t_k - \t_{k - 1}$ given as follows:
 \[
-  \vs(\t_k) = e^{\mA \dt} \vs(\t_{k - 1}) + \int_0^{\dt} e^{\mA (\dt - \tau)} \mB \: \vp(\t_k + \tau, \vs(\t_k + \tau)) \: \d\tau.
+  \vs(\t_k) = e^{\mA \dt} \vs(\t_{k - 1}) + \int_0^{\dt} e^{\mA (\dt - \t)} \mB \: \vp(\t_k + \t, \vs(\t_k + \t)) \: \d\t.
 \]
 The integral on the right-hand side is approximated by assuming that, within $\dt$, the power dissipation does not change and is equal to the power dissipation at $\t_k$.
 Thus, we have
