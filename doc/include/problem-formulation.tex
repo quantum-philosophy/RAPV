@@ -5,7 +5,7 @@ Denote by $\specification$ an abstract set containing all the information about 
 The content of $\specification$ is problem specific, and we shall gradually detail it when it is needed.
 For now, $\specification$ is assumed to include: (a) the floorplans of the active layers of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity and specific heat).
 
-A power profile of the system is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements which correspond to certain moments of time $(\t_k)_{k = 1}^\nsteps$ that partition a time interval $[0, t]$ as $0 = \t_0 < \t_1 < \dotsc < \t_\nsteps = \period$.
+A power profile of the system is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements which correspond to certain moments of time $(\t_k)_{k = 1}^\nsteps$ that partition a time interval $[0, \period]$ as $0 = \t_0 < \t_1 < \dotsc < \t_\nsteps = \period$.
 Analogously, a temperature profile $\mQ \in \real^{\nprocs \times \nsteps}$ is a matrix containing samples of temperature.
 For clarity, power and temperature profiles are assumed to have a one-to-one correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, \dots, \nsteps$.
 
