@@ -7,18 +7,19 @@ Due to the inherent complexity, uncertainty quantification problems are typicall
 In order to construct such an approximation, we appeal to spectral methods \cite{maitre2010, janson1997, eldred2008}.
 The approach taken in this work can be classified as non-intrusive, in which case the system is treated as a ``black box.''
 
+\subsection{Uncertainty Model}
 Before we proceed to the construction, let us first refine our definition of $\vu = (\u_i)_{i = 1}^\nparams$.
 Each $\u_i$ is a characteristic of a single transistor (consider, for example, the effective channel length), and, therefore, each device in the electrical circuits at hand can potentially have a different value of this parameter as, in general, the variability due to process variation is not uniform.
 Consequently, each $\u_i$ can be viewed as a random process $\u_i: \outcomes \times \domain \to \real$ defined on an appropriate spatial domain $\domain \subset \real^3$.
 Since this work is system-level oriented, we model each processing element with one variable for each such random process.
-More specifically, we let $\u_{ij} = \u_i(\cdot, \r_j)$ be the \rv\ representing the $i$th uncertain parameter at the $j$th processing element where $\r_j$ stands for the spatial location of the processing element (\eg, the center of mass).
+More specifically, we let $\u_{ij} = \u_i(\cdot, \vr_j)$ be the \rv\ representing the $i$th uncertain parameter at the $j$th processing element where $\vr_j$ stands for the spatial location of the processing element (\eg, the center of mass).
 Thus, we redefine the parametrization of the problem as
 \begin{equation} \elab{uncertain-parameters}
   \vu = (\u_i)_{i = 1}^{\nparams \nprocs}
 \end{equation}
 such that there is a one-to-one correspondence between $\u_i$, $i = 1, \dots, \nparams \nprocs$, and $\u_{ij}$, $i = 1, \dots, \nparams$, $j = 1, \dots, \nprocs$.
 \begin{remark}
-Some authors prefer to split the variability of a process parameter at a spacial location into several parts, such as wafer-to-wafer, die-to-die, and within-die; see, \eg, \cite{juan2012}.
+Some authors prefer to split the variability of a process parameter at a spacial location into several parts such as wafer-to-wafer, die-to-die, and within-die; see, \eg, \cite{juan2012}.
 However, from the mathematical standpoint, it is sufficient to consider just one random variable per location which is adequately correlated with the other locations of interest.
 \end{remark}
 
