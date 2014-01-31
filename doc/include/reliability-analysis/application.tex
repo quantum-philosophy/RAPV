@@ -1,0 +1,51 @@
+Despite its generality, the proposed technique can be better appreciated considering a concrete example.
+Suppose that the system is experiencing a periodic workload (\eg, due to the execution of a periodic or nearly periodic application) with period $\period$.
+The corresponding temperature profile $\mQ$ is, therefore, a \dss\ temperature profile.
+Hence, for a given $\vu$, $\mQ$ can be computed using \aref{temperature-solution}.
+
+Assume that any fault of any processing element makes the system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given the parameters gathered in $\vwr$.
+In this case,
+\[
+  \T = \min_{i = 1}^\nprocs \T_i \hspace{1em} \text{and} \hspace{1em} \survival_\T(\t | \vwr) = \prod_{i = 1}^\nprocs \survival_{\T_i}(\t, \vwr).
+\]
+Regarding the individual survival functions, we shall rely on Weibull distributions.
+In this case,
+\begin{equation} \elab{weibull-model}
+  \ln \survival_{\T_i}(\t, \vwr) = -\left( \frac{\t}{\eta_i} \right)^{\beta_i}
+\end{equation}
+where $\eta_i$ and $\beta_i$ are called the scale and shape parameters of the distribution, respectively.
+The mean time to failure is
+\begin{equation} \elab{weibull-expectation}
+  \expectation{\T_i} = \eta_i \, \Gamma\left(1 + \frac{1}{\beta_i}\right)
+\end{equation}
+where $\Gamma$ is the Gamma function.
+Both $\eta_i$ and $\beta_i$ depend on the considered technological process and, therefore, are affected by process variation.
+Consequently, $\eta_i$ and $\beta_i$ are \rvs\ at the design stage.
+The amount of stress that the $i$th processing element undergoes is time dependent as temperature changes over time.
+Since the impact of temperature on $\beta_i$ is negligible, the only parameter that varies with temperature is $\eta_i$, which is taken into account as follows.
+
+The $i$th row of $\mQ$, denoted by $\mQ(i, :)$, is the temperature curve of the $i$th processing element.
+This curve is analyzed, and a set of $\nsegments[i]$ time segments $\{ \dt_{ij} \}_{j = 1}^{\nsegments[i]}$ is extracted such that the processing element undergoes a constant stress within each segment.
+Then the scale parameter in \eref{weibull-model} is \cite{xiang2010}
+\begin{equation} \elab{compound-weibull-eta}
+  \eta_i = \frac{\sum_j \dt_{ij}}{\sum_j\frac{\dt_{ij}}{\eta_{ij}}}
+\end{equation}
+where $\eta_{ij}$ is the mean time to failure of the $i$th processing element with respect to the stress of the $j$th segment.
+The partition into tuples $\{ (\dt_{ij}, \eta_{ij}) \}_{j = 1}^{\nsegments[i]}$ of the $i$th processing element depends on the fatigue under consideration.
+
+Assume that the power consumption is rapidly changing during the execution of the application, and, thus, the major concern of the designer is the thermal-cycling fatigue \cite{jedec2011}.
+This fatigue has a strong dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
+In this context, $\{ (\dt_{ij}, \eta_{ij}) \}_{j = 1}^{\nsegments[i]}$ is computed as follows.
+First, $\mQ(i, :)$ is analyzed using a peak-detection procedure in order to extract the extrema of this curve.
+The found extrema are then fed to the rainflow counting algorithm \cite{xiang2010} for an adequate identification of thermal cycles.
+For each cycle, one can estimate the expected number of such cycles to failure (as if it was the only cycle damaging the system) using
+\begin{equation} \elab{thermal-cycling-model}
+  \ncycles = a \left(\max( 0, \Delta\q - \Delta\q_0 )\right)^{-b} e^{c / \q_\maximal}
+\end{equation}
+where $a$, $b$, and $c$ are constants; $\Delta\q$ is the entire temperature range of the cycle; $\Delta\q_0$ is the portion of the temperature range in the elastic region; and $\q_\maximal$ is the maximal temperature.
+Denote by $\ncycles[ij]$ the expected number of cycles to failure corresponding to the $i$th processing element and its $j$th cycle, which is computed using \eref{thermal-cycling-model}.
+Then the expected time to failure is $\ncycles[ij] \dt_{ij}$ where $\dt_{ij}$ is the duration of the cycle.
+Finally, $\eta_{ij}$ is expressed via this expected time to failure using \eref{weibull-expectation}, and \eref{compound-weibull-eta} is rewritten as follows:
+\[
+  \eta_i = \frac{\sum_j \dt_{ij}}{\Gamma\left(1 + \frac{1}{\beta_i}\right) \sum_j\frac{1}{\ncycles[ij]}}.
+\]

@@ -40,7 +40,7 @@ An anisotropic total-order index set is as follows:
 \begin{equation} \elab{anisotropic-total-order-index-set}
   \chaosMultiindexSet{\level} = \left\{ \multiindex: \innerProduct{\dimensionAnisotropy, \multiindex} \leq \level \, \min_i c_i \right\}
 \end{equation}
-where $\dimensionAnisotropy = (c_i) \in \real^\nvars_+$ is a vector assigning importance coefficients, or weights, to each dimension, and $\innerProduct{\cdot, \cdot}$ is the standard inner product on $\real^\nvars$.
+where $\dimensionAnisotropy = (c_i) \in \real^\nvars$, $c_i \geq 0$, is a vector assigning importance coefficients to each dimension, and $\innerProduct{\cdot, \cdot}$ is the standard inner product on $\real^\nvars$.
 Equation \eref{anisotropic-total-order-index-set} plugged into \eref{smolyak-sparse-grid} results in a sparse grid which is exact for the polynomial space which is tailored using the same index set.
 
 The above approach allows one to leverage the highly anisotropic behaviors inherent for many practical problems \cite{nobile2008}.

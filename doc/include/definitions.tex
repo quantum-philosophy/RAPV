@@ -243,11 +243,8 @@
 \newcommand{\vh}{\bm{\zeta}}
 \newcommand{\mH}{\m{Z}}
 
-\newcommand{\effective}{\text{eff}}
-\newcommand{\oxide}{\text{ox}}
-
-\newcommand{\Leff}{\ell_\effective}
-\newcommand{\Tox}{\theta_\oxide}
+\newcommand{\Leff}{\u_1}
+\newcommand{\Tox}{\u_2}
 
 \makeatletter
 \def\transformation{\@ifnextchar\bgroup{\transformationWithOne}{\transformationWithZero}}
@@ -276,10 +273,12 @@
 %
 % Temperature analysis
 %
+\newcommand{\q}{q}
 \newcommand{\vq}{\v{q}}
 \newcommand{\mQ}{\m{Q}}
 
 \newcommand{\ambient}{\text{amb}}
+\newcommand{\maximal}{\text{max}}
 
 % Capacitance and conductance
 \newcommand{\mCth}{\m{C}}
@@ -315,7 +314,8 @@
 \newcommand{\nnodes}{{n_\text{n}}}
 \newcommand{\nprocs}{{n_\text{p}}}
 \newcommand{\nsteps}{{n_\text{t}}}
-\newcommand{\nsegments}[1][]{{n_{\text{s}#1}}}
+\newcommand{\nsegments}[1][]{{n_{\text{s}\,#1}}}
+\newcommand{\ncycles}[1][]{{n_{\text{c}\,#1}}}
 
 \newcommand{\nparams}{{n_\text{u}}}
 \newcommand{\nvars}{{n_\z}}

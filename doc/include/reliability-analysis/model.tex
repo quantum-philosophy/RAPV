@@ -1,0 +1,13 @@
+Let $\T: \outcomes \to \real$ be a \rv\ representing the lifetime of the considered system.
+The lifetime is the time until the system experiences a fault after which the system no longer meets the requirements imposed on this system.
+Let $\distribution_\T(\cdot | \vwr)$ be the distribution of $\T$ where $\vwr = (\wr_i)$ is a vector of parameters.
+The survival function of the system is
+\[
+  \survival_\T(\t | \vwr) = 1 - \distribution_\T(\t | \vwr).
+\]
+
+The overall lifetime $\T$ is a function of the lifetimes of the processing elements, which are denoted by a set of \rvs\ $\{ \T_i \}_{i = 1}^\nprocs$.
+Each $\T_i$ is characterized by a physical model of wear \cite{jedec2011} describing the fatigues that the corresponding processing element is suffering from.
+Each $\T_i$ is also assigned an individual survival function $\survival_{\T_i}(\cdot, \vwr)$ describing the rate of failures due to those fatigues.
+The structure of $\survival_\T(\cdot, \vwr)$ with respect to $\{ \survival_{\T_i}(\cdot, \vwr) \}_{i = 1}^\nprocs$ is problem specific, and it can be especially diverse in the context of fault-tolerant systems.
+Thus, $\survival_\T(\cdot, \vwr)$ along with the corresponding parametrization $\vwr$ are to be specified by the designer of the system.

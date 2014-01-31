@@ -32,8 +32,8 @@ With this in mind, we model the two process parameters using the four-parametric
 where $i = 1, \dots, \nparams \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond their supports.
 Without loss of generality, we let the two considered process parameters be independent of each other, and the correlations among those elements of $\vu$ that correspond to the same process parameter be given by the following correlation function:
 \begin{equation} \elab{correlation-function}
-  \fCorr(\vr_1, \vr_2) = \sum_i w_i \; \fCorr_i(\vr_1, \vr_2)
+  \fCorr(\vr_1, \vr_2) = \sum_i \varpi_i \; \fCorr_i(\vr_1, \vr_2)
 \end{equation}
-where $\{ \fCorr_i: \domain \times \domain \to \real \}$ are a number of kernel functions, and $\{ w_i \}$ are their weights which are positive and sum up to one.
+where $\{ \fCorr_i: \domain \times \domain \to \real \}$ are a number of kernel functions, and $\bm{\varpi} = (\varpi_i)$ are their weights such that $\varpi_i \geq 0$ and $\norm[1]{\bm{\varpi}} = 1$.
 Each kernel captures certain correlation features inherent to the fabrication process at hand; we shall use the same kernels as in \cite{ukhov2014}.
-Hence, $\mCorr_\u$ can be obtained using \eref{correlation-function}.
+The entries of $\mCorr_\u$ are computed using \eref{correlation-function}.
