@@ -16,7 +16,7 @@ In this case,
 where $\eta_i$ and $\beta_i$ are called the scale and shape parameters of the distribution, respectively.
 The mean time to failure is
 \begin{equation} \elab{weibull-expectation}
-  \expectation{\T_i} = \eta_i \, \Gamma\left(1 + \frac{1}{\beta_i}\right)
+  \mu_i = \expectation{\T_i} = \eta_i \, \Gamma\left(1 + \frac{1}{\beta_i}\right)
 \end{equation}
 where $\Gamma$ is the Gamma function.
 Both $\eta_i$ and $\beta_i$ depend on the considered technological process and, therefore, are affected by process variation.
@@ -26,26 +26,23 @@ Since the impact of temperature on $\beta_i$ is negligible, the only parameter t
 
 The $i$th row of $\mQ$, denoted by $\mQ(i, :)$, is the temperature curve of the $i$th processing element.
 This curve is analyzed, and a set of $\nsegments[i]$ time segments $\{ \dt_{ij} \}_{j = 1}^{\nsegments[i]}$ is extracted such that the processing element undergoes a constant stress within each segment.
+Let $\eta_{ij}$ and $\mu_{ij}$ be the scale parameter and expectation of the lifetime corresponding to the $i$th processing element under the stress of the $j$th cycle; the two are related as shown in \eref{weibull-expectation}.
 Then the scale parameter in \eref{weibull-model} is \cite{xiang2010}
 \begin{equation} \elab{compound-weibull-eta}
-  \eta_i = \frac{\sum_j \dt_{ij}}{\sum_j\frac{\dt_{ij}}{\eta_{ij}}}
+  \eta_i = \frac{\period}{\sum_j\frac{\dt_{ij}}{\eta_{ij}}} = \frac{\period}{\Gamma\left(1 + \frac{1}{\beta_i}\right) \sum_j\frac{\dt_{ij}}{\mu_{ij}}}
 \end{equation}
-where $\eta_{ij}$ is the mean time to failure of the $i$th processing element with respect to the stress of the $j$th segment.
-The partition into tuples $\{ (\dt_{ij}, \eta_{ij}) \}_{j = 1}^{\nsegments[i]}$ of the $i$th processing element depends on the fatigue under consideration.
+The tuples $\{ (\dt_{ij}, \mu_{ij}) \}_{j = 1}^{\nsegments[i]}$, characterizing the $i$th processing element, depend on the fatigue under consideration.
 
 Assume that the power consumption is rapidly changing during the execution of the application, and, thus, the major concern of the designer is the thermal-cycling fatigue \cite{jedec2011}.
-This fatigue has a strong dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
-In this context, $\{ (\dt_{ij}, \eta_{ij}) \}_{j = 1}^{\nsegments[i]}$ is computed as follows.
+This fatigue has a profound dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
+Each tuple $(\dt_{ij}, \mu_{ij})$ characterizes a cycle and is computed as follows.
 First, $\mQ(i, :)$ is analyzed using a peak-detection procedure in order to extract the extrema of this curve.
 The found extrema are then fed to the rainflow counting algorithm \cite{xiang2010} for an adequate identification of thermal cycles.
-For each cycle, one can estimate the expected number of such cycles to failure (as if it was the only cycle damaging the system) using
-\begin{equation} \elab{thermal-cycling-model}
-  \ncycles = a \left(\max( 0, \Delta\q - \Delta\q_0 )\right)^{-b} e^{c / \q_\maximal}
-\end{equation}
-where $a$, $b$, and $c$ are constants; $\Delta\q$ is the entire temperature range of the cycle; $\Delta\q_0$ is the portion of the temperature range in the elastic region; and $\q_\maximal$ is the maximal temperature.
-Denote by $\ncycles[ij]$ the expected number of cycles to failure corresponding to the $i$th processing element and its $j$th cycle, which is computed using \eref{thermal-cycling-model}.
-Then the expected time to failure is $\ncycles[ij] \dt_{ij}$ where $\dt_{ij}$ is the duration of the cycle.
-Finally, $\eta_{ij}$ is expressed via this expected time to failure using \eref{weibull-expectation}, and \eref{compound-weibull-eta} is rewritten as follows:
-\[
-  \eta_i = \frac{\sum_j \dt_{ij}}{\Gamma\left(1 + \frac{1}{\beta_i}\right) \sum_j\frac{1}{\ncycles[ij]}}.
-\]
+Denote by $\ncycles[ij]$ the expected number of cycles to failure corresponding to the $i$th processing element and its $j$th cycle (as if it was the only cycle damaging the processing element).
+$\ncycles[ij]$ is computed using the corresponding physical model of wear given in \cite{jedec2011, xiang2010}.
+Consequently, in \eref{compound-weibull-eta}, $\mu_{ij} = \ncycles[ij] \dt_{ij}$, and $\dt_{ij}$ is the duration of the cycle.
+\begin{remark} \rlab{thermal-cycles}
+A cycle need not be formed by adjacent extrema; cycles can overlap.
+In this regard, the rainflow counting method is known to the best as it efficiently mitigates overestimation.
+A cycle can be a half cycle meaning that only an upward or downward temperature swing is present in the time series, which is assumed to be taken into account in $\ncycles[ij]$.
+\end{remark}
