@@ -34,13 +34,13 @@ Then the scale parameter in \eref{weibull-model} is \cite{xiang2010}
 The tuples $\{ (\dt_{ij}, \mu_{ij}) \}_{j = 1}^{\nsegments[i]}$, characterizing the $i$th processing element, depend on the fatigue under consideration.
 
 Assume that the power consumption is rapidly changing during the execution of the application, and, thus, the major concern of the designer is the thermal-cycling fatigue \cite{jedec2011}.
-This fatigue has a profound dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
+This fatigue has a sophisticated dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
 Each tuple $(\dt_{ij}, \mu_{ij})$ characterizes a cycle and is computed as follows.
 First, $\mQ(i, :)$ is analyzed using a peak-detection procedure in order to extract the extrema of this curve.
 The found extrema are then fed to the rainflow counting algorithm \cite{xiang2010} for an adequate identification of thermal cycles.
 Denote by $\ncycles[ij]$ the expected number of cycles to failure corresponding to the $i$th processing element and its $j$th cycle (as if it was the only cycle damaging the processing element).
 $\ncycles[ij]$ is computed using the corresponding physical model of wear given in \cite{jedec2011, xiang2010}.
-Consequently, in \eref{compound-weibull-eta}, $\mu_{ij} = \ncycles[ij] \dt_{ij}$, and $\dt_{ij}$ is the duration of the cycle.
+Then, in \eref{compound-weibull-eta}, we have that $\mu_{ij} = \ncycles[ij] \dt_{ij}$, and $\dt_{ij}$ stands for the duration of the $ij$th cycle.
 \begin{remark} \rlab{thermal-cycles}
 A cycle need not be formed by adjacent extrema; cycles can overlap.
 In this regard, the rainflow counting method is known to the best as it efficiently mitigates overestimation.
