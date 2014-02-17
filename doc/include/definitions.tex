@@ -50,7 +50,7 @@
 \newcommand{\eg}{e.g.}
 \newcommand{\etc}{etc.}
 \newcommand{\apriori}{\emph{a~priori}}
-\newcommand{\perse}{\emph{per se}}
+\newcommand{\perse}{\emph{per~se}}
 
 % Temperature analysis
 \newcommand{\ta}{temperature analysis}
@@ -111,6 +111,9 @@
 %
 \newcommand{\cardinality}[1]{\# #1}
 
+\newcommand{\multiindex}[1][\alpha]{\bm{#1}}
+\newcommand{\multiindexSet}[2][]{\mathcal{A}_{#1}\left( #2 \right)}
+
 %
 % Linear algebra
 %
@@ -147,13 +150,12 @@
 \newcommand{\innerProduct}[1]{\langle #1 \rangle}
 \newcommand{\hull}[1]{\text{span}\left( #1 \right)}
 
-\newcommand{\multiindex}[1][\alpha]{\bm{#1}}
-\newcommand{\multiindexSet}[2][]{\mathcal{A}_{#1}\left( #2 \right)}
+\renewcommand{\d}{d}
 
 \newcommand{\x}{x}
 \newcommand{\vx}{\v{x}}
 
-\renewcommand{\d}{d}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
 
 %
 % Probability theory
@@ -162,6 +164,7 @@
 \renewcommand{\o}{\omega}
 
 \newcommand{\probabilityMeasure}{\mathbb{P}}
+\newcommand{\pr}{\rho}
 
 \newcommand{\gaussianDistribution}[1]{\mathcal{N}\left( #1 \right)}
 \newcommand{\betaDistribution}[1]{\text{Beta}\left( #1 \right)}
@@ -173,8 +176,6 @@
 \newcommand{\density}{f}
 
 \newcommand{\mCorr}{\m{K}}
-\newcommand{\mCov}{\bm{\Sigma}}
-
 \newcommand{\fCorr}{k}
 
 %
@@ -222,8 +223,9 @@
 
 % Time
 \renewcommand{\t}{t}
+\newcommand{\vt}{\v{t}}
 \newcommand{\dt}{\Delta \t}
-\newcommand{\period}{\t_\text{d}}
+\newcommand{\period}{\t_\text{period}}
 
 %
 % Uncertain parameters
@@ -255,9 +257,12 @@
 %
 % Quantity of interest
 %
-\newcommand{\w}{v}
-\newcommand{\vw}{\v{v}}
-\newcommand{\mW}{\vw}
+\newcommand{\w}{\vartheta}
+\newcommand{\vw}{\bm{\vartheta}}
+
+\newcommand{\ew}{v}
+\newcommand{\evw}{\v{v}}
+\newcommand{\emW}{\evw}
 
 %
 % Power analysis
@@ -278,7 +283,6 @@
 \newcommand{\mQ}{\m{Q}}
 
 \newcommand{\ambient}{\text{amb}}
-\newcommand{\maximal}{\text{max}}
 
 % Capacitance and conductance
 \newcommand{\mCth}{\m{C}}
@@ -303,8 +307,14 @@
 \newcommand{\T}{\tau}
 \newcommand{\vT}{\bm{\tau}}
 
-\renewcommand{\wr}{\theta}
-\newcommand{\vwr}{\bm{\theta}}
+\newcommand{\pw}{\theta}
+\newcommand{\pvw}{\bm{\theta}}
+
+%
+% Application
+%
+\newcommand{\mapping}{\v{m}}
+\newcommand{\priority}{\v{n}}
 
 %
 % Numbers
@@ -314,6 +324,7 @@
 \newcommand{\nnodes}{{n_\text{n}}}
 \newcommand{\nprocs}{{n_\text{p}}}
 \newcommand{\nsteps}{{n_\text{t}}}
+
 \newcommand{\nsegments}[1][]{{n_{\text{s}\,#1}}}
 \newcommand{\ncycles}[1][]{{n_{\text{c}\,#1}}}
 
@@ -325,3 +336,13 @@
 
 \newcommand{\nqlevel}{{\level_\mathcal{Q}}}
 \newcommand{\nqorder}{{n_\mathcal{Q}}}
+
+\newcommand{\ntasks}{{n_\text{v}}}
+
+%
+% Other subscripts
+%
+\newcommand{\maximal}{\text{max}}
+\newcommand{\minimal}{\text{min}}
+\newcommand{\burn}{\text{burn}}
+\newcommand{\wear}{\text{wear}}

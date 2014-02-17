@@ -4,7 +4,7 @@ A \rv\ $\h$ is uniquely characterized by its (cumulative) distribution function 
 \begin{equation*}
   \distribution_\h(\x) := \probabilityMeasure(\{ \o \in \outcomes: \h(\o) \leq \x \}).
 \end{equation*}
-The expectation and variance of $\h(\o)$ are given by
+The expectation and variance of $\h$ are given by
 \begin{align*}
   & \expectation{\h} := \int_\outcomes \h(\o) \, \d\probabilityMeasure(\o) = \int_\real \x \, \d \distribution_\h(\x) \hspace{1em} \text{and} \\
   & \variance{\h} := \expectation{(\h - \expectation{\h})^2},
@@ -13,6 +13,6 @@ respectively.
 A random vector $\vh = (\h_i)$ and matrix $\mH = (\h_{ij})$ are a vector and matrix whose elements are \rvs.
 Let $\L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ denote the Hilbert space of square-integrable \rvs\ \cite{janson1997} defined on $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ with the inner product and norm defined, respectively, by
 \begin{equation*}
-  \innerProduct{\h_1, \h_2} := \expectation{\h_1 \, \h_2} \hspace{1em} \text{and} \hspace{1em} \norm{\h} := \innerProduct{\h, \h}^{1/2}.
+  \innerProduct{\h_1, \h_2} := \expectation{\h_1 \h_2} \hspace{1em} \text{and} \hspace{1em} \norm{\h} := \innerProduct{\h, \h}^{1/2}.
 \end{equation*}
 In what follows, all the \rvs\ will tacitly have $(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ as the underlying probability space.

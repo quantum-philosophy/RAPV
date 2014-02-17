@@ -76,21 +76,20 @@ that is, $\pi_{ij}$ is the polynomial corresponding to the $i$th multi-index eva
 We refer to $\projection$ as the projection matrix.
 The coefficients in \eref{spectral-decomposition} can now be computed as
 \begin{equation} \elab{coefficient-evaluation}
-  \coefficient{\vw} = \projection \, \vw
+  \coefficient{\evw} = \projection \, \evw
 \end{equation}
 where
 \begin{equation} \elab{quantity-evaluation}
-  \coefficient{\vw} = (\coefficient{\w}_i)_{i = 1}^\ncorder \hspace{1em} \text{and} \hspace{1em} \vw = \big( \w_i = \w(\transformation{\point_i}) \big)_{i = 1}^\nqorder,
+  \coefficient{\evw} = (\coefficient{\w}_i)_{i = 1}^\ncorder \hspace{1em} \text{and} \hspace{1em} \evw = \big(\w(\transformation{\point_i}) \big)_{i = 1}^\nqorder.
 \end{equation}
-that is, $\w_i$ is $\w$ evaluated at the $i$th quadrature node.
-It can be seen that \eref{coefficient-evaluation} is just a matrix version of \eref{numerical-integration}.
-$\projection$ is the one that should be precomputed and tabulated.
+It can be seen that \eref{coefficient-evaluation} is a matrix version of \eref{numerical-integration}.
+$\projection$ is the one that should be precomputed.
 The pseudocode of the procedure is given in \aref{surrogate-construction} wherein Algorithm~X stands for the routine that calculates $\w$ for a given $\vu$.
 \input{include/algorithms/surrogate-construction.tex}
 
 \begin{remark} \rlab{multiple-dimensions}
 When $\w$ is multidimensional, we shall consider it as a row vector with an appropriate number of elements.
 Then all the operation with respect to $\w$, such as those in \eref{spectral-decomposition} and \eref{numerical-integration}, should be undertaken elementwise.
-In \eref{coefficient-evaluation}, \eref{quantity-evaluation}, and \aref{surrogate-construction}, $\vw$ and $\coefficient{\vw}$ are to be treated as matrices with $\ncorder$ rows, and $\w_i$ as a row vector.
+In \eref{coefficient-evaluation}, \eref{quantity-evaluation}, and \aref{surrogate-construction}, $\evw$ and $\coefficient{\evw}$ are to be treated as matrices with $\ncorder$ rows, and $\w_i$ as a row vector.
 The output of Algorithm~X is assumed to be automatically reshaped into a row vector.
 \end{remark}

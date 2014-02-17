@@ -4,16 +4,16 @@
     \vspace{0.4em}
 
     \Require{Algorithm X} \Comment{the subroutine evaluating $\w$}
-    \Ensure{$\coefficient{\mW} \in \real^\ncorder$} \Comment{the expansion coefficients}
+    \Ensure{$\coefficient{\emW} \in \real^\ncorder$} \Comment{the expansion coefficients}
 
     \vspace{0.5em}
 
     \For{$i \gets 1 \textrm{ to } \nqorder$} \Comment{for each quadrature point $\point_i$}
       \Let{$\vu$}{$\transformation{\point_i}$}
-      \Let{$\mW(i)$}{call {\bf Algorithm X} for $\vu$}
+      \Let{$\emW(i)$}{call {\bf Algorithm X} for $\vu$}
     \EndFor
 
-    \Let{$\coefficient{\mW}$}{$\projection \, \mW$}
+    \Let{$\coefficient{\emW}$}{$\projection \, \emW$}
 
     \vspace{0.4em}
   \end{algorithmic}

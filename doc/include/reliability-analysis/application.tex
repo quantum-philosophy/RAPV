@@ -3,17 +3,18 @@ Suppose that the system is experiencing a periodic workload (\eg, due to the exe
 The corresponding temperature profile $\mQ$ is, therefore, a \dss\ temperature profile.
 Hence, for a given $\vu$, $\mQ$ can be computed using \aref{temperature-solution}.
 
-Assume that any fault of any processing element makes the system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given the parameters gathered in $\vwr$.
+Assume that any fault of any processing element makes the system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given the parameters gathered in $\pvw$.
 In this case,
 \[
-  \T = \min_{i = 1}^\nprocs \T_i \hspace{1em} \text{and} \hspace{1em} \survival_\T(\t | \vwr) = \prod_{i = 1}^\nprocs \survival_{\T_i}(\t, \vwr).
+  \T = \min_{i = 1}^\nprocs \T_i \hspace{1em} \text{and} \hspace{1em} \survival_\T(\t | \pvw) = \prod_{i = 1}^\nprocs \survival_{\T_i}(\t | \pvw).
 \]
 Regarding the individual survival functions, we shall rely on Weibull distributions.
 In this case,
 \begin{equation} \elab{weibull-model}
-  \ln \survival_{\T_i}(\t, \vwr) = -\left( \frac{\t}{\eta_i} \right)^{\beta_i}
+  \ln \survival_{\T_i}(\t | \pvw) = -\left( \frac{\t}{\eta_i} \right)^{\beta_i}
 \end{equation}
 where $\eta_i$ and $\beta_i$ are called the scale and shape parameters of the distribution, respectively.
+Consequently, $\pvw = (\eta_1, \dotsc, \eta_\nprocs, \beta_1, \dotsc, \beta_\nprocs)$.
 The mean time to failure is
 \begin{equation} \elab{weibull-expectation}
   \mu_i = \expectation{\T_i} = \eta_i \, \Gamma\left(1 + \frac{1}{\beta_i}\right)
@@ -29,7 +30,7 @@ This curve is analyzed, and a set of $\nsegments[i]$ time segments $\{ \dt_{ij} 
 Let $\eta_{ij}$ and $\mu_{ij}$ be the scale parameter and expectation of the lifetime corresponding to the $i$th processing element under the stress of the $j$th cycle; the two are related as shown in \eref{weibull-expectation}.
 Then the scale parameter in \eref{weibull-model} is \cite{xiang2010}
 \begin{equation} \elab{compound-weibull-eta}
-  \eta_i = \frac{\period}{\sum_j\frac{\dt_{ij}}{\eta_{ij}}} = \frac{\period}{\Gamma\left(1 + \frac{1}{\beta_i}\right) \sum_j\frac{\dt_{ij}}{\mu_{ij}}}
+  \eta_i = \frac{\period}{\sum_j\frac{\dt_{ij}}{\eta_{ij}}} = \frac{\period}{\Gamma\left(1 + \frac{1}{\beta_i}\right) \sum_j\frac{\dt_{ij}}{\mu_{ij}}}.
 \end{equation}
 The tuples $\{ (\dt_{ij}, \mu_{ij}) \}_{j = 1}^{\nsegments[i]}$, characterizing the $i$th processing element, depend on the fatigue under consideration.
 
@@ -40,7 +41,7 @@ First, $\mQ(i, :)$ is analyzed using a peak-detection procedure in order to extr
 The found extrema are then fed to the rainflow counting algorithm \cite{xiang2010} for an adequate identification of thermal cycles.
 Denote by $\ncycles[ij]$ the expected number of cycles to failure corresponding to the $i$th processing element and its $j$th cycle (as if it was the only cycle damaging the processing element).
 $\ncycles[ij]$ is computed using the corresponding physical model of wear given in \cite{jedec2011, xiang2010}.
-Then, in \eref{compound-weibull-eta}, we have that $\mu_{ij} = \ncycles[ij] \dt_{ij}$, and $\dt_{ij}$ stands for the duration of the $ij$th cycle.
+Then, in \eref{compound-weibull-eta}, we have that $\mu_{ij} = \ncycles[ij] \dt_{ij}$, and $\dt_{ij}$ stands for the duration of the $(i, j)$th cycle.
 \begin{remark} \rlab{thermal-cycles}
 A cycle need not be formed by adjacent extrema; cycles can overlap.
 In this regard, the rainflow counting method is known to the best as it efficiently mitigates overestimation.
