@@ -16,34 +16,23 @@ Our objective is then to minimize the expected value of this variable:
 where $\dt$ is the sampling interval of the power profile $\mP$, and $\sum \mP$ denotes the summation over all elements of $\mP$.
 Here we also emphasize the dependency of $\mP$ on $\mapping$ and $\priority$.
 Our constraints are time, temperature, and reliability:
-\begin{equation} \elab{constraints}
-  \begin{aligned}
-    & \period(\mapping, \priority) \leq \t_\maximal, \\
-    & \probabilityMeasure\left( \norm[\infty]{\mQ(\mapping, \priority)} \geq \q_\maximal \right) \leq \pr_\burn, \text{ and} \\
-    & \expectation{\probabilityMeasure\left( \T(\mapping, \priority) \leq \T_\minimal \right)} \leq \pr_\wear,
-  \end{aligned}
-\end{equation}
+\begin{align}
+  & \period(\mapping, \priority) \leq \t_\maximal, \elab{timing-constraint} \\
+  & \probabilityMeasure\left( \norm[\infty]{\mQ(\mapping, \priority)} \geq \q_\maximal \right) \leq \pr_\burn, \text{ and} \elab{thermal-constraint} \\
+  & \expectation{\probabilityMeasure\left( \T(\mapping, \priority) \leq \T_\minimal \right)} \leq \pr_\wear, \elab{reliability-constraint}
+\end{align}
 where $\period$ is the duration of the application according to the schedule; $\t_\maximal$ is an upper bound on this duration, that is, a deadline; $\q_\maximal$ is the maximal temperature that the system can tolerate; $\pr_\burn$ is an acceptable probability of burning the chip; $\T_\minimal$ is the minimal time that the system should survive; and $\pr_\wear$ is an acceptable probability of having a premature fault due to wear.
 The last two constraints are probabilistic as the quantities under consideration are random.
-In addition, in the very last constraint, we take the expected value as the corresponding probability is a \rv\ due to the reasons described in \rref{two-level-probabilistic-modeling}.
+In addition, in the very last constraint, we compute the expected value as the corresponding probability is itself a \rv\ due to the reasons described in \rref{two-level-probabilistic-modeling}.
 
 In our experiment, we use a genetic algorithm for optimization.
 Each chromosome is a $2 \ntasks$-element vector concatenating a pair of $\mapping$ and $\priority$.
-The fitness of a chromosome is either the expected consumption of energy, as in \eref{objective}, or zero if any of the constraints in \eref{constraints} is violated.
+The fitness of a chromosome is either the expected consumption of energy, as in \eref{objective}, or zero if any of the constraints in \eref{timing-constraint}--\eref{reliability-constraint} is violated.
 In order to perform these computations, we utilize the uncertainty analysis technique presented in \sref{uncertainty-analysis}.
-In this case, the quantity of interest is
+In this case, the quantity of interest is a vector with three elements:
 \begin{equation} \elab{quantity-of-interest}
-  \vw = \left( \dt \sum \mP(\mapping, \priority), \; \norm[\infty]{\mQ(\mapping, \priority)}, \; \pvw \right),
+  \vw = \left( \dt \sum \mP, \; \norm[\infty]{\mQ}, \; \eta \right).
 \end{equation}
-which should be interpreted as a vector with $(1 + 1 + 2 \nprocs)$ elements.
-The first two elements are scalars corresponding to the energy consumption and maximal temperature, respectively.
-The rest are due to the parametrization $\pvw$ of the reliability model as described in \sref{reliability-analysis}.
+The first element corresponds to the energy consumption needed in \eref{objective}, the second element is the maximal temperature needed in \eref{thermal-constraint}, and the last one is the scale parameter of the reliability model (see \sref{reliability-analysis}) needed in \eref{reliability-constraint}.
 The uncertainty analysis in \sref{uncertainty-analysis} should be applied as explained in \rref{multiple-dimensions}.
-
-The genetic algorithm is configured as follows.
-The population contains $4 \ntasks$ individuals which are initialized using uniform distributions.
-The parents for the next generation are chosen by a tournament selection with the number of competitors equal to 20\% of $\ntasks$.
-A one-point crossover is then applied to 80\% of the parents.
-Each parent undergoes a uniform mutation wherein each gene is altered with probability 0.01.
-The top five-percent individuals always survive from one generation to the next one.
-The stopping condition is the absence of improvement within 20 successive generations.
+In \aref{surrogate-construction}, Algorithm~X is an intermediate procedure that makes a call to \aref{temperature-solution} and processes the resulting power and temperature profiles as required by \eref{quantity-of-interest}.

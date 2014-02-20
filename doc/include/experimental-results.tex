@@ -1,0 +1,8 @@
+\subsection{Reliability Optimization}
+The genetic algorithm is configured as follows.
+The population contains $4 \ntasks$ individuals which are initialized using uniform distributions.
+The parents for the next generation are chosen by a tournament selection with the number of competitors equal to 20\% of $\ntasks$.
+A one-point crossover is then applied to 80\% of the parents.
+Each parent undergoes a uniform mutation wherein each gene is altered with probability 0.01.
+The top five-percent individuals always survive from one generation to the next one.
+The stopping condition is the absence of improvement within 20 successive generations.
