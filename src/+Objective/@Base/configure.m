@@ -20,11 +20,7 @@ function [ targetIndex, constraints ] = configure(this, options)
   constraints.range = cell(1, quantityCount);
   constraints.probability = NaN(1, quantityCount);
 
-  Pdyn = options.power.compute(options.schedule);
-  [ T, output ] = surrogate.temperature.compute(Pdyn);
-  P = output.P;
-
-  output = surrogate.compute(Pdyn);
+  output = surrogate.compute(options.power.compute(options.schedule));
   data = surrogate.sample(output, 1e5);
 
   for i = 1:quantityCount
@@ -35,16 +31,7 @@ function [ targetIndex, constraints ] = configure(this, options)
       end
     end
 
-    switch lower(quantityNames{i})
-    case 'temperature'
-      nominal = max(T(:));
-    case 'energy'
-      nominal = surrogate.temperature.samplingInterval * sum(P(:));
-    case 'lifetime'
-      nominal = surrogate.fatigue.compute(T);
-    otherwise
-      assert(false);
-    end
+    nominal = mean(data(:, i));
     constraints.nominal(i) = nominal;
 
     if targetIndex(i), continue; end

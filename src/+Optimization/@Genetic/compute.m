@@ -1,9 +1,11 @@
-function output = compute(this)
+function output = compute(this, varargin)
+  options = Options(varargin{:});
+
   scheduler = this.scheduler;
   objective = this.objective;
 
   geneticOptions = this.geneticOptions;
-  geneticOptions.CreationFcn = @populate;
+  geneticOptions.CreationFcn = [];
   geneticOptions.MutationFcn = @mutate;
   geneticOptions.OutputFcns = @track;
 
@@ -13,7 +15,7 @@ function output = compute(this)
 
   populationSize = geneticOptions.PopulationSize;
 
-  function population = populate(varargin)
+  function population = populate
     population = zeros(populationSize, 2 * taskCount);
     population(:, 1:taskCount) = randi(processorCount, ...
       populationSize, taskCount);
@@ -21,6 +23,11 @@ function output = compute(this)
   end
 
   geneticOptions.InitialPopulation = populate;
+
+  if options.has('initialSolution')
+    geneticOptions.InitialPopulation(1, :) = ...
+      [ options.initialSolution(1, :), options.initialSolution(2, :) ];
+  end
 
   mutationRate = geneticOptions.MutationRate;
 
@@ -97,13 +104,14 @@ function output = compute(this)
   end
 
   if dimensionCount == 1
-    solutions = ga(@evaluate, 2 * taskCount, ...
+    [ solutions, fitness ] = ga(@evaluate, 2 * taskCount, ...
       [], [], [], [], [], [], [], geneticOptions);
   else
-    solutions = gamultiobj(@evaluate, 2 * taskCount, ...
+    [ solutions, fitness ] = gamultiobj(@evaluate, 2 * taskCount, ...
       [], [], [], [], [], [], geneticOptions);
   end
 
   output = struct;
-  output.solutions = unique(unify(solutions), 'rows');
+  [ output.solutions, I ] = unique(unify(solutions), 'rows');
+  output.fitness = fitness(I, :);
 end
