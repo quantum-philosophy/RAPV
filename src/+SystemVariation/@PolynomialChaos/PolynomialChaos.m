@@ -8,7 +8,7 @@ classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
       this = this@SystemVariation.Base(options);
     end
 
-    function output = compute(this, Pdyn)
+    function output = compute(this, Pdyn, varargin)
       T = this.temperature.computeWithoutLeakage(Pdyn); % cycle template
       [ ~, fatigueOutput ] = this.fatigue.compute(T);
 
@@ -17,11 +17,26 @@ classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
 
       output.T = T;
       output.fatigueOutput = fatigueOutput;
+
+      options = Options(varargin{:});
+      output.raw = options.get('raw', false);
     end
 
-    function stats = analyze(~, ~)
-      stats.expectation = [];
-      stats.variance = [];
+    function stats = analyze(this, output)
+      if output.raw
+        stats = this.surrogate.analyze(output);
+      else
+        stats.expectation = [];
+        stats.variance = [];
+      end
+    end
+
+    function data = sample(this, output, sampleCount)
+      data = sample@TemperatureVariation.PolynomialChaos( ...
+        this, output, sampleCount);
+      if output.raw
+        data = this.encode(data);
+      end
     end
   end
 

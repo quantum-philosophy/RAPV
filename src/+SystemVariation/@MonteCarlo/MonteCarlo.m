@@ -7,6 +7,14 @@ classdef MonteCarlo < TemperatureVariation.MonteCarlo & ...
       this = this@TemperatureVariation.MonteCarlo(options);
       this = this@SystemVariation.Base(options);
     end
+
+    function output = compute(this, Pdyn, varargin)
+      output = compute@TemperatureVariation.MonteCarlo(this, Pdyn);
+      options = Options(varargin{:});
+      if options.get('raw', false)
+        output.data = this.encode(output.data);
+      end
+    end
   end
 
   methods (Access = 'protected')
