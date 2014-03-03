@@ -30,5 +30,9 @@ classdef MonteCarlo < TemperatureVariation.MonteCarlo & ...
 
       output.data = this.decode(output.data);
     end
+
+    function data = postprocess(this, ~, data)
+      data = this.decode(data);
+    end
   end
 end

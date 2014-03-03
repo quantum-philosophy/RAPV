@@ -1,4 +1,4 @@
-function quantities = postprocess(surrogate, output, options)
+function quantities = postprocess(surrogate, output)
   sampleCount = 1e5;
 
   name = class(surrogate);
@@ -23,15 +23,6 @@ function quantities = postprocess(surrogate, output, options)
     stats.variance = var(output.data, [], 1);
   end
 
-  quantities = decode(surrogate, output, stats);
-
-  [ T, output ] = surrogate.temperature.compute(options.dynamicPower);
-  quantities.temperature.nominal = max(T(:));
-  quantities.energy.nominal = options.samplingInterval * sum(output.P(:));
-  quantities.lifetime.nominal = surrogate.fatigue.compute(T);
-end
-
-function quantities = decode(surrogate, output, stats)
   quantities = struct;
 
   for i = 1:surrogate.quantityCount
