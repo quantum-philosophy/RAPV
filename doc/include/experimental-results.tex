@@ -1,4 +1,48 @@
-\subsection{Reliability Optimization}
+In this section, we elaborate on the performance of the proposed techniques.
+All the experiments are conducted on a \abbr{GNU}/Linux machine equipped with 16 processors Intel Xeon E5520 2.27~\abbr{GH}z and 24~\abbr{GB} of \abbr{RAM}.
+
+We consider a 45-nm technological process and rely on the 45-nm standard-cell library published and maintained by NanGate \cite{nangate}.
+The effective channel length and gate-oxide thickness are assumed to have nominal values equal to 22.5~nm and 1~nm, respectively.
+Following the information about process variation reported by \abbr{ITRS} \cite{itrs}, we assume that each process parameter can deviate up to 12\% of its nominal value, and this percentage is treated as three standard deviations.
+The corresponding probabilistic model is the one described in \sref{parameter-preprocessing} where the correlation function is taken from \cite{ukhov2014}, and the model-order reduction procedure is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
+
+Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of tasks is uniformly distributed between 10 and 20~ms, and their dynamic power between 8 and 12~W.
+The floorplans of the platforms are regular grids wherein each processing element occupies $2 \times 2\,\text{mm}^2$.
+The granularity of power and temperature profiles, that is, $\dt$ in \sref{temperature-solution} and \xref{temperature-solution}, is set to 1~ms.
+The stopping condition in \aref{temperature-solution} is a decrease of the normalized root-mean-square error between two successive temperature profiles smaller than 1\%, which typically requires 3--5 iterations.
+In addition to the reduction of the stochastic dimensionality $\nvars$, we reduce the state-space dimensionality $\nnodes$ of the thermal system in \eref{thermal-model}.
+In this case, we discard the nodes with the smallest Hankel singular values and alter the remaining ones to preserve the \abbr{DC} gain of the system.
+The reduction procedure is configured to preserve 95\% of the energy of the system while ensuring that the decrease of $\nnodes$ is at most 40\%.
+
+The leakage model needed for the calculation of $\mP_\static(\vu, \mQ)$ in \aref{temperature-solution} is based on \abbr{SPICE} simulations of a series of \abbr{CMOS} invertors taken from the NanGate cell library and configured according to the high-performance 45-nm \abbr{PTM} \cite{ptm}.
+The simulations are performed for a fine-grained and sufficiently broad three-dimensional grid comprising the effective channel length, gate-oxide thickness, and temperature; the results are tabulated.
+The interpolation facilities of \abbr{MATLAB} \cite{matlab} are then utilized whenever we need to evaluate the leakage power for a particular point within the range of the grid.
+The output of the constructed leakage model is scaled up to account for about 40\% of the total power dissipation \cite{liu2007}.
+
+Since the reliability optimization in \sref{reliability-optimization} embraces all the techniques developed throughout the paper, that is, in \sref{uncertainty-analysis}, \sref{temperature-analysis}, and \sref{reliability-analysis}, we shall perform our assessment directly in the context of that optimization.
+
+\subsection{Calibration} \slab{experimental-results-calibration}
+As described in \sref{reliability-optimization}, the driving force of our optimization is a genetic algorithm; in this regard, the quantity of interest in \eref{quantity-of-interest} plays the key role since the objective function in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} are entirely based on it.
+Hence, we begin with an assessment of the accuracy and computational speed of the proposed solutions applied to $\vw$ in \eref{quantity-of-interest}, which also servers a calibration stage for the forthcoming design-space exploration.
+To this end, we shall compare our performance with the performance of Monte Carlo (\MC) sampling.
+The operations performed by the \MC-based approach for one sample are the same as those performed by our technique for one quadrature point.
+The only exception is that no reduction of any kind is undertaken inside \MC\ simulations in order to keep the corresponding results accurate.
+In the following experiments, the number of \MC\ samples is set to $10^4$.
+
+\input{include/tables/accuracy.tex}
+The results concerning accuracy are displayed in \tref{accuracy} where we study a quad-core system, \ie, $\nprocs = 4$, and vary the level of polynomial expansions $\nclevel$ from one to seven.
+For each of the three components of $\vw$, we report three error metrics: the relative errors of the expected value and variance and the Kullback--Leibler divergence of the empirical probability distribution functions.
+The three metrics are denoted by \eE, \eV, and \eD, respectively.
+The numbers of polynomial terms $\ncorder$ and quadrature points $\nqorder$ corresponding to each value of $\nclevel$ can also be found in the table.
+In general, the errors decrease as $\nclevel$ increases.
+However, the trend is not strictly monotonic.
+
+\tref{speed} displays the time needed to perform one characterization of $\vw$.
+Naturally, no parallel computing is utilized in these experiments.
+\input{include/tables/speed.tex}
+
+\subsection{Optimization} \slab{experimental-results-optimization}
+In this subsection, we report the result of the reliability optimization discussed in \sref{reliability-optimization}.
 The genetic algorithm is configured as follows.
 The population contains $4 \ntasks$ individuals which are initialized using uniform distributions.
 The parents for the next generation are chosen by a tournament selection with the number of competitors equal to 20\% of $\ntasks$.
@@ -6,3 +50,8 @@ A one-point crossover is then applied to 80\% of the parents.
 Each parent undergoes a uniform mutation wherein each gene is altered with probability 0.01.
 The top five-percent individuals always survive from one generation to the next one.
 The stopping condition is the absence of improvement within 20 successive generations.
+
+In order to speed up the computational process, we employ a number of auxiliary techniques.
+First of all, we perform model-order reduction of the thermal model in \eref{thermal-model}, which decreases the dimensionality of the state space of the thermal system given by $\nnodes$.
+Second, we cache the fitness value of each evaluated chromosome such that we do not need to recompute it for other chromosomes that have the same genes.
+Third, in each generation, the individuals are assessed in parallel using 12 processing cores, which is undertaken by virtue of the parallel computing toolbox of \abbr{MATLAB} \cite{matlab}.
