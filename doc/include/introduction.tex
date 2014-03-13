@@ -4,3 +4,27 @@ Therefore, the same workload applied to two ``identical'' dies can lead to two d
 This concern is especially urgent due to the interdependence between the leakage power and temperature \cite{liu2007}.
 Consequently, process variation leads to performance degradation in the best case and to severe faults or burnt silicon in the worst scenario.
 Under these circumstances, uncertainty quantification \cite{maitre2010} has evolved into an indispensable asset of electronic system design workflows in order to provide them with guaranties on the efficiency and robustness of products.
+
+\Ta\ can be broadly classified into two categories: transient and steady-state.
+The latter can be further subdivided into static and dynamic.
+\Tta\ is concerned with studying the thermal behavior of the system as a function of time.
+Intuitively speaking, the analysis takes a power curve and delivers the corresponding temperature curve.
+\Sssta\ addresses the hypothetical scenario in which the power dissipation is assumed to be constant, and one is interested in the temperature that the system attains when it reaches a (static) steady state.
+In this case, the analysis takes a single value of power (or a power curve which is immediately averaged out) and output the corresponding single value of temperature.
+\Dssta\ is a combination of the previous two: it is also targeted at a steady state of the system, but this steady state is now a temperature curve rather than a single value.
+The considered scenario is that the system is exposed to a periodic or nearly period workload, and one is interested in the repetitive evolution of temperature over time when the thermal behavior of the system stabilizes and starts exhibiting the same pattern over and over again.
+We refer to this state as a dynamic steady state.
+Consequently, the input to the analysis is a power curve, and the output is the corresponding periodic temperature curve.
+
+Consequently, such uncertainties have to be addressed in order to pursue efficiency and fail-safeness.
+Nevertheless, the majority of the literature related to temperature analysis of multiprocessor systems ignores this important aspect.
+
+The remainder of the paper is organized as follows.
+\sref{prior-work} provides an overview of the prior work.
+In \sref{present-work}, we summarize the contribution of the present paper.
+The objective of our study is formulated in \sref{problem-formulation}.
+The proposed frameworks for uncertainty, temperature, and reliability analyses are presented in \sref{uncertainty-analysis}, \sref{temperature-analysis}, and \sref{reliability-analysis}, respectively.
+An application of the proposed techniques to the context of reliability optimization is given in \sref{reliability-optimization}.
+The experimental results are reported and discussed in \sref{experimental-results}.
+\sref{conclusion} concludes the paper.
+The paper contains a set of supplementary materials with discussions on certain aspects of our solutions.

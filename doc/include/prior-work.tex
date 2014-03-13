@@ -1,13 +1,10 @@
-\Ta\ can be broadly classified into two categories: transient and steady-state.
-The latter can be further subdivided into static and dynamic.
-\Tta\ is concerned with studying the thermal behavior of the system as a function of time.
-Intuitively speaking, the analysis takes a power curve and delivers the corresponding temperature curve.
-\Sssta\ addresses the hypothetical scenario in which the power dissipation is assumed to be constant, and one is interested in the temperature that the system attains when it reaches a (static) steady state.
-In this case, the analysis takes a single value of power (or a power curve which is immediately averaged out) and output the corresponding single value of temperature.
-\Dssta\ is a combination of the previous two: it is also targeted at a steady state of the system, but this steady state is now a temperature curve rather than a single value.
-The considered scenario is that the system is exposed to a periodic or nearly period workload, and one is interested in the repetitive evolution of temperature over time when the thermal behavior of the system stabilizes and starts exhibiting the same pattern over and over again.
-We refer to this state as a dynamic steady state.
-Consequently, the input to the analysis is a power curve, and the output is the corresponding periodic temperature curve.
+Monte Carlo (\MC) sampling remains one of the most well known and widely used methods for the analysis of stochastic systems.
+The reason for this popularity lies in the ease of implementation, in the independence of the stochastic dimensionality, and in the asymptotic behavior of the quantities estimated using this technique.
+The crucial problem with \MC\ sampling, however, is the low rate of convergence: in order to get an additional decimal point of accuracy, one has to obtain hundred times more samples.
+Each such sample implies a complete realization of the whole system, which renders \MC-based methods slow and often infeasible since the needed number of simulations can be extremely large.
+
+In order to overcome the limitations of deterministic temperature analysis and, at the same time, to completely eliminate or, at least, mitigate the costs associated with \abbr{MC} sampling, a number of alternative stochastic techniques have been recently introduced.
+Due to the fact that the leakage component of the power dissipation is influenced by process variation the most, the techniques discussed below primarily focus on the variability of leakage.
 
 \Dssta\ for electronic systems was developed in \cite{ukhov2012}.
 Probabilistic \tta was presented in \cite{ukhov2014}.
