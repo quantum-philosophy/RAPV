@@ -2,7 +2,7 @@ function options = problem(varargin)
   %
   % System simulation
   %
-  options = Configure.systemSimulation( ...
+  options = Configure.systemSimulation('processorCount', 4, ...
     'assetPath', File.join(File.trace, '..', 'Assets'), varargin{:});
 
   %
@@ -42,7 +42,7 @@ function options = problem(varargin)
     if nargin < 3, quantile = nominal; end;
     switch lower(name)
     case 'time'
-      range = [ 0, 2 * nominal ];
+      range = [ 0, 1.2 * nominal ];
     case { 'temperature', 'energy' }
       range = [ 0, quantile ];
     case 'lifetime'

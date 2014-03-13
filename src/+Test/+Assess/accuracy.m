@@ -30,9 +30,15 @@ function accuracy
   surrogates = cell(1, orderCount);
 
   options = Configure.problem('surrogate', 'PolynomialChaos');
+
+  fprintf('%20s%20s%20s\n', 'Polynomial order', ...
+    'Polynomial terms', 'Quadrature nodes');
   for i = 1:orderCount
     options.surrogateOptions.order = orderSet(i);
     surrogates{i} = SystemVariation(options);
+    fprintf('%20d%20d%20d\n', orderSet(i), ...
+      surrogates{i}.surrogate.termCount, ...
+      surrogates{i}.surrogate.nodeCount);
   end
 
   %
