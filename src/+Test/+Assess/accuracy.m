@@ -1,14 +1,15 @@
 function accuracy
   setup;
-  rng(1);
+  rng(0);
 
   comparisonOptions = Options('quantity', 'pdf', 'range', 'unbounded', ...
     'method', 'smooth', 'distanceMetric', 'KLD', 'errorMetric', 'NRMSE');
 
   caseCount = 10;
 
-  orderSet = [ 1 2 3 4 5 ];
-  orderCount = length(orderSet);
+  orderSet = 1:5;
+  levelSet = orderSet;
+  setCount = length(orderSet);
 
   sampleCountSet = [ 1e4 ];
   sampleCount = length(sampleCountSet);
@@ -27,17 +28,19 @@ function accuracy
   %
   % Polynomial chaos
   %
-  surrogates = cell(1, orderCount);
+  surrogates = cell(1, setCount);
 
   options = Configure.problem('surrogate', 'PolynomialChaos');
 
-  fprintf('%20s%20s%20s\n', 'Polynomial order', ...
-    'Polynomial terms', 'Quadrature nodes');
-  for i = 1:orderCount
+  fprintf('%20s%20s%20s%20s\n', 'Polynomial order', ...
+    'Polynomial terms', 'Quadrature level', 'Quadrature nodes');
+  for i = 1:setCount
     options.surrogateOptions.order = orderSet(i);
+    options.surrogateOptions.quadratureOptions.level = levelSet(i);
     surrogates{i} = SystemVariation(options);
-    fprintf('%20d%20d%20d\n', orderSet(i), ...
+    fprintf('%20d%20d%20d%20d\n', options.surrogateOptions.order, ...
       surrogates{i}.surrogate.termCount, ...
+      options.surrogateOptions.quadratureOptions.level, ...
       surrogates{i}.surrogate.nodeCount);
   end
 
@@ -48,10 +51,10 @@ function accuracy
   metricCount = length(metricNames);
 
   error = struct;
-  error.expectation = cell(orderCount, sampleCount);
-  error.variance = cell(orderCount, sampleCount);
-  error.data = cell(orderCount, sampleCount);
-  for i = 1:orderCount
+  error.expectation = cell(setCount, sampleCount);
+  error.variance = cell(setCount, sampleCount);
+  error.data = cell(setCount, sampleCount);
+  for i = 1:setCount
     for j = 1:sampleCount
       error.expectation{i, j} = zeros(1, quantityCount);
       error.variance{i, j} = zeros(1, quantityCount);
@@ -66,7 +69,15 @@ function accuracy
     schedule = options.scheduler.compute(mapping, priority);
     dynamicPower = options.power.compute(schedule);
 
-    output = mc.compute(dynamicPower, 'raw', true);
+    [ output, fromCache ] = cache(mc, 'compute', dynamicPower, 'raw', true);
+    if fromCache
+      %
+      % NOTE: Offset the RNG to get the same results each time
+      % the code is executed.
+      %
+      mc.surrogate.distribution.sample( ...
+        mc.surrogate.sampleCount, mc.surrogate.inputCount);
+    end
 
     mcStats = struct;
     mcStats.expectation = cell(sampleCount, 1);
@@ -79,7 +90,7 @@ function accuracy
       mcStats.variance{i} = var(mcStats.data{i}, [], 1);
     end
 
-    for i = 1:orderCount
+    for i = setCount:-1:1
       surrogate = surrogates{i};
 
       fprintf('%s: evaluating order %d...\n', class(surrogate), orderSet(i));
@@ -111,7 +122,7 @@ function accuracy
     end
   end
 
-  for i = 1:orderCount
+  for i = 1:setCount
     for j = 1:sampleCount
       error.expectation{i, j} = error.expectation{i, j} / caseCount;
       error.variance{i, j} = error.variance{i, j} / caseCount;
@@ -125,7 +136,7 @@ function accuracy
     %
     % Header
     %
-    fprintf('%5s | ', 'Order');
+    fprintf('%5s | ', '');
     for i = 1:metricCount
       for j = 1:sampleCount
         fprintf('%15s', sprintf('%s, 10^%d', ...
@@ -138,7 +149,7 @@ function accuracy
     %
     % Data
     %
-    for i = 1:orderCount
+    for i = 1:setCount
       fprintf('%5d | ', orderSet(i));
       fprintf('%15.4f', 100 * cellfun(@(x) x(k), error.expectation(i, :)));
       fprintf(' | ');
@@ -151,4 +162,27 @@ function accuracy
 
     fprintf('\n');
   end
+end
+
+function [ output, fromCache ] = cache(this, method, varargin)
+  fromCache = false;
+
+  filename = sprintf('%s_%s.mat', class(this), ...
+    DataHash({ this.toString, method, varargin(:) }));
+
+  if File.exist(filename)
+    fprintf('%s: loading data from "%s"...\n', class(this), filename);
+    load(filename);
+    fromCache = true;
+  else
+    fprintf('%s: collecting data...\n', class(this));
+
+    time = tic;
+    output = this.(method)(varargin{:});
+    time = toc(time);
+
+    save(filename, 'output', 'time', '-v7.3');
+  end
+
+  fprintf('%s: done in %.2f seconds.\n', class(this), time);
 end
