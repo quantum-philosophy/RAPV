@@ -5,7 +5,7 @@ function accuracy
   comparisonOptions = Options('quantity', 'pdf', 'range', 'unbounded', ...
     'method', 'smooth', 'distanceMetric', 'KLD', 'errorMetric', 'NRMSE');
 
-  caseCount = 1;
+  caseCount = 10;
   iterationCount = 10;
 
   orderSet = 1:5;
