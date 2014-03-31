@@ -42,20 +42,17 @@ function compute(varargin)
   globalFitness = Inf(caseCount, iterationCount, dimensionCount);
   globalGain = Inf(caseCount, iterationCount, dimensionCount);
 
+  fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Solution');
+  for l = 1:dimensionCount
+    fprintf('%15s (%10s)', names{l}, 'Gain, %');
+  end
+  fprintf('\n');
+
   for i = 1:caseCount
-    fprintf('%10s', 'Solution');
-    for l = 1:dimensionCount
-      fprintf('%15s (%10s)', names{l}, 'Gain, %');
-    end
-    fprintf('\n');
-
     for j = 1:iterationCount
-      fprintf('Case %d, iteration %d:\n', i, j);
-
       solutionCount = size(output{i, j}.solutions, 1);
-
       for k = 1:solutionCount
-        fprintf('%10d', k);
+        fprintf('%10d%10d%10d', i, j, k);
         for l = 1:dimensionCount
           fitness = output{i, j}.fitness(k, l);
           gain = 1 - nominal(l) / output{i, j}.fitness(k, l);
@@ -65,21 +62,21 @@ function compute(varargin)
         end
         fprintf('\n');
       end
-
-      fprintf('\n');
     end
 
-    fprintf('Case-%d average (%.2f minutes):\n', 1, mean(time(i, :)) / 60);
+    fprintf('%10d%20s', i, 'Average solution');
     for l = 1:dimensionCount
       fitness = mean(globalFitness(i, :, l));
       gain = mean(globalGain(i, :, l));
       fprintf('%15.2f (%10.2f)', fitness, gain * 100);
     end
-
+    fprintf('\n');
+    fprintf('%10d%20s%28.2f\n', i, 'Average time, m', ...
+      mean(time(i, :)) / 60);
     fprintf('\n');
   end
 
-  fprintf('Total average (%.2f minus):\n', mean(time(:)) / 60);
+  fprintf('%30s', 'Total average solution');
   for l = 1:dimensionCount
     fitness = globalFitness(:, :, l);
     fitness = mean(fitness(:));
@@ -87,6 +84,7 @@ function compute(varargin)
     gain = mean(gain(:));
     fprintf('%15.2f (%10.2f)', fitness, gain * 100);
   end
-
   fprintf('\n');
+  fprintf('%30s%28.2f\n', 'Total average time, m', ...
+    mean(time(:)) / 60);
 end
