@@ -1,5 +1,7 @@
 classdef Genetic < Optimization.Base
   properties (SetAccess = 'protected')
+    verbose
+    visualize
     geneticOptions
   end
 
@@ -8,6 +10,9 @@ classdef Genetic < Optimization.Base
       options = Options(varargin{:});
 
       this = this@Optimization.Base(options);
+
+      this.verbose = options.get('verbose', true);
+      this.visualize = options.get('visualize', true);
 
       geneticOptions = gaoptimset;
 

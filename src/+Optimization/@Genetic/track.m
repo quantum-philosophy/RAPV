@@ -1,10 +1,10 @@
 function track(this, state, flag)
   if this.objective.dimensionCount == 1
-    printUniobjective(state, flag);
-    plotUniobjective(state, flag);
+    if this.verbose, printUniobjective(state, flag); end
+    if this.visualize, plotUniobjective(state, flag); end
   else
-    printMultiobjective(state, flag);
-    plotMultiobjective(state, flag);
+    if this.verbose, printMultiobjective(state, flag); end
+    if this.visualize, plotMultiobjective(state, flag); end
   end
 end
 

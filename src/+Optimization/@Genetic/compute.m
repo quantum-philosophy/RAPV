@@ -80,7 +80,7 @@ function output = compute(this, varargin)
     newPriority = chromosomes(I, (taskCount + 1):end);
     newFitness = Inf(newCount, dimensionCount);
 
-    for i = 1:newCount
+    parfor i = 1:newCount
       schedule = scheduler.compute(newMapping(i, :), newPriority(i, :));
       newFitness(i, :) = objective.compute(schedule);
     end
