@@ -41,22 +41,21 @@ function options = problem(varargin)
   %
   % Optimization
   %
-  function range = boundRange(name, nominal, quantile)
-    if nargin < 3, quantile = nominal; end;
+  function range = boundRange(name, nominal, ~)
     switch lower(name)
     case 'time'
-      range = [ 0, 1.2 * nominal ];
+      range = [ 0, 2 * nominal ];
     case { 'temperature', 'energy' }
-      range = [ 0, quantile ];
+      range = [ 0, nominal ];
     case 'lifetime'
-      range = [ quantile, Inf ];
+      range = [ nominal, Inf ];
     otherwise
       assert(false);
     end
   end
 
   function probability = boundProbability(~, ~)
-    probability = 0.95;
+    probability = 0.99;
   end
 
   options.objectiveOptions = Options( ...
@@ -69,9 +68,10 @@ function options = problem(varargin)
 
   geneticOptions = Options( ...
     'Generations', 100, ...
+    'StallGenLimit', 10, ...
     'PopulationSize', 4 * options.taskCount, ...
     'CrossoverFraction', 0.8, ...
-    'MutationRate', 0.01, ...
+    'MutationRate', 0.05, ...
     'SelectionFcn', { @selectiontournament, ...
       floor(0.05 * 4 * options.taskCount) });
 

@@ -10,43 +10,95 @@ function compute(varargin)
   surrogate = SystemVariation(options);
   display(surrogate);
 
-  objective = Objective.Expectation( ...
+  %
+  % Stochastic
+  %
+  stochasticObjective = Objective.Stochastic( ...
     'surrogate', surrogate, options.objectiveOptions);
-  display(objective);
+  display(stochasticObjective);
 
-  optimization = Optimization.Genetic( ...
-    'objective', objective, options.optimizationOptions);
+  stochasticOptimization = Optimization.Genetic( ...
+    'objective', stochasticObjective, options.optimizationOptions);
 
-  time = zeros(caseCount, iterationCount);
-  output = cell(caseCount, iterationCount);
+  %
+  % Deterministic
+  %
+  deterministicObjective = Objective.Deterministic(stochasticObjective);
 
-  for i = 1:caseCount
-    mapping = randi(options.processorCount, 1, options.taskCount);
-    priority = rand(1, options.taskCount);
-    schedule = options.scheduler.compute(mapping, priority);
+  deterministicOptimization = Optimization.Genetic( ...
+    'objective', deterministicObjective, options.optimizationOptions);
 
-    for j = 1:iterationCount
-      ticStamp = tic;
-      fprintf('%s: case %d, iteration %d...\n', class(optimization), i, j);
-      output{i, j} = optimization.compute('initialSolution', schedule);
-      time(i, j) = toc(ticStamp);
-      fprintf('%s: case %d, iteration %d, done in %.2f minutes.\n', ...
-        class(optimization), i, j, time(i, j) / 60);
+  mapping = randi(options.processorCount, caseCount, options.taskCount);
+  priority = rand(caseCount, options.taskCount);
+
+  filename = sprintf('optimization_%s.mat', ...
+    DataHash({ mapping, priority, iterationCount, options.toString }));
+
+  if File.exist(filename)
+    fprintf('Using the data from "%s"...\n', filename);
+    load(filename);
+  else
+    stochasticTime = zeros(caseCount, iterationCount);
+    stochasticOutput = cell(caseCount, iterationCount);
+
+    deterministicTime = zeros(caseCount, iterationCount);
+    deterministicOutput = cell(caseCount, iterationCount);
+
+    for i = 1:caseCount
+      for j = 1:iterationCount
+        fprintf('Case %d, iteration %d...\n', i, j);
+
+        ticStamp = tic;
+        stochasticOutput{i, j} = stochasticOptimization.compute();
+        stochasticTime(i, j) = toc(ticStamp);
+        fprintf('Stochastic: done in %.2f minutes.\n', ...
+          stochasticTime(i, j) / 60);
+
+        ticStamp = tic;
+        deterministicOutput{i, j} = deterministicOptimization.compute();
+        deterministicTime(i, j) = toc(ticStamp);
+        fprintf('Deterministic: done in %.2f minutes.\n', ...
+          deterministicTime(i, j) / 60);
+      end
     end
+
+    save(filename, 'stochasticTime', 'stochasticOutput', ...
+      'deterministicTime', 'deterministicOutput', '-v7.3');
   end
 
+  fprintf('\n');
+  fprintf('Stochastic solutions:\n');
+  fprintf('--------------------------------------------------\n');
+  report(surrogate, stochasticObjective, ...
+    stochasticOutput, stochasticTime);
+
+  fprintf('\n');
+  fprintf('Deterministic solutions:\n');
+  fprintf('--------------------------------------------------\n');
+  report(surrogate, deterministicObjective, ...
+    deterministicOutput, deterministicTime);
+
+  fprintf('\n');
+  fprintf('Assessment of the deterministic solutions:\n');
+  fprintf('--------------------------------------------------\n');
+  check(options.scheduler, stochasticObjective, deterministicOutput);
+end
+
+function report(surrogate, objective, output, time)
   dimensionCount = objective.dimensionCount;
   nominal = objective.constraints.nominal(objective.targetIndex);
   names = surrogate.quantityNames(objective.targetIndex);
+
+  [ caseCount, iterationCount ] = size(output);
 
   globalFitness = Inf(caseCount, iterationCount, dimensionCount);
   globalGain = Inf(caseCount, iterationCount, dimensionCount);
 
   fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Solution');
   for l = 1:dimensionCount
-    fprintf('%15s (%10s)', names{l}, 'Gain, %');
+    fprintf('%15s (%15s)', names{l}, 'Reduction, %');
   end
-  fprintf('\n');
+  fprintf('%10s\n', 'Time, m');
 
   for i = 1:caseCount
     for j = 1:iterationCount
@@ -55,36 +107,77 @@ function compute(varargin)
         fprintf('%10d%10d%10d', i, j, k);
         for l = 1:dimensionCount
           fitness = output{i, j}.fitness(k, l);
-          gain = 1 - nominal(l) / output{i, j}.fitness(k, l);
+          gain = 1 - fitness / nominal(l);
           globalFitness(i, j, l) = min(globalFitness(i, j, l), fitness);
           globalGain(i, j, l) = min(globalGain(i, j, l), gain);
-          fprintf('%15.2f (%10.2f)', fitness, gain * 100);
+          fprintf('%15.2f (%15.2f)', fitness, gain * 100);
         end
-        fprintf('\n');
+        if k == 1
+          fprintf('%10.2f\n', time(i, j) / 60);
+        else
+          fprintf('\n');
+        end
       end
     end
 
-    fprintf('%10d%20s', i, 'Average solution');
+    if iterationCount == 1, continue; end
+
+    fprintf('%10s%20s', 'Average', '');
     for l = 1:dimensionCount
       fitness = mean(globalFitness(i, :, l));
       gain = mean(globalGain(i, :, l));
-      fprintf('%15.2f (%10.2f)', fitness, gain * 100);
+      fprintf('%15.2f (%15.2f)', fitness, gain * 100);
     end
-    fprintf('\n');
-    fprintf('%10d%20s%28.2f\n', i, 'Average time, m', ...
-      mean(time(i, :)) / 60);
+    fprintf('%10.2f\n', mean(time(i, :)) / 60);
     fprintf('\n');
   end
 
-  fprintf('%30s', 'Total average solution');
+  fprintf('%10s%20s', 'Average', '');
   for l = 1:dimensionCount
     fitness = globalFitness(:, :, l);
     fitness = mean(fitness(:));
     gain = globalGain(:, :, l);
     gain = mean(gain(:));
-    fprintf('%15.2f (%10.2f)', fitness, gain * 100);
+    fprintf('%15.2f (%15.2f)', fitness, gain * 100);
   end
+  fprintf('%10.2f\n', mean(time(:)) / 60);
+end
+
+function check(scheduler, objective, output)
+  nominal = objective.constraints.nominal(objective.targetIndex);
+
+  [ caseCount, iterationCount ] = size(output);
+  taskCount = length(scheduler.application);
+
+  failCount = 0;
+
+  fprintf('%10s%10s%10s%10s%25s\n', 'Case', 'Iteration', 'Solution', ...
+    'Result', 'Reduction optimism, %');
+  for i = 1:caseCount
+    for j = 1:iterationCount
+      solutionCount = size(output{i, j}.solutions, 1);
+      for k = 1:solutionCount
+        fprintf('%10d%10d%10d', i, j, k);
+        chromosome = output{i, j}.solutions(k, :);
+        schedule = scheduler.compute( ...
+          chromosome(1:taskCount), chromosome((taskCount + 1):end));
+        objectiveOutput = objective.compute(schedule);
+        if objectiveOutput.deadlineViolation > 0 || ...
+          any(objectiveOutput.constraintViolation > 0)
+
+          failCount = failCount + 1;
+          fprintf('%10s', 'failed');
+        else
+          fprintf('%10s', 'passed');
+        end
+        delta = (objectiveOutput.fitness - ...
+          output{i, j}.fitness(k, :)) ./ nominal;
+        fprintf('%25.2f', delta * 100);
+        fprintf('\n');
+      end
+    end
+  end
+
   fprintf('\n');
-  fprintf('%30s%28.2f\n', 'Total average time, m', ...
-    mean(time(:)) / 60);
+  fprintf('Failure rate: %.2f %%\n', failCount / caseCount / iterationCount * 100);
 end

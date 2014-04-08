@@ -1,4 +1,8 @@
 classdef Base < handle
+  properties (Constant)
+    maximalFitness = 1e3;
+  end
+
   properties (SetAccess = 'private')
     power
     surrogate
@@ -12,6 +16,17 @@ classdef Base < handle
 
   methods
     function this = Base(varargin)
+      if length(varargin) == 1
+        that = varargin{:};
+        this.power = that.power;
+        this.surrogate = that.surrogate;
+        this.targetIndex = that.targetIndex;
+        this.constraints = that.constraints;
+        this.dimensionCount = that.dimensionCount;
+        this.sampleCount = that.sampleCount;
+        return;
+      end
+
       options = Options(varargin{:});
 
       this.power = options.power;
@@ -24,11 +39,11 @@ classdef Base < handle
     end
   end
 
-  methods (Abstract, Access = 'protected')
-    fitness = computeFitness(this, data);
+  methods (Abstract = true)
+    fitness = compute(this, schedule)
   end
 
-  methods (Access = 'private')
+  methods (Access = 'protected')
     function probability = computeProbability(~, data, range)
       %
       % NOTE: It is assumed that the support is positive, and
@@ -59,6 +74,14 @@ classdef Base < handle
       else
         assert(false);
       end
+    end
+
+    function penalty = penalize(~, violation, guide)
+      penalty = violation / guide;
+    end
+
+    function fitness = finalize(this, fitness, penalty)
+      fitness = -fitness + this.maximalFitness + penalty;
     end
   end
 end

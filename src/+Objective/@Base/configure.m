@@ -19,6 +19,7 @@ function [ targetIndex, constraints ] = configure(this, options)
   constraints.percentile = NaN(1, quantityCount);
   constraints.range = cell(1, quantityCount);
   constraints.probability = NaN(1, quantityCount);
+  constraints.quantityCount = quantityCount;
 
   output = surrogate.compute(options.power.compute(options.schedule));
   data = surrogate.sample(output, 1e5);

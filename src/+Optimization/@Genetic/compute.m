@@ -24,7 +24,7 @@ function output = compute(this, varargin)
 
   geneticOptions.InitialPopulation = populate;
 
-  if options.has('initialSolution')
+  if ~isempty(options.get('initialSolution', []))
     geneticOptions.InitialPopulation(1, :) = ...
       [ options.initialSolution(1, :), options.initialSolution(2, :) ];
   end
@@ -47,8 +47,18 @@ function output = compute(this, varargin)
   end
 
   cache = Cache;
+
+  %
+  % Generation stats
+  %
+  newCount = 0;
+  newPenalizedCount = 0;
+
+  %
+  % Global stats
+  %
   cachedCount = 0;
-  discardedCount = 0;
+  penalizedCount = 0;
 
   function chromosomes = unify(chromosomes)
     %
@@ -62,43 +72,68 @@ function output = compute(this, varargin)
 
   function fitness = evaluate(chromosomes)
     chromosomeCount = size(chromosomes, 1);
+    objectiveOutput = cell(chromosomeCount, 1);
+
     fitness = NaN(chromosomeCount, dimensionCount);
 
     chromosomes = unify(chromosomes);
 
+    I = true(chromosomeCount, 1);
     for i = 1:chromosomeCount
       value = cache.get(chromosomes(i, :));
-      if ~isempty(value), fitness(i, :) = value; end
+
+      if isempty(value), continue; end
+
+      objectiveOutput{i} = value;
+      I(i) = false;
+
+      fitness(i, :) = value.fitness;
     end
 
-    I = find(any(isnan(fitness), 2));
+    I = find(I);
     newCount = length(I);
 
     cachedCount = cachedCount + chromosomeCount - newCount;
 
     newMapping = chromosomes(I, 1:taskCount);
     newPriority = chromosomes(I, (taskCount + 1):end);
-    newFitness = Inf(newCount, dimensionCount);
+    newObjectiveOutput = cell(newCount, 1);
 
     parfor i = 1:newCount
       schedule = scheduler.compute(newMapping(i, :), newPriority(i, :));
-      newFitness(i, :) = objective.compute(schedule);
+      newObjectiveOutput{i} = objective.compute(schedule);
     end
+
+    objectiveOutput(I) = newObjectiveOutput;
 
     for i = 1:newCount
-      cache.set(chromosomes(I(i), :), newFitness(i, :));
+      cache.set(chromosomes(I(i), :), newObjectiveOutput{i});
+
+      fitness(I(i), :) = newObjectiveOutput{i}.fitness;
     end
 
-    fitness(I, :) = newFitness;
+    newPenalizedCount = 0;
 
-    discardedCount = discardedCount + sum(isinf(max(fitness, [], 2)));
+    for i = 1:chromosomeCount
+      if ~((objectiveOutput{i}.deadlineViolation > 0) || ...
+        any(objectiveOutput{i}.constraintViolation > 0)), continue; end
+
+      penalizedCount = penalizedCount + 1;
+
+      if ismember(i, I)
+        newPenalizedCount = newPenalizedCount + 1;
+      end
+    end
   end
 
   function [ state, options, onchanged ] = track(options, state, flag)
     onchanged = false;
 
+    state.newCount = newCount;
+    state.newPenalizedCount = newPenalizedCount;
+
     state.cachedCount = cachedCount;
-    state.discardedCount = discardedCount;
+    state.penalizedCount = penalizedCount;
 
     this.track(state, flag);
   end
