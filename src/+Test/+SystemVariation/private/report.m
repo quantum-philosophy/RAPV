@@ -5,8 +5,7 @@ function report(surrogate, output, quantities)
     plot(surrogate, output);
   end
 
-  fprintf('%25s%15s%15s%15s\n', 'Quantity', 'Nominal', ...
-    'Expectation', 'Deviation');
+  fprintf('%25s%15s%15s\n', 'Quantity', 'Expectation', 'Deviation');
 
   for i = 1:surrogate.quantityCount
     name = lower(surrogate.quantityNames{i});
@@ -18,12 +17,10 @@ function reportOne(quantity, stats)
   expectation = stats.expectation;
   variance = stats.variance;
   data = stats.data;
-  nominal = stats.nominal;
 
   switch quantity
   case 'temperature'
     name = 'Maximal temperature';
-    nominal = Utils.toCelsius(nominal);
     expectation = Utils.toCelsius(expectation);
     deviation = sqrt(variance);
     data = Utils.toCelsius(data);
@@ -32,7 +29,6 @@ function reportOne(quantity, stats)
     deviation = sqrt(variance);
   case 'lifetime'
     name = 'Mean time to failure';
-    nominal = Utils.toYears(nominal);
     expectation = Utils.toYears(expectation);
     deviation = Utils.toYears(sqrt(variance));
     data = Utils.toYears(data);
@@ -40,20 +36,18 @@ function reportOne(quantity, stats)
     assert(false);
   end
 
-  fprintf('%25s%15.4f%15.4f%15.4f\n', ...
-    name, nominal, expectation, deviation);
+  fprintf('%25s%15.4f%15.4f\n', name, expectation, deviation);
 
   if isempty(data), return; end
 
   Plot.distribution(data, 'method', 'smooth', 'range', 'unbounded');
 
-  Plot.vline(nominal, 'number', 2);
-  Plot.vline(expectation, 'number', 3);
-  Plot.vline(expectation + deviation, 'number', 3, 'auxiliary', true);
-  Plot.vline(expectation - deviation, 'number', 3, 'auxiliary', true);
+  Plot.vline(expectation, 'number', 2);
+  Plot.vline(expectation + deviation, 'number', 2, 'auxiliary', true);
+  Plot.vline(expectation - deviation, 'number', 2, 'auxiliary', true);
 
   Plot.title(name);
-  Plot.legend('Density', 'Nominal', 'Expectation', '+/- Deviation');
+  Plot.legend('Density', 'Expectation', '+/- Deviation');
 
   switch quantity
   case 'temperature'

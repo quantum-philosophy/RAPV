@@ -3,6 +3,6 @@ function compute(varargin)
 
   options = Configure.problem(varargin{:});
   [ surrogate, output ] = construct(options);
-  stats = postprocess(surrogate, output, options);
+  stats = postprocess(surrogate, output);
   report(surrogate, output, stats);
 end
