@@ -1,52 +1,54 @@
 function [ quantities, targets, constraints ] = configure(this, options)
   surrogate = options.surrogate;
+  targetNames = options.targetNames;
 
   quantities = struct;
-  quantities.names = [ { 'Time' }, surrogate.quantityNames ];
+
+  quantities.names = [ surrogate.quantityNames, { 'Time' } ];
   quantities.count = length(quantities.names);
+  quantities.nominal = zeros(1, quantities.count);
 
   targets = struct;
-  targets.names = options.targetNames;
-  targets.count = length(targets.names);
-
-  targetIndex = false(1, quantities.count);
+  targets.count = length(targetNames);
 
   constraints = struct;
-  constraints.nominal = zeros(1, quantities.count);
-  constraints.quantile = NaN(1, quantities.count);
-  constraints.percentile = NaN(1, quantities.count);
-  constraints.range = cell(1, quantities.count);
-  constraints.probability = NaN(1, quantities.count);
+  constraints.count = quantities.count - targets.count;
+  constraints.quantile = NaN(1, constraints.count);
+  constraints.percentile = NaN(1, constraints.count);
+  constraints.range = cell(1, constraints.count);
+  constraints.probability = NaN(1, constraints.count);
 
   %
-  % The first
+  % NOTE: Excluding the last one as we do not count time.
   %
-  constraints.nominal(1) = ...
-    max(options.schedule(4, :) + options.schedule(5, :));
-  constraints.range{1} = ...
-    options.boundRange('Time', constraints.nominal(1));
+  isTarget = false(1, quantities.count);
+  for i = 1:(quantities.count - 1)
+    for j = 1:targets.count
+      if strcmpi(quantities.names{i}, targetNames{j})
+        isTarget(i) = true;
+        break;
+      end
+    end
+  end
+
+  targets.index = find(isTarget);
+  constraints.index = find(~isTarget);
 
   %
-  % The rest
+  % Stochastic
   %
   output = surrogate.compute(options.power.compute(options.schedule));
   data = surrogate.sample(output, 1e5);
 
-  for i = 2:quantities.count
-    for j = 1:targets.count
-      if strcmpi(quantities.names{i}, targets.names{j})
-        targetIndex(i) = true;
-        break;
-      end
-    end
+  %
+  % NOTE: Excluding the last one as it will be treated separatly.
+  %
+  j = 0;
+  for i = 1:(quantities.count - 1)
+    nominal = mean(data(:, i));
+    quantities.nominal(i) = nominal;
 
-    %
-    % NOTE: Shifting by one hereafter to account for the timing constraint.
-    %
-    nominal = mean(data(:, i - 1));
-    constraints.nominal(i) = nominal;
-
-    if targetIndex(i), continue; end
+    if isTarget(i), continue; end
 
     %
     % Compute the prior range and probability
@@ -57,23 +59,28 @@ function [ quantities, targets, constraints ] = configure(this, options)
     %
     % Update the range
     %
-    % NOTE: computeQuantile uses range only to check the boundedness.
-    %
-    quantile = this.computeQuantile(data(:, i - 1), range, probability);
+    quantile = this.computeQuantile(data(:, i), range, probability);
     range = options.boundRange(quantities.names{i}, nominal, quantile);
 
     %
     % Update the probability
     %
-    percentile = this.computeProbability(data(:, i - 1), range) * 100;
+    percentile = this.computeProbability(data(:, i), range) * 100;
     probability = options.boundProbability(quantities.names{i}, percentile);
 
-    constraints.quantile(i) = quantile;
-    constraints.percentile(i) = percentile;
-    constraints.range{i} = range;
-    constraints.probability(i) = probability;
+    j = j + 1;
+
+    constraints.quantile(j) = quantile;
+    constraints.percentile(j) = percentile;
+    constraints.range{j} = range;
+    constraints.probability(j) = probability;
   end
 
-  targets.index = find(targetIndex);
-  constraints.index = find(~targetIndex);
+  %
+  % Deterministic
+  %
+  quantities.nominal(end) = ...
+    max(options.schedule(4, :) + options.schedule(5, :));
+  constraints.range{end} = ...
+    options.boundRange('Time', quantities.nominal(end));
 end

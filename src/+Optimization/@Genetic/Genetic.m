@@ -21,6 +21,7 @@ classdef Genetic < Optimization.Base
       geneticOptions.Generations = 100;
       geneticOptions.StallGenLimit = 20;
       geneticOptions.TolFun = 0;
+      geneticOptions.TolCon = 0;
       geneticOptions.SelectionFcn = @selectiontournament;
       geneticOptions.CrossoverFcn = @crossoversinglepoint;
       geneticOptions.UseParallel = 'never';

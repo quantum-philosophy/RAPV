@@ -7,14 +7,15 @@ function display(this)
 
   for i = targets.index
     name = quantities.names{i};
-    [ nominal, units ] = convert(constraints.nominal(i), name);
+    [ nominal, units ] = convert(quantities.nominal(i), name);
     fprintf('  Target: %s (initial %.2f %s)\n', name, nominal, units);
   end
 
-  for i = constraints.index
-    name = quantities.names{i};
+  for i = 1:constraints.count
+    j = constraints.index(i);
+    name = quantities.names{j};
 
-    [ nominal, units ] = convert(constraints.nominal(i), name);
+    [ nominal, units ] = convert(quantities.nominal(j), name);
     range = convert(constraints.range{i}, name);
 
     deterministic = isnan(constraints.quantile(i));

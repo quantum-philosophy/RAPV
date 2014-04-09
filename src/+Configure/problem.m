@@ -44,11 +44,11 @@ function options = problem(varargin)
   function range = boundRange(name, nominal, ~)
     switch lower(name)
     case 'time'
-      range = [ 0, 2 * nominal ];
+      range = [ 0, 1.3 * nominal ];
     case { 'temperature', 'energy' }
-      range = [ 0, nominal ];
+      range = [ 0, 1.01 * nominal ];
     case 'lifetime'
-      range = [ nominal, Inf ];
+      range = [ 0.95 * nominal, Inf ];
     otherwise
       assert(false);
     end

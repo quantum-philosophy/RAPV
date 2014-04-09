@@ -84,8 +84,8 @@ end
 
 function report(objective, output, time)
   targetCount = objective.targets.count;
-  nominal = objective.constraints.nominal(objective.targets.index);
   names = objective.quantities.names(objective.targets.index);
+  nominal = objective.quantities.nominal(objective.targets.index);
 
   [ caseCount, iterationCount ] = size(output);
 
@@ -142,7 +142,7 @@ function report(objective, output, time)
 end
 
 function check(scheduler, objective, output)
-  nominal = objective.constraints.nominal(objective.targets.index);
+  nominal = objective.quantities.nominal(objective.targets.index);
 
   [ caseCount, iterationCount ] = size(output);
   taskCount = length(scheduler.application);

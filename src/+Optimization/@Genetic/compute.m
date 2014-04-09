@@ -52,13 +52,13 @@ function output = compute(this, varargin)
   % Generation stats
   %
   newCount = 0;
-  newPenalizedCount = 0;
+  newViolationCount = zeros(1, objective.constraints.count);
 
   %
   % Global stats
   %
   cachedCount = 0;
-  penalizedCount = 0;
+  violationCount = zeros(1, objective.constraints.count);
 
   function chromosomes = unify(chromosomes)
     %
@@ -112,15 +112,14 @@ function output = compute(this, varargin)
       fitness(I(i), :) = newObjectiveOutput{i}.fitness;
     end
 
-    newPenalizedCount = 0;
+    newViolationCount(:) = 0;
 
     for i = 1:chromosomeCount
-      if ~any(objectiveOutput{i}.violations > 0), continue; end
-
-      penalizedCount = penalizedCount + 1;
-
+      violationCount = violationCount + ...
+        (objectiveOutput{i}.violations > 0);
       if ismember(i, I)
-        newPenalizedCount = newPenalizedCount + 1;
+        newViolationCount = newViolationCount + ...
+          (objectiveOutput{i}.violations > 0);
       end
     end
   end
@@ -129,10 +128,10 @@ function output = compute(this, varargin)
     onchanged = false;
 
     state.newCount = newCount;
-    state.newPenalizedCount = newPenalizedCount;
+    state.newViolationCount = newViolationCount;
 
     state.cachedCount = cachedCount;
-    state.penalizedCount = penalizedCount;
+    state.violationCount = violationCount;
 
     this.track(state, flag);
   end

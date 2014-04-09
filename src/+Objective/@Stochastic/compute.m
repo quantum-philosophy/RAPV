@@ -5,21 +5,21 @@ function output = compute(this, schedule)
 
   output = struct;
   output.fitness = NaN(1, targets.count);
-  output.violations = NaN(1, quantities.count);
+  output.violations = NaN(1, constraints.count);
 
   penalty = 0;
 
   %
-  % The first
+  % Deterministic
   %
-  deadline = max(constraints.range{1});
+  deadline = max(constraints.range{end});
   duration = max(schedule(4, :) + schedule(5, :));
 
-  output.violations(1) = max(0, duration - deadline);
+  output.violations(end) = max(0, duration - deadline);
 
-  if output.violations(1) > 0
+  if output.violations(end) > 0
     penalty = penalty + this.penalize( ...
-      output.violations(1), deadline);
+      output.violations(end), deadline);
   end
 
   %
@@ -32,20 +32,19 @@ function output = compute(this, schedule)
   end
 
   %
-  % The rest
+  % Stochastic
   %
   surrogateOutput = this.surrogate.compute(this.power.compute(schedule));
   data = this.surrogate.sample(surrogateOutput, this.sampleCount);
 
   %
-  % NOTE: Excluding one to account for the timing constraint.
+  % NOTE: Excluding the last one as it has already been treated.
   %
-  for i = setdiff(constraints.index, 1)
-    %
-    % NOTE: Shifting by one to account for the timing constraint.
-    %
+  for i = 1:(constraints.count - 1)
+    j = constraints.index(i);
+
     probability = this.computeProbability( ...
-      data(:, i - 1), constraints.range{i});
+      data(:, j), constraints.range{i});
 
     output.violations(i) = ...
       max(0, constraints.probability(i) - probability);
@@ -60,9 +59,7 @@ function output = compute(this, schedule)
   % NOTE: It should be positive for the energy consumption and
   % negative for the maximal temperature and lifetime.
   %
-  % NOTE: Shifting by one to account for the timing constraint.
-  %
-  output.fitness = mean(data(:, targets.index - 1), 1);
+  output.fitness = mean(data(:, targets.index), 1);
 
   if penalty > 0
     output.fitness = this.finalize(output.fitness, penalty);
