@@ -2,8 +2,8 @@ function compute(varargin)
   setup;
   rng(0);
 
-  caseCount = 10;
-  iterationCount = 10;
+  caseCount = 1;
+  iterationCount = 1;
 
   options = Configure.problem(varargin{:});
 
@@ -69,14 +69,12 @@ function compute(varargin)
   fprintf('\n');
   fprintf('Stochastic solutions:\n');
   fprintf('--------------------------------------------------\n');
-  report(surrogate, stochasticObjective, ...
-    stochasticOutput, stochasticTime);
+  report(stochasticObjective, stochasticOutput, stochasticTime);
 
   fprintf('\n');
   fprintf('Deterministic solutions:\n');
   fprintf('--------------------------------------------------\n');
-  report(surrogate, deterministicObjective, ...
-    deterministicOutput, deterministicTime);
+  report(deterministicObjective, deterministicOutput, deterministicTime);
 
   fprintf('\n');
   fprintf('Assessment of the deterministic solutions:\n');
@@ -84,18 +82,18 @@ function compute(varargin)
   check(options.scheduler, stochasticObjective, deterministicOutput);
 end
 
-function report(surrogate, objective, output, time)
-  dimensionCount = objective.dimensionCount;
-  nominal = objective.constraints.nominal(objective.targetIndex);
-  names = surrogate.quantityNames(objective.targetIndex);
+function report(objective, output, time)
+  targetCount = objective.targets.count;
+  nominal = objective.constraints.nominal(objective.targets.index);
+  names = objective.quantities.names(objective.targets.index);
 
   [ caseCount, iterationCount ] = size(output);
 
-  globalFitness = Inf(caseCount, iterationCount, dimensionCount);
-  globalGain = Inf(caseCount, iterationCount, dimensionCount);
+  globalFitness = Inf(caseCount, iterationCount, targetCount);
+  globalGain = Inf(caseCount, iterationCount, targetCount);
 
   fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Solution');
-  for l = 1:dimensionCount
+  for l = 1:targetCount
     fprintf('%15s (%15s)', names{l}, 'Reduction, %');
   end
   fprintf('%10s\n', 'Time, m');
@@ -105,7 +103,7 @@ function report(surrogate, objective, output, time)
       solutionCount = size(output{i, j}.solutions, 1);
       for k = 1:solutionCount
         fprintf('%10d%10d%10d', i, j, k);
-        for l = 1:dimensionCount
+        for l = 1:targetCount
           fitness = output{i, j}.fitness(k, l);
           gain = 1 - fitness / nominal(l);
           globalFitness(i, j, l) = min(globalFitness(i, j, l), fitness);
@@ -123,7 +121,7 @@ function report(surrogate, objective, output, time)
     if iterationCount == 1, continue; end
 
     fprintf('%10s%20s', 'Average', '');
-    for l = 1:dimensionCount
+    for l = 1:targetCount
       fitness = mean(globalFitness(i, :, l));
       gain = mean(globalGain(i, :, l));
       fprintf('%15.2f (%15.2f)', fitness, gain * 100);
@@ -133,7 +131,7 @@ function report(surrogate, objective, output, time)
   end
 
   fprintf('%10s%20s', 'Average', '');
-  for l = 1:dimensionCount
+  for l = 1:targetCount
     fitness = globalFitness(:, :, l);
     fitness = mean(fitness(:));
     gain = globalGain(:, :, l);
@@ -144,7 +142,7 @@ function report(surrogate, objective, output, time)
 end
 
 function check(scheduler, objective, output)
-  nominal = objective.constraints.nominal(objective.targetIndex);
+  nominal = objective.constraints.nominal(objective.targets.index);
 
   [ caseCount, iterationCount ] = size(output);
   taskCount = length(scheduler.application);
@@ -162,9 +160,7 @@ function check(scheduler, objective, output)
         schedule = scheduler.compute( ...
           chromosome(1:taskCount), chromosome((taskCount + 1):end));
         objectiveOutput = objective.compute(schedule);
-        if objectiveOutput.deadlineViolation > 0 || ...
-          any(objectiveOutput.constraintViolation > 0)
-
+        if any(objectiveOutput.violations > 0)
           failCount = failCount + 1;
           fprintf('%10s', 'failed');
         else

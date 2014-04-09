@@ -3,6 +3,5 @@ classdef Deterministic < Objective.Base
     function this = Deterministic(varargin)
       this = this@Objective.Base(varargin{:});
     end
-  end 
+  end
 end
-

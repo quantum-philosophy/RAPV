@@ -7,23 +7,27 @@ classdef Base < handle
     power
     surrogate
 
-    targetIndex
+    quantities
+    targets
     constraints
 
-    dimensionCount
     sampleCount
   end
 
   methods
     function this = Base(varargin)
       if length(varargin) == 1
-        that = varargin{:};
+        that = varargin{1};
+
         this.power = that.power;
         this.surrogate = that.surrogate;
-        this.targetIndex = that.targetIndex;
+
+        this.quantities = that.quantities;
+        this.targets = that.targets;
         this.constraints = that.constraints;
-        this.dimensionCount = that.dimensionCount;
+
         this.sampleCount = that.sampleCount;
+
         return;
       end
 
@@ -32,9 +36,9 @@ classdef Base < handle
       this.power = options.power;
       this.surrogate = options.surrogate;
 
-      [ this.targetIndex, this.constraints ] = this.configure(options);
+      [ this.quantities, this.targets, this.constraints ] = ...
+        this.configure(options);
 
-      this.dimensionCount = nnz(this.targetIndex);
       this.sampleCount = options.get('sampleCount', 1e3);
     end
   end

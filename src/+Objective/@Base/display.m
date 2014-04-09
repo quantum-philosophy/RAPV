@@ -1,37 +1,48 @@
 function display(this)
-  quantityNames = this.surrogate.quantityNames;
+  quantities = this.quantities;
+  targets = this.targets;
   constraints = this.constraints;
 
   fprintf('%s:\n', class(this));
 
-  for i = find(this.targetIndex)
-    name = quantityNames{i};
+  for i = targets.index
+    name = quantities.names{i};
     [ nominal, units ] = convert(constraints.nominal(i), name);
     fprintf('  Target: %s (initial %.2f %s)\n', name, nominal, units);
   end
 
-  fprintf('  Deterministic constraints on time:\n');
-  fprintf('    Deadline:    %.2f s (initial %.2f s)\n', ...
-    constraints.deadline, constraints.duration);
+  for i = constraints.index
+    name = quantities.names{i};
 
-  for i = find(~this.targetIndex)
-    name = quantityNames{i};
     [ nominal, units ] = convert(constraints.nominal(i), name);
-    quantile = convert(constraints.quantile(i), name);
     range = convert(constraints.range{i}, name);
 
-    fprintf('  Probabilistic constraints on %s:\n', name);
+    deterministic = isnan(constraints.quantile(i));
+
+    if deterministic
+      fprintf('  Deterministic constraint on %s:\n', name);
+    else
+      fprintf('  Probabilistic constraint on %s:\n', name);
+    end
+
     fprintf('    Nominal:     %.2f %s\n', nominal, units);
-    fprintf('    Quantile:    %.2f %s\n', quantile, units);
-    fprintf('    Percentile:  %.2f %%\n', constraints.percentile(i));
     fprintf('    Lower bound: %.2f %s\n', range(1), units);
     fprintf('    Upper bound: %.2f %s\n', range(2), units);
+
+    if deterministic, continue; end
+
+    quantile = convert(constraints.quantile(i), name);
+
+    fprintf('    Quantile:    %.2f %s\n', quantile, units);
+    fprintf('    Percentile:  %.2f %%\n', constraints.percentile(i));
     fprintf('    Probability: %.2f\n', constraints.probability(i));
   end
 end
 
 function [ value, units ] = convert(value, name)
   switch lower(name)
+  case 'time'
+    units = 's';
   case 'temperature'
     value = Utils.toCelsius(value);
     units = 'C';

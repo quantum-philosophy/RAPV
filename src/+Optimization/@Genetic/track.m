@@ -1,5 +1,5 @@
 function track(this, state, flag)
-  if this.objective.dimensionCount == 1
+  if this.objective.targets.count == 1
     if this.verbose, printUniobjective(state, flag); end
     if this.visualize, plotUniobjective(state, flag); end
   else

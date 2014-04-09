@@ -11,7 +11,7 @@ function output = compute(this, varargin)
 
   processorCount = length(scheduler.platform);
   taskCount = length(scheduler.application);
-  dimensionCount = objective.dimensionCount;
+  targetCount = objective.targets.count;
 
   populationSize = geneticOptions.PopulationSize;
 
@@ -74,7 +74,7 @@ function output = compute(this, varargin)
     chromosomeCount = size(chromosomes, 1);
     objectiveOutput = cell(chromosomeCount, 1);
 
-    fitness = NaN(chromosomeCount, dimensionCount);
+    fitness = NaN(chromosomeCount, targetCount);
 
     chromosomes = unify(chromosomes);
 
@@ -115,8 +115,7 @@ function output = compute(this, varargin)
     newPenalizedCount = 0;
 
     for i = 1:chromosomeCount
-      if ~((objectiveOutput{i}.deadlineViolation > 0) || ...
-        any(objectiveOutput{i}.constraintViolation > 0)), continue; end
+      if ~any(objectiveOutput{i}.violations > 0), continue; end
 
       penalizedCount = penalizedCount + 1;
 
@@ -138,7 +137,7 @@ function output = compute(this, varargin)
     this.track(state, flag);
   end
 
-  if dimensionCount == 1
+  if targetCount == 1
     [ solutions, fitness ] = ga(@evaluate, 2 * taskCount, ...
       [], [], [], [], [], [], [], geneticOptions);
   else

@@ -1,23 +1,25 @@
 function output = compute(this, schedule)
+  quantities = this.quantities;
+  targets = this.targets;
   constraints = this.constraints;
 
   output = struct;
-  output.fitness = NaN(1, this.dimensionCount);
-  output.deadlineViolation = NaN;
-  output.constraintViolation = NaN(1, constraints.quantityCount);
+  output.fitness = NaN(1, targets.count);
+  output.violations = NaN(1, quantities.count);
 
   penalty = 0;
 
   %
-  % Timing constraint
+  % The first
   %
+  deadline = max(constraints.range{1});
   duration = max(schedule(4, :) + schedule(5, :));
 
-  output.deadlineViolation = max(0, duration - constraints.deadline);
+  output.violations(1) = max(0, duration - deadline);
 
-  if output.deadlineViolation > 0
+  if output.violations(1) > 0
     penalty = penalty + this.penalize( ...
-      output.deadlineViolation, constraints.deadline);
+      output.violations(1), deadline);
   end
 
   %
@@ -30,29 +32,37 @@ function output = compute(this, schedule)
   end
 
   %
-  % Other constraints
+  % The rest
   %
   surrogateOutput = this.surrogate.compute(this.power.compute(schedule));
   data = this.surrogate.sample(surrogateOutput, this.sampleCount);
 
-  for i = find(~this.targetIndex)
+  %
+  % NOTE: Excluding one to account for the timing constraint.
+  %
+  for i = setdiff(constraints.index, 1)
+    %
+    % NOTE: Shifting by one to account for the timing constraint.
+    %
     probability = this.computeProbability( ...
-      data(:, i), constraints.range{i});
+      data(:, i - 1), constraints.range{i});
 
-    output.constraintViolation(i) = ...
+    output.violations(i) = ...
       max(0, constraints.probability(i) - probability);
 
-    if output.constraintViolation(i) > 0
+    if output.violations(i) > 0
       penalty = penalty + this.penalize( ...
-        output.constraintViolation(i), constraints.probability(i));
+        output.violations(i), constraints.probability(i));
     end
   end
 
   %
-  % TODO: It should be positive for the energy consumption and
+  % NOTE: It should be positive for the energy consumption and
   % negative for the maximal temperature and lifetime.
   %
-  output.fitness = mean(data(:, this.targetIndex), 1);
+  % NOTE: Shifting by one to account for the timing constraint.
+  %
+  output.fitness = mean(data(:, targets.index - 1), 1);
 
   if penalty > 0
     output.fitness = this.finalize(output.fitness, penalty);
