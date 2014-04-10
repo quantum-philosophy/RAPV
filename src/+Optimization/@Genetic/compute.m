@@ -116,10 +116,10 @@ function output = compute(this, varargin)
 
     for i = 1:chromosomeCount
       violationCount = violationCount + ...
-        (objectiveOutput{i}.violations > 0);
+        (objectiveOutput{i}.violation > 0);
       if ismember(i, I)
         newViolationCount = newViolationCount + ...
-          (objectiveOutput{i}.violations > 0);
+          (objectiveOutput{i}.violation > 0);
       end
     end
   end

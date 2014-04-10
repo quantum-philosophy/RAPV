@@ -4,4 +4,8 @@ classdef Stochastic < Objective.Base
       this = this@Objective.Base(varargin{:});
     end
   end
+
+  methods (Access = 'protected')
+    output = evaluate(this, schedule)
+  end
 end

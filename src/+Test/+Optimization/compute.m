@@ -2,7 +2,7 @@ function compute(varargin)
   setup;
   rng(0);
 
-  caseCount = 1;
+  caseCount = 10;
   iterationCount = 1;
 
   options = Configure.problem(varargin{:});
@@ -149,8 +149,8 @@ function check(scheduler, objective, output)
 
   failCount = 0;
 
-  fprintf('%10s%10s%10s%10s%25s\n', 'Case', 'Iteration', 'Solution', ...
-    'Result', 'Reduction optimism, %');
+  fprintf('%10s%10s%10s%10s (%30s)\n', 'Case', 'Iteration', 'Solution', ...
+    'Result', 'Optimism / Violation, %');
   for i = 1:caseCount
     for j = 1:iterationCount
       solutionCount = size(output{i, j}.solutions, 1);
@@ -160,20 +160,22 @@ function check(scheduler, objective, output)
         schedule = scheduler.compute( ...
           chromosome(1:taskCount), chromosome((taskCount + 1):end));
         objectiveOutput = objective.compute(schedule);
-        if any(objectiveOutput.violations > 0)
+        if any(objectiveOutput.violation > 0)
           failCount = failCount + 1;
-          fprintf('%10s', 'failed');
+          fprintf('%10s (', 'failed');
+          fprintf('%10.2f', objectiveOutput.violation * 100);
+          fprintf(')');
         else
-          fprintf('%10s', 'passed');
+          delta = (objectiveOutput.fitness - ...
+            output{i, j}.fitness(k, :)) ./ nominal;
+          fprintf('%10s (%10.2f)', 'passed', delta * 100);
         end
-        delta = (objectiveOutput.fitness - ...
-          output{i, j}.fitness(k, :)) ./ nominal;
-        fprintf('%25.2f', delta * 100);
         fprintf('\n');
       end
     end
   end
 
   fprintf('\n');
-  fprintf('Failure rate: %.2f %%\n', failCount / caseCount / iterationCount * 100);
+  fprintf('Failure rate: %.2f %%\n', ...
+    failCount / caseCount / iterationCount * 100);
 end

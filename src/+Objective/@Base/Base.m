@@ -41,10 +41,22 @@ classdef Base < handle
 
       this.sampleCount = options.get('sampleCount', 1e3);
     end
+
+    function output = compute(this, schedule)
+      output = this.evaluate(schedule);
+
+      I = output.violation > 0;
+      if ~any(I), return; end
+
+      %
+      % NOTE: Here we ignore the computed fitness.
+      %
+      output.fitness(:) = this.maximalFitness + sum(output.violation(I));
+    end
   end
 
-  methods (Abstract = true)
-    fitness = compute(this, schedule)
+  methods (Abstract = true, Access = 'protected')
+    output = evaluate(this, schedule)
   end
 
   methods (Access = 'protected')
@@ -78,14 +90,6 @@ classdef Base < handle
       else
         assert(false);
       end
-    end
-
-    function penalty = penalize(~, violation, guide)
-      penalty = violation / guide;
-    end
-
-    function fitness = finalize(this, fitness, penalty)
-      fitness = -fitness + this.maximalFitness + penalty;
     end
   end
 end
