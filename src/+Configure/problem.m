@@ -50,7 +50,7 @@ function options = problem(varargin)
     case { 'temperature', 'energy' }
       range = [ 0, 1.0 * nominal ];
     case 'lifetime'
-      range = [ 1.5 * nominal, Inf ];
+      range = [ 2 * nominal, Inf ];
     otherwise
       assert(false);
     end

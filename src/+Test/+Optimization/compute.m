@@ -89,8 +89,8 @@ function report(objective, output, time)
 
   [ caseCount, iterationCount ] = size(output);
 
-  globalFitness = Inf(caseCount, iterationCount, targetCount);
-  globalGain = Inf(caseCount, iterationCount, targetCount);
+  globalFitness = NaN(caseCount, iterationCount, targetCount);
+  globalGain = NaN(caseCount, iterationCount, targetCount);
 
   fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Solution');
   for l = 1:targetCount
@@ -105,6 +105,12 @@ function report(objective, output, time)
         fprintf('%10d%10d%10d', i, j, k);
         for l = 1:targetCount
           fitness = output{i, j}.fitness(k, l);
+
+          if fitness >= objective.maximalFitness
+            fprintf('%15s (%15s)', 'NA', 'NA');
+            continue;
+          end
+
           gain = 1 - fitness / nominal(l);
           globalFitness(i, j, l) = min(globalFitness(i, j, l), fitness);
           globalGain(i, j, l) = min(globalGain(i, j, l), gain);
@@ -122,9 +128,13 @@ function report(objective, output, time)
 
     fprintf('%10s%20s', 'Average', '');
     for l = 1:targetCount
-      fitness = mean(globalFitness(i, :, l));
-      gain = mean(globalGain(i, :, l));
-      fprintf('%15.2f (%15.2f)', fitness, gain * 100);
+      fitness = globalFitness(i, I, l);
+      gain = globalGain(i, I, l);
+
+      I = ~isnan(fitness);
+
+      fprintf('%15.2f (%15.2f)', mean(fitness(I)), ...
+        mean(gain(:)) * 100);
     end
     fprintf('%10.2f\n', mean(time(i, :)) / 60);
     fprintf('\n');
@@ -132,11 +142,13 @@ function report(objective, output, time)
 
   fprintf('%10s%20s', 'Average', '');
   for l = 1:targetCount
-    fitness = globalFitness(:, :, l);
-    fitness = mean(fitness(:));
-    gain = globalGain(:, :, l);
-    gain = mean(gain(:));
-    fprintf('%15.2f (%15.2f)', fitness, gain * 100);
+    fitness = reshape(globalFitness(:, :, l), 1, []);
+    gain = reshape(globalGain(:, :, l), 1, []);
+
+    I = ~isnan(fitness);
+
+    fprintf('%15.2f (%15.2f)', mean(fitness(I)), ...
+      mean(gain(I)) * 100);
   end
   fprintf('%10.2f\n', mean(time(:)) / 60);
 end
@@ -168,7 +180,7 @@ function check(scheduler, objective, output)
         else
           delta = (objectiveOutput.fitness - ...
             output{i, j}.fitness(k, :)) ./ nominal;
-          fprintf('%10s (%10.2f)', 'passed', delta * 100);
+          fprintf('%10s (%30.2f)', 'passed', delta * 100);
         end
         fprintf('\n');
       end
