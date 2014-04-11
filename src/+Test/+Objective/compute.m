@@ -10,7 +10,7 @@ function compute(varargin)
   surrogate = SystemVariation(options);
   display(surrogate);
 
-  objective = Objective.Expectation( ...
+  objective = Objective.Stochastic( ...
     'surrogate', surrogate, options.objectiveOptions);
   display(objective);
 end

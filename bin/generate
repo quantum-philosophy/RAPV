@@ -1,0 +1,106 @@
+#!/usr/bin/env ruby
+
+class Template
+  def initialize filename
+    @template = []
+
+    File.open(filename) do |file|
+      while line = file.gets
+        next if line =~ /\s*#/ or line =~ /^\s*$/
+        @template << line
+      end
+    end
+  end
+
+  def complete options, &block
+    gaps = {}
+
+    options.each do |param, value|
+      value = value.to_s
+
+      if value.empty?
+        puts "Got a blank value for '#{ param }'"
+        exit
+      end
+
+      gaps["[#{ param.to_s.upcase }]"] = value
+    end
+
+    @template.each do |line|
+      gaps.each do |param, value|
+        line = line.gsub param, value
+      end
+      if line =~ /\[([A-Z_]+)\]/
+        puts "Do not know how to fill in '#{ $1.downcase }'"
+        exit
+      end
+      yield line
+    end
+  end
+end
+
+root_path = File.join File.dirname(__FILE__), '..'
+
+template_filename = File.join root_path, 'src', 'Assets', 'template.tgffopt'
+template_filename = ARGV[0] if ARGV.length > 0
+raise if not File.exist? template_filename
+
+output_path = File.join root_path, 'src', 'Assets'
+output_path = ARGV[1] if ARGV.length > 1
+raise if not File.directory? output_path
+
+pairs = [
+  [  2,  40, 10 ],
+  [  4,  80, 10 ],
+  [  8, 160, 10 ],
+  [ 16, 320, 10 ],
+  [ 32, 640, 10 ]
+]
+pairs = eval(ARGV[2]) if ARGV.length > 2
+
+template = Template.new template_filename
+
+pairs.each do |processor_count, task_count, case_count|
+  name = "%03d_%03d" % [ processor_count, task_count ]
+  current_path = File.join output_path, name
+
+  puts "Test case %d/%d: %s" % [ processor_count, task_count, current_path ]
+
+  Dir::mkdir current_path unless File.directory? current_path
+
+  seed = 0
+
+  (1..case_count).each do |i|
+    puts "  #{ i }:"
+
+    while true
+      tgffopt_filename = File.join current_path, ("%03d.tgffopt" % i)
+      puts "    - TGFF options: #{ tgffopt_filename }"
+
+      gaps = { seed: seed, processor_count: processor_count,
+        task_count: task_count, type_count: (task_count / 2).round }
+
+      File.open(tgffopt_filename, 'w') do |file|
+        template.complete(gaps) do |line|
+          file << line
+        end
+      end
+
+      tgff_filename = File.join current_path, ("%03d.tgff" % i)
+      puts "    - TGFF: #{ tgff_filename }"
+
+      raise if not system("tgff #{ tgffopt_filename.gsub /\.tgffopt$/, '' }")
+
+      generated_task_count = 0;
+      File.open tgff_filename do |file|
+        while line = file.gets
+          generated_task_count += 1 if line =~ /\s*TASK\s+/
+        end
+      end
+
+      break if generated_task_count == task_count
+
+      seed += 1
+    end
+  end
+end

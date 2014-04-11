@@ -2,8 +2,9 @@ function options = problem(varargin)
   %
   % System simulation
   %
-  options = Configure.systemSimulation('processorCount', 4, ...
-    'assetPath', File.join(File.trace, '..', 'Assets'), varargin{:});
+  options = Configure.systemSimulation( ...
+    'assetPath', File.join(File.trace, '..', 'Assets'), ...
+    'tgffFilename', 'Assets/004_080/001.tgff', varargin{:});
 
   %
   % Deterministic analysis
