@@ -1,10 +1,19 @@
 function options = problem(varargin)
+  options = Options(varargin{:});
+
+  processorCount = options.get('processorCount', 4);
+  taskCount = options.get('taskCount', 20 * processorCount);
+  caseNumber = options.get('caseNumber', 1);
+
+  tgffFilename = File.join('Asses', sprintf('%03d_%03d', ...
+    processorCount, taskCount), sprintf('%03d.tgff', caseNumber));
+
   %
   % System simulation
   %
   options = Configure.systemSimulation( ...
     'assetPath', File.join(File.trace, '..', 'Assets'), ...
-    'tgffFilename', 'Assets/004_080/001.tgff', varargin{:});
+    'tgffFilename', tgffFilename, options);
 
   %
   % Deterministic analysis
@@ -44,14 +53,24 @@ function options = problem(varargin)
   %
   % Optimization
   %
+  constraints = { ...
+    ... Time Temperature/Energy Lifetime
+    [ 1.20, 0.99, 3.20 ], ...
+    [ 1.30, 1.00, 2.00 ], ...
+    [ 1.30, 1.00, 2.00 ], ...
+    [ 1.30, 1.00, 2.00 ], ...
+    [ 1.30, 1.00, 2.00 ]  ...
+  };
+  constraints = constraints{log2(options.processorCount)};
+
   function range = boundRange(name, nominal, ~)
     switch lower(name)
     case 'time'
-      range = [ 0, 1.3 * nominal ];
+      range = [ 0, constraints(1) * nominal ];
     case { 'temperature', 'energy' }
-      range = [ 0, 1.0 * nominal ];
+      range = [ 0, constraints(2) * nominal ];
     case 'lifetime'
-      range = [ 2 * nominal, Inf ];
+      range = [ constraints(3) * nominal, Inf ];
     otherwise
       assert(false);
     end
