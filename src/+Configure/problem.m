@@ -5,15 +5,17 @@ function options = problem(varargin)
   taskCount = options.get('taskCount', 20 * processorCount);
   caseNumber = options.get('caseNumber', 1);
 
-  tgffFilename = File.join('Asses', sprintf('%03d_%03d', ...
-    processorCount, taskCount), sprintf('%03d.tgff', caseNumber));
+  setupName = sprintf('%03d_%03d', processorCount, taskCount);
+  caseName = File.join(setupName, sprintf('%03d', caseNumber));
+
+  fprintf('Configuring "%s"...\n', caseName);
 
   %
   % System simulation
   %
   options = Configure.systemSimulation( ...
     'assetPath', File.join(File.trace, '..', 'Assets'), ...
-    'tgffFilename', tgffFilename, options);
+    'tgffFilename', File.join('Assets', [ caseName, '.tgff' ]), options);
 
   %
   % Deterministic analysis
@@ -53,24 +55,33 @@ function options = problem(varargin)
   %
   % Optimization
   %
-  constraints = { ...
-    ... Time Temperature/Energy Lifetime
-    [ 1.20, 0.99, 3.20 ], ...
-    [ 1.30, 1.00, 2.00 ], ...
-    [ 1.30, 1.00, 2.00 ], ...
-    [ 1.30, 1.00, 2.00 ], ...
-    [ 1.30, 1.00, 2.00 ]  ...
-  };
-  constraints = constraints{log2(options.processorCount)};
+  constraints = containers.Map;
+
+  ... Constraints on Temperature/Energy, Lifetime, and Time
+
+  ... 2 cores
+  constraints('002_040'    ) = [ 0.99, 3.20, 1.20 ]; % 70%
+  constraints('002_040'    ) = [ 0.99, 3.30, 1.20 ]; % 80%
+
+  ... 4 cores
+  constraints('004_080'    ) = [ 1.02, 1.00, 1.30 ]; % 100%
+
+  if constraints.isKey(caseName)
+    constraints = constraints(caseName);
+  elseif constraints.isKey(setupName)
+    constraints = constraints(setupName);
+  else
+    assert(false);
+  end
 
   function range = boundRange(name, nominal, ~)
     switch lower(name)
-    case 'time'
-      range = [ 0, constraints(1) * nominal ];
     case { 'temperature', 'energy' }
-      range = [ 0, constraints(2) * nominal ];
+      range = [ 0, constraints(1) * nominal ];
     case 'lifetime'
-      range = [ constraints(3) * nominal, Inf ];
+      range = [ constraints(2) * nominal, Inf ];
+    case 'time'
+      range = [ 0, constraints(3) * nominal ];
     otherwise
       assert(false);
     end
