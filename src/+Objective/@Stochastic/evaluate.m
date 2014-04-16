@@ -19,7 +19,7 @@ function output = evaluate(this, schedule)
     j = constraints.index(i);
 
     probability = this.computeProbability( ...
-      data(:, j), constraints.range{i});
+      data(:, j), constraints.range{i}, true); % crude
 
     %
     % NOTE: It is assumed that the constraint is a lower bound.

@@ -60,17 +60,27 @@ classdef Base < handle
   end
 
   methods (Access = 'protected')
-    function probability = computeProbability(~, data, range)
+    function probability = computeProbability(~, data, range, crude)
+      if nargin < 4, crude = false; end
+
       %
       % NOTE: It is assumed that the support is positive, and
       % the range is bounded only at one end.
       %
       if range(1) <= 0
-        probability = ksdensity(data, range(2), ...
-          'support', 'positive', 'function', 'cdf');
+        if crude
+          probability = sum(data < range(2)) / numel(data);
+        else
+          probability = ksdensity(data, range(2), ...
+            'support', 'positive', 'function', 'cdf');
+        end
       elseif isinf(range(2))
-        probability = 1 - ksdensity(data, range(1), ...
-          'support', 'positive', 'function', 'cdf');
+        if crude
+          probability = 1 - sum(data < range(1)) / numel(data);
+        else
+          probability = 1 - ksdensity(data, range(1), ...
+            'support', 'positive', 'function', 'cdf');
+        end
       else
         assert(false);
       end
