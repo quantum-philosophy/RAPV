@@ -28,7 +28,7 @@ table_label PROCESSOR
 table_cnt [PROCESSOR_COUNT]
 # Attributes of the tasks mapped on a particular processor
 type_attrib \
-  dynamic_power 12 8 0 0.01, \
-  execution_time 0.020 0.010 0 0.001
+  dynamic_power 11.00 9.00 0 0.01, \
+  execution_time 0.011 0.009 0 0.001
 # Write
 pe_write
