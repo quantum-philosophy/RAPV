@@ -1,5 +1,5 @@
 function track(this, state, flag)
-  if this.objective.targets.count == 1
+  if isscalar(this.objective.quantities.targetIndex)
     if this.verbose, printUniobjective(state, flag); end
     if this.visualize, plotUniobjective(state, flag); end
   else

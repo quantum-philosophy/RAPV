@@ -11,7 +11,7 @@ function output = compute(this, varargin)
 
   processorCount = length(scheduler.platform);
   taskCount = length(scheduler.application);
-  targetCount = objective.targets.count;
+  targetCount = length(objective.quantities.targetIndex);
 
   populationSize = geneticOptions.PopulationSize;
 
@@ -52,13 +52,13 @@ function output = compute(this, varargin)
   % Generation stats
   %
   newCount = 0;
-  newViolationCount = zeros(1, objective.constraints.count);
+  newViolationCount = zeros(1, length(objective.quantities.count));
 
   %
   % Global stats
   %
   cachedCount = 0;
-  violationCount = zeros(1, objective.constraints.count);
+  violationCount = newViolationCount;
 
   function chromosomes = unify(chromosomes)
     %
@@ -137,14 +137,23 @@ function output = compute(this, varargin)
   end
 
   if targetCount == 1
-    [ solutions, fitness ] = ga(@evaluate, 2 * taskCount, ...
+    solutions = ga(@evaluate, 2 * taskCount, ...
       [], [], [], [], [], [], [], geneticOptions);
   else
-    [ solutions, fitness ] = gamultiobj(@evaluate, 2 * taskCount, ...
+    solutions = gamultiobj(@evaluate, 2 * taskCount, ...
       [], [], [], [], [], [], geneticOptions);
   end
 
+  [ solutions, I ] = unique(unify(solutions), 'rows');
+
+  solutionCount = size(solutions, 1);
+
   output = struct;
-  [ output.solutions, I ] = unique(unify(solutions), 'rows');
-  output.fitness = fitness(I, :);
+  output.solutions = cell(1, solutionCount);
+
+  for i = 1:solutionCount
+    output.solutions{i} = cache.get(solutions(i, :));
+    assert(~isempty(output.solutions{i}));
+    output.solutions{i}.chromosome = solutions(i, :);
+  end
 end

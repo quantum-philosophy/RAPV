@@ -67,7 +67,7 @@ function compute(varargin)
         solutionCount = size(deterministicOutput{i, j}.solutions, 1);
         iterationAssessmentOutput = cell(1, solutionCount);
         for k = 1:solutionCount
-          chromosome = deterministicOutput{i, j}.solutions(k, :);
+          chromosome = deterministicOutput{i, j}.solutions{k}.chromosome;
           schedule = options.scheduler.compute( ...
             chromosome(1:taskCount), chromosome((taskCount + 1):end));
           iterationAssessmentOutput{k} = stochasticObjective.compute(schedule);
@@ -80,128 +80,130 @@ function compute(varargin)
     %
     % NOTE: Any objective will do here.
     %
-    names = stochasticObjective.quantities.names( ...
-      stochasticObjective.targets.index);
-    nominal = stochasticObjective.quantities.nominal( ...
-      stochasticObjective.targets.index);
+    quantities = stochasticObjective.quantities;
 
     save(filename, 'stochasticTime', 'stochasticOutput', ...
       'deterministicTime', 'deterministicOutput', ...
-      'assessmentOutput', 'names', 'nominal', '-v7.3');
+      'assessmentOutput', 'quantities', '-v7.3');
   end
 
   fprintf('\n');
   fprintf('Stochastic solutions:\n');
   fprintf('--------------------------------------------------\n');
-  reportOptimization(stochasticOutput, stochasticTime, ...
-    names, nominal);
+  reportOptimization(quantities, stochasticOutput, stochasticTime);
 
   fprintf('\n');
   fprintf('Deterministic solutions:\n');
   fprintf('--------------------------------------------------\n');
-  reportOptimization(deterministicOutput, deterministicTime, ...
-    names, nominal);
+  reportOptimization(quantities, deterministicOutput, deterministicTime);
 
   fprintf('\n');
   fprintf('Assessment of the deterministic solutions:\n');
   fprintf('--------------------------------------------------\n');
-  reportAssessment(deterministicOutput, assessmentOutput, nominal);
+  reportAssessment(quantities, deterministicOutput, assessmentOutput);
 end
 
-function reportOptimization(output, time, names, nominal)
-  targetCount = size(output{1, 1}.fitness, 2);
-
+function reportOptimization(quantities, output, time)
+  targetCount = length(quantities.targetIndex);
   [ caseCount, iterationCount ] = size(output);
 
-  globalFitness = NaN(caseCount, iterationCount, targetCount);
-  globalGain = NaN(caseCount, iterationCount, targetCount);
+  globalValue = NaN(caseCount, iterationCount, targetCount);
+  globalChange = NaN(caseCount, iterationCount, targetCount);
 
-  fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Solution');
-  for l = 1:targetCount
-    fprintf('%15s (%15s)', names{l}, 'Reduction, %');
+  fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Time, m');
+  for k = 1:quantities.count
+    fprintf('%15s (%15s)', quantities.names{k}, 'Change, %');
   end
-  fprintf('%10s\n', 'Time, m');
+  fprintf('\n');
 
   for i = 1:caseCount
     for j = 1:iterationCount
-      solutionCount = size(output{i, j}.solutions, 1);
-      for k = 1:solutionCount
-        fprintf('%10d%10d%10d', i, j, k);
-        for l = 1:targetCount
-          fitness = output{i, j}.fitness(k, l);
+      %
+      % NOTE: Not ready for multiple solutions.
+      %
+      solutionCount = length(output{i, j}.solutions);
+      assert(solutionCount == 1);
 
-          if fitness >= Objective.Base.maximalFitness
-            fprintf('%15s (%15s)', 'NA', 'NA');
-            continue;
-          end
+      solution = output{i, j}.solutions{1};
 
-          gain = 1 - fitness / nominal(l);
-          globalFitness(i, j, l) = min(globalFitness(i, j, l), fitness);
-          globalGain(i, j, l) = min(globalGain(i, j, l), gain);
-          fprintf('%15.2f (%15.2f)', fitness, gain * 100);
-        end
-        if k == 1
-          fprintf('%10.2f\n', time(i, j) / 60);
-        else
-          fprintf('\n');
-        end
+      fprintf('%10d%10d%10.2f', i, j, time(i, j) / 60);
+
+      if any(solution.fitness >= Objective.Base.maximalFitness)
+        fprintf('%15s\n', 'NA');
+        continue;
       end
+
+      for k = 1:quantities.count
+        value = solution.expectation(k);
+        change = value / quantities.nominal(k);
+
+        globalValue(i, j, k) = value;
+        globalChange(i, j, k) = change;
+
+        fprintf('%15.2e (%15.2f)', value, change * 100);
+      end
+
+      fprintf('\n');
     end
 
     if iterationCount == 1, continue; end
 
-    fprintf('%10s%20s', 'Average', '');
-    for l = 1:targetCount
-      fitness = globalFitness(i, I, l);
-      gain = globalGain(i, I, l);
+    fprintf('%10s%10s%10.2f', 'Average', '', mean(time(i, :)) / 60);
+    for k = 1:quantities.count
+      value = globalValue(i, :, k);
+      change = globalChange(i, :, k);
 
-      I = ~isnan(fitness);
+      I = ~isnan(value);
 
-      fprintf('%15.2f (%15.2f)', mean(fitness(I)), ...
-        mean(gain(:)) * 100);
+      fprintf('%15.2f (%15.2f)', mean(value(I)), mean(change(I)) * 100);
     end
-    fprintf('%10.2f\n', mean(time(i, :)) / 60);
-    fprintf('\n');
+    fprintf('\n\n');
   end
 
-  fprintf('%10s%20s', 'Average', '');
-  for l = 1:targetCount
-    fitness = reshape(globalFitness(:, :, l), 1, []);
-    gain = reshape(globalGain(:, :, l), 1, []);
+  fprintf('%10s%10s%10.2f', 'Average', '', mean(time(:)) / 60);
+  for k = 1:targetCount
+    value = reshape(globalValue(:, :, k), 1, []);
+    change = reshape(globalChange(:, :, k), 1, []);
 
-    I = ~isnan(fitness);
+    I = ~isnan(value);
 
-    fprintf('%15.2f (%15.2f)', mean(fitness(I)), ...
-      mean(gain(I)) * 100);
+    fprintf('%15.2f (%15.2f)', mean(value(I)), mean(change(I)) * 100);
   end
-  fprintf('%10.2f\n', mean(time(:)) / 60);
+  fprintf('\n');
 end
 
-function reportAssessment(optimizationOutput, assessmentOutput, nominal)
+function reportAssessment(quantities, optimizationOutput, assessmentOutput)
   [ caseCount, iterationCount ] = size(optimizationOutput);
 
   failCount = 0;
 
-  fprintf('%10s%10s%10s%10s (%30s)\n', 'Case', 'Iteration', 'Solution', ...
-    'Result', 'Optimism / Violation, %');
+  fprintf('%10s%10s%10s (%40s)\n', 'Case', 'Iteration', 'Result', ...
+    'Offset / Violation, %');
   for i = 1:caseCount
     for j = 1:iterationCount
-      solutionCount = size(optimizationOutput{i, j}.solutions, 1);
-      iterationAssessmentOutput = assessmentOutput{i, j};
-      for k = 1:solutionCount
-        fprintf('%10d%10d%10d', i, j, k);
-        if any(iterationAssessmentOutput{k}.violation > 0)
-          failCount = failCount + 1;
-          fprintf('%10s (', 'failed');
-          fprintf('%10.2f', iterationAssessmentOutput{k}.violation * 100);
-          fprintf(')');
-        else
-          delta = (iterationAssessmentOutput{k}.fitness - ...
-            optimizationOutput{i, j}.fitness(k, :)) ./ nominal;
-          fprintf('%10s (%30.2f)', 'passed', delta * 100);
-        end
-        fprintf('\n');
+      %
+      % NOTE: Not ready for multiple solutions.
+      %
+      solutionCount = length(optimizationOutput{i, j}.solutions);
+      assert(solutionCount == 1);
+
+      solution = optimizationOutput{i, j}.solutions{1};
+      assessment = assessmentOutput{i, j}{1};
+
+      fprintf('%10d%10d', i, j);
+      if any(assessment.violation > 0)
+        failCount = failCount + 1;
+        fprintf('%10s (', 'failed');
+        fprintf('%10.2f', assessment.violation * 100);
+        fprintf(')');
+      else
+        fprintf('%10s (', 'passed');
+        change = solution.expectation ./ quantities.nominal;
+        trueChange = assessment.expectation ./ quantities.nominal;
+        fprintf('%10.2f', (trueChange - change) * 100);
+        fprintf(')');
       end
+      fprintf('\n');
     end
   end
 

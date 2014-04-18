@@ -1,6 +1,5 @@
-function [ quantities, targets, constraints ] = configure(this, options)
+function quantities = configure(this, options)
   surrogate = options.surrogate;
-  targetNames = options.targetNames;
 
   quantities = struct;
 
@@ -8,47 +7,45 @@ function [ quantities, targets, constraints ] = configure(this, options)
   quantities.count = length(quantities.names);
   quantities.nominal = zeros(1, quantities.count);
 
-  targets = struct;
-  targets.count = length(targetNames);
-
-  constraints = struct;
-  constraints.count = quantities.count - targets.count;
-  constraints.quantile = NaN(1, constraints.count);
-  constraints.percentile = NaN(1, constraints.count);
-  constraints.range = cell(1, constraints.count);
-  constraints.probability = NaN(1, constraints.count);
+  quantities.targetIndex = false(1, quantities.count);
+  quantities.constraintIndex = false(1, quantities.count);
+  quantities.quantile = NaN(1, quantities.count);
+  quantities.percentile = NaN(1, quantities.count);
+  quantities.range = cell(1, quantities.count);
+  quantities.probability = NaN(1, quantities.count);
 
   %
-  % NOTE: Excluding the last one as we do not count time.
+  % Targets
   %
-  isTarget = false(1, quantities.count);
-  for i = 1:(quantities.count - 1)
-    for j = 1:targets.count
-      if strcmpi(quantities.names{i}, targetNames{j})
-        isTarget(i) = true;
-        break;
-      end
+  for i = 1:length(options.targetNames)
+    for j = 1:quantities.count
+      if strcmpi(options.targetNames{i}, quantities.names{j})
+      quantities.targetIndex(j) = true;
+      break;
     end
   end
 
-  targets.index = find(isTarget);
-  constraints.index = find(~isTarget);
-
   %
-  % Stochastic
+  % Stochastic constraints
   %
   output = surrogate.compute(options.power.compute(options.schedule));
-  data = surrogate.sample(output, 1e5);
+  data = surrogate.sample(output, this.sampleCount);
 
   %
   % NOTE: Excluding the last one as it will be treated separatly.
   %
-  j = 0;
   for i = 1:(quantities.count - 1)
+    for j = 1:length(options.constraintNames)
+      if strcmpi(quantities.names{i}, options.constraintNames{j})
+        quantities.constraintIndex(i) = true;
+        break;
+      end
+    end
+
     nominal = mean(data(:, i));
     quantities.nominal(i) = nominal;
 
-    if isTarget(i), continue; end
+    if ~quantities.constraintIndex(i), continue; end
 
     %
     % Compute the prior range and probability
@@ -68,19 +65,21 @@ function [ quantities, targets, constraints ] = configure(this, options)
     percentile = this.computeProbability(data(:, i), range) * 100;
     probability = options.boundProbability(quantities.names{i}, percentile);
 
-    j = j + 1;
-
-    constraints.quantile(j) = quantile;
-    constraints.percentile(j) = percentile;
-    constraints.range{j} = range;
-    constraints.probability(j) = probability;
+    quantities.quantile(i) = quantile;
+    quantities.percentile(i) = percentile;
+    quantities.range{i} = range;
+    quantities.probability(i) = probability;
   end
 
   %
-  % Deterministic
+  % Deterministic constraints
   %
+  quantities.constraintIndex(end) = true;
   quantities.nominal(end) = ...
     max(options.schedule(4, :) + options.schedule(5, :));
-  constraints.range{end} = ...
+  quantities.range{end} = ...
     options.boundRange('Time', quantities.nominal(end));
+
+  quantities.targetIndex = find(quantities.targetIndex);
+  quantities.constraintIndex = find(quantities.constraintIndex);
 end

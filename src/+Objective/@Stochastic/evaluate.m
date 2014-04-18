@@ -1,10 +1,8 @@
 function output = evaluate(this, schedule)
-  targets = this.targets;
-  constraints = this.constraints;
+  quantities = this.quantities;
 
   output = struct;
-  output.fitness = NaN(1, targets.count);
-  output.violation = NaN(1, constraints.count);
+  output.violation = NaN(1, quantities.count);
 
   %
   % Stochastic
@@ -15,31 +13,25 @@ function output = evaluate(this, schedule)
   %
   % NOTE: Excluding the last one as it will be treated separatly.
   %
-  for i = 1:(constraints.count - 1)
-    j = constraints.index(i);
-
+  for i = quantities.constraintIndex(1:(end - 1))
     probability = this.computeProbability( ...
-      data(:, j), constraints.range{i}, true); % crude
+      data(:, i), quantities.range{i}, true); % crude
 
     %
     % NOTE: It is assumed that the constraint is a lower bound.
     %
-    delta = constraints.probability(i) - probability;
-    output.violation(i) = max([ 0, delta ]) / constraints.probability(i);
+    delta = quantities.probability(i) - probability;
+    output.violation(i) = max([ 0, delta ]) / quantities.probability(i);
   end
 
   %
   % Deterministic
   %
-  deadline = max(constraints.range{end});
+  deadline = max(quantities.range{end});
   duration = max(schedule(4, :) + schedule(5, :));
 
   delta = duration - deadline;
   output.violation(end) = max(0, delta) / deadline;
 
-  %
-  % NOTE: It should be positive for the energy consumption and
-  % negative for the maximal temperature and lifetime.
-  %
-  output.fitness = mean(data(:, targets.index), 1);
+  output.expectation = [ mean(data, 1), duration ];
 end

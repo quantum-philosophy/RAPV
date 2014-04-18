@@ -1,42 +1,39 @@
 function display(this)
   quantities = this.quantities;
-  targets = this.targets;
-  constraints = this.constraints;
 
   fprintf('%s:\n', class(this));
 
-  for i = targets.index
+  for i = 1:quantities.count
     name = quantities.names{i};
+
     [ nominal, units ] = convert(quantities.nominal(i), name);
-    fprintf('  Target: %s (initial %.2f %s)\n', name, nominal, units);
-  end
+    range = convert(quantities.range{i}, name);
 
-  for i = 1:constraints.count
-    j = constraints.index(i);
-    name = quantities.names{j};
+    constraint = ismember(i, quantities.constraintIndex);
+    deterministic = isnan(quantities.quantile(i));
 
-    [ nominal, units ] = convert(quantities.nominal(j), name);
-    range = convert(constraints.range{i}, name);
-
-    deterministic = isnan(constraints.quantile(i));
-
-    if deterministic
-      fprintf('  Deterministic constraint on %s:\n', name);
+    if ~constraint
+      fprintf('  Nonconstraint: %s\n', name);
+    elseif deterministic
+      fprintf('  Deterministic constraint: %s\n', name);
     else
-      fprintf('  Probabilistic constraint on %s:\n', name);
+      fprintf('  Probabilistic constraint: %s\n', name);
     end
 
     fprintf('    Nominal:     %.2f %s\n', nominal, units);
+
+    if ~constraint, continue; end
+
     fprintf('    Lower bound: %.2f %s\n', range(1), units);
     fprintf('    Upper bound: %.2f %s\n', range(2), units);
 
     if deterministic, continue; end
 
-    quantile = convert(constraints.quantile(i), name);
+    quantile = convert(quantities.quantile(i), name);
 
     fprintf('    Quantile:    %.2f %s\n', quantile, units);
-    fprintf('    Percentile:  %.2f %%\n', constraints.percentile(i));
-    fprintf('    Probability: %.2f\n', constraints.probability(i));
+    fprintf('    Percentile:  %.2f %%\n', quantities.percentile(i));
+    fprintf('    Probability: %.2f\n', quantities.probability(i));
   end
 end
 

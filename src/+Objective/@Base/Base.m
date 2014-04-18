@@ -6,12 +6,8 @@ classdef Base < handle
   properties (SetAccess = 'private')
     power
     surrogate
-
-    quantities
-    targets
-    constraints
-
     sampleCount
+    quantities
   end
 
   methods
@@ -21,12 +17,8 @@ classdef Base < handle
 
         this.power = that.power;
         this.surrogate = that.surrogate;
-
-        this.quantities = that.quantities;
-        this.targets = that.targets;
-        this.constraints = that.constraints;
-
         this.sampleCount = that.sampleCount;
+        this.quantities = that.quantities;
 
         return;
       end
@@ -35,15 +27,14 @@ classdef Base < handle
 
       this.power = options.power;
       this.surrogate = options.surrogate;
-
-      [ this.quantities, this.targets, this.constraints ] = ...
-        this.configure(options);
-
-      this.sampleCount = options.get('sampleCount', 1e3);
+      this.sampleCount = options.get('sampleCount', 1e4);
+      this.quantities = this.configure(options);
     end
 
     function output = compute(this, schedule)
       output = this.evaluate(schedule);
+
+      output.fitness = output.expectation(this.quantities.targetIndex);
 
       I = output.violation > 0;
       if ~any(I), return; end
