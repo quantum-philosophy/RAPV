@@ -104,11 +104,11 @@ function compute(varargin)
 end
 
 function reportOptimization(quantities, output, time)
-  targetCount = length(quantities.targetIndex);
   [ caseCount, iterationCount ] = size(output);
 
-  globalValue = NaN(caseCount, iterationCount, targetCount);
-  globalChange = NaN(caseCount, iterationCount, targetCount);
+  globalValue = NaN(caseCount, iterationCount, quantities.count);
+  globalChange = NaN(caseCount, iterationCount, quantities.count);
+  bestIndex = NaN(caseCount, 1);
 
   fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Time, m');
   for k = 1:quantities.count
@@ -129,8 +129,17 @@ function reportOptimization(quantities, output, time)
       fprintf('%10d%10d%10.2f', i, j, time(i, j) / 60);
 
       if any(solution.fitness >= Objective.Base.maximalFitness)
-        fprintf('%15s\n', 'NA');
+        fprintf('%15s (%15s)\n', 'NA', 'NA');
         continue;
+      end
+
+      %
+      % NOTE: Not ready for multiobjective optimization.
+      %
+      if isnan(bestIndex(i)) || ...
+        solution.fitness < output{i, bestIndex(i)}.solutions{1}.fitness
+
+        bestIndex(i) = j;
       end
 
       for k = 1:quantities.count
@@ -146,28 +155,31 @@ function reportOptimization(quantities, output, time)
       fprintf('\n');
     end
 
-    if iterationCount == 1, continue; end
+    if iterationCount == 1 || isnan(bestIndex(i)), continue; end
 
-    fprintf('%10s%10s%10.2f', 'Average', '', mean(time(i, :)) / 60);
+    fprintf('%10s%10s%10.2f', 'Best', '', time(i, bestIndex(i)) / 60);
     for k = 1:quantities.count
-      value = globalValue(i, :, k);
-      change = globalChange(i, :, k);
+      value = globalValue(i, bestIndex(i), k);
+      change = globalChange(i, bestIndex(i), k);
 
-      I = ~isnan(value);
-
-      fprintf('%15.2f (%15.2f)', mean(value(I)), mean(change(I)) * 100);
+      fprintf('%15.2e (%15.2f)', value, change * 100);
     end
     fprintf('\n\n');
   end
 
-  fprintf('%10s%10s%10.2f', 'Average', '', mean(time(:)) / 60);
-  for k = 1:targetCount
-    value = reshape(globalValue(:, :, k), 1, []);
-    change = reshape(globalChange(:, :, k), 1, []);
+  I = find(~isnan(bestIndex));
+  J = bestIndex(I);
 
-    I = ~isnan(value);
+  if isempty(I), return; end
 
-    fprintf('%15.2f (%15.2f)', mean(value(I)), mean(change(I)) * 100);
+  time = select(time, I, J);
+
+  fprintf('%10s%10s%10.2f', 'Average', '', mean(time) / 60);
+  for k = 1:quantities.count
+    value = select(globalValue(:, :, k), I, J);
+    change = select(globalChange(:, :, k), I, J);
+
+    fprintf('%15.2e (%15.2f)', mean(value), mean(change) * 100);
   end
   fprintf('\n');
 end
@@ -180,6 +192,8 @@ function reportAssessment(quantities, optimizationOutput, assessmentOutput)
   fprintf('%10s%10s%10s (%40s)\n', 'Case', 'Iteration', 'Result', ...
     'Offset / Violation, %');
   for i = 1:caseCount
+    found = false;
+
     for j = 1:iterationCount
       %
       % NOTE: Not ready for multiple solutions.
@@ -192,11 +206,11 @@ function reportAssessment(quantities, optimizationOutput, assessmentOutput)
 
       fprintf('%10d%10d', i, j);
       if any(assessment.violation > 0)
-        failCount = failCount + 1;
         fprintf('%10s (', 'failed');
         fprintf('%10.2f', assessment.violation * 100);
         fprintf(')');
       else
+        found = true;
         fprintf('%10s (', 'passed');
         change = solution.expectation ./ quantities.nominal;
         trueChange = assessment.expectation ./ quantities.nominal;
@@ -205,9 +219,17 @@ function reportAssessment(quantities, optimizationOutput, assessmentOutput)
       end
       fprintf('\n');
     end
+
+    if ~found, failCount = failCount + 1; end
   end
 
   fprintf('\n');
-  fprintf('Failure rate: %.2f %%\n', ...
-    failCount / caseCount / iterationCount * 100);
+  fprintf('Failure rate: %.2f %%\n', failCount / caseCount * 100);
+end
+
+function result = select(A, I, J)
+  result = zeros(1, length(I));
+  for i = 1:length(I)
+    result(i) = A(I(i), J(i));
+  end
 end
