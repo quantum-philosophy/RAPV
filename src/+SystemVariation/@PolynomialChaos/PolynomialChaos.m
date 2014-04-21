@@ -9,14 +9,9 @@ classdef PolynomialChaos < TemperatureVariation.PolynomialChaos & ...
     end
 
     function output = compute(this, Pdyn, varargin)
-      %
-      % NOTE: This profile is used to obtain a "thermal-cycling template."
-      % It is also used as the initial temperature of further solves.
-      %
       T = this.temperature.computeWithLeakage(Pdyn, struct, ...
         'algorithm', 'condensedEquationSingle', 'errorMetric', 'NRMSE', ...
         'errorThreshold', 0.01, 'iterationLimit', 10);
-
       [ ~, fatigueOutput ] = this.fatigue.compute(T);
       fatigueOutput.T = T;
 
