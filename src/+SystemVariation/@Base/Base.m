@@ -31,7 +31,8 @@ classdef Base < handle
       parameters = this.process.evaluate(parameters, isUniform);
       parameters = this.process.assign(parameters);
 
-      [ T, output ] = this.temperature.computeWithLeakage(Pdyn, parameters);
+      [ T, output ] = this.temperature.computeWithLeakage( ...
+        Pdyn, parameters, 'T', fatigueOutput.T);
 
       samplingInterval = this.temperature.samplingInterval;
 
