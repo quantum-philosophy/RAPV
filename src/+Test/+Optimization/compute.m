@@ -2,28 +2,36 @@ function compute(varargin)
   setup;
   rng(0);
 
-  processorCount = 4;
+  processorCount = 32;
   taskCount = 20 * processorCount;
 
   caseCount = 10;
   iterationCount = 1;
 
-  filename = sprintf('optimization_%03d_%03d_%03d_%03d.mat', ...
-    processorCount, taskCount, caseCount, iterationCount);
+  stochasticTime = zeros(caseCount, iterationCount);
+  stochasticOutput = cell(caseCount, iterationCount);
 
-  if File.exist(filename)
-    fprintf('Using the data from "%s"...\n', filename);
-    load(filename);
-  else
-    stochasticTime = zeros(caseCount, iterationCount);
-    stochasticOutput = cell(caseCount, iterationCount);
+  deterministicTime = zeros(caseCount, iterationCount);
+  deterministicOutput = cell(caseCount, iterationCount);
 
-    deterministicTime = zeros(caseCount, iterationCount);
-    deterministicOutput = cell(caseCount, iterationCount);
+  assessmentOutput = cell(caseCount, iterationCount);
 
-    assessmentOutput = cell(caseCount, iterationCount);
+  for i = 1:caseCount
+    filename = sprintf('optimization_%03d_%03d_%03d_%03d.mat', ...
+      processorCount, taskCount, i, iterationCount);
 
-    for i = 1:caseCount
+    if File.exist(filename)
+      fprintf('Using the data from "%s"...\n', filename);
+      load(filename);
+    else
+      caseStochasticTime = zeros(1, iterationCount);
+      caseStochasticOutput = cell(1, iterationCount);
+
+      caseDeterministicTime = zeros(1, iterationCount);
+      caseDeterministicOutput = cell(1, iterationCount);
+
+      caseAssessmentOutput = cell(1, iterationCount);
+
       options = Configure.problem('processorCount', processorCount, ...
         'taskCount', taskCount, 'caseNumber', i, varargin{:});
 
@@ -50,41 +58,49 @@ function compute(varargin)
       for j = 1:iterationCount
         fprintf('Stochastic: case %d, iteration %d...\n', i, j);
         ticStamp = tic;
-        stochasticOutput{i, j} = stochasticOptimization.compute();
-        stochasticTime(i, j) = toc(ticStamp);
+        caseStochasticOutput{j} = stochasticOptimization.compute();
+        caseStochasticTime(j) = toc(ticStamp);
         fprintf('Stochastic: done in %.2f minutes.\n', ...
-          stochasticTime(i, j) / 60);
+          caseStochasticTime(j) / 60);
 
         fprintf('Deterministic: case %d, iteration %d...\n', i, j);
         ticStamp = tic;
-        deterministicOutput{i, j} = deterministicOptimization.compute();
-        deterministicTime(i, j) = toc(ticStamp);
+        caseDeterministicOutput{j} = deterministicOptimization.compute();
+        caseDeterministicTime(j) = toc(ticStamp);
         fprintf('Deterministic: done in %.2f minutes.\n', ...
-          deterministicTime(i, j) / 60);
+          caseDeterministicTime(j) / 60);
 
         fprintf('Assessment: case %d, iteration %d...\n', i, j);
         ticStamp = tic;
-        solutionCount = size(deterministicOutput{i, j}.solutions, 1);
+        solutionCount = size(caseDeterministicOutput{j}.solutions, 1);
         iterationAssessmentOutput = cell(1, solutionCount);
         for k = 1:solutionCount
-          chromosome = deterministicOutput{i, j}.solutions{k}.chromosome;
+          chromosome = caseDeterministicOutput{j}.solutions{k}.chromosome;
           schedule = options.scheduler.compute( ...
             chromosome(1:taskCount), chromosome((taskCount + 1):end));
           iterationAssessmentOutput{k} = stochasticObjective.compute(schedule);
         end
-        assessmentOutput{i, j} = iterationAssessmentOutput;
+        caseAssessmentOutput{j} = iterationAssessmentOutput;
         fprintf('Assessment: done in %.2f minutes.\n', toc(ticStamp) / 60);
       end
+
+      %
+      % NOTE: Any objective will do here.
+      %
+      quantities = stochasticObjective.quantities;
+
+      save(filename, 'caseStochasticTime', 'caseStochasticOutput', ...
+        'caseDeterministicTime', 'caseDeterministicOutput', ...
+        'caseAssessmentOutput', 'quantities', '-v7.3');
     end
 
-    %
-    % NOTE: Any objective will do here.
-    %
-    quantities = stochasticObjective.quantities;
+    stochasticTime(i, :) = caseStochasticTime;
+    stochasticOutput(i, :) = caseStochasticOutput;
 
-    save(filename, 'stochasticTime', 'stochasticOutput', ...
-      'deterministicTime', 'deterministicOutput', ...
-      'assessmentOutput', 'quantities', '-v7.3');
+    deterministicTime(i, :) = caseDeterministicTime;
+    deterministicOutput(i, :) = caseDeterministicOutput;
+
+    assessmentOutput(i, :) = caseAssessmentOutput;
   end
 
   fprintf('\n');
@@ -192,7 +208,11 @@ function reportAssessment(quantities, optimizationOutput, assessmentOutput)
   fprintf('%10s%10s%10s (%40s)\n', 'Case', 'Iteration', 'Result', ...
     'Offset / Violation, %');
   for i = 1:caseCount
-    found = false;
+    %
+    % NOTE: Not ready for multiple objectives.
+    %
+    fitness = NaN(1, iterationCount);
+    valid = false(1, iterationCount);
 
     for j = 1:iterationCount
       %
@@ -204,13 +224,18 @@ function reportAssessment(quantities, optimizationOutput, assessmentOutput)
       solution = optimizationOutput{i, j}.solutions{1};
       assessment = assessmentOutput{i, j}{1};
 
+      if all(solution.fitness < Objective.Base.maximalFitness)
+        fitness(j) = solution.fitness;
+      end
+
       fprintf('%10d%10d', i, j);
       if any(assessment.violation > 0)
         fprintf('%10s (', 'failed');
         fprintf('%10.2f', assessment.violation * 100);
         fprintf(')');
       else
-        found = true;
+        valid(j) = true;
+
         fprintf('%10s (', 'passed');
         change = solution.expectation ./ quantities.nominal;
         trueChange = assessment.expectation ./ quantities.nominal;
@@ -220,7 +245,12 @@ function reportAssessment(quantities, optimizationOutput, assessmentOutput)
       fprintf('\n');
     end
 
-    if ~found, failCount = failCount + 1; end
+    J = find(~isnan(fitness));
+    [ ~, k ] = min(fitness(J));
+
+    if isempty(J) || ~valid(J(k))
+      failCount = failCount + 1;
+    end
   end
 
   fprintf('\n');
