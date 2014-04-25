@@ -57,13 +57,22 @@ function options = problem(varargin)
   constraints = containers.Map;
 
   ... Constraints on Temperature/Energy, Lifetime, and Time
+  ... C - cases, I - iterations, NA - w/o solution, F - failures
 
   ... 2 cores
-  constraints('002_040'    ) = [ 0.99, 3.20, 1.20 ]; % 70%
-  constraints('002_040'    ) = [ 0.99, 3.30, 1.20 ]; % 80%
+  constraints('002_040'    ) = [ 0.99, 10.00, 1.10 ]; % C 10, I 1, NA 1, F 8
 
   ... 4 cores
-  constraints('004_080'    ) = [ 1.02, 1.00, 1.30 ]; % 100%
+  constraints('004_080'    ) = [ 1.02,  1.00, 1.30 ]; % C 10, I 1, NA 1, F 9
+
+  ... 8 cores
+  constraints('008_160'    ) = [ 1.02,  1.00, 1.30 ]; % C 10, I 1, NA 0, F 10
+
+  ... 16 cores
+  constraints('016_320'    ) = [ 1.02,  1.00, 1.30 ]; % C 10, I 1, NA 0, F 10
+
+  ... 32 cores
+  constraints('032_640'    ) = [ 1.00,  1.50, 1.30 ]; % C 10, I 1, NA 0, F 0
 
   if constraints.isKey(caseName)
     constraints = constraints(caseName);
