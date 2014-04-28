@@ -1,12 +1,12 @@
-\begin{table}[b]
-  \vspace{-1.0em}
+\begin{table}[t]
   \centering
   \caption{Assessment of the computational speed}
   \vspace{-0.5em}
-  \begin{tabular*}{1\linewidth}{R{15pt}R{15pt}R{15pt}R{15pt}R{15pt}R{40pt}R{50pt}}
+  \begin{tabular*}{1\linewidth}{R{10pt}R{16pt}R{16pt}R{16pt}R{16pt}R{44pt}R{49pt}}
     \toprule
     $\nprocs$ & $\nnodes$ & $\nvars$ & $\ncorder$ & $\nqorder$ & Time, s & Speedup, times \\
-    \midrule
+    \cmidrule( r){1-5}
+    \cmidrule(l ){6-7}
      2 & 12 &  4 & 19 &  57 & 0.29 & 175.44 \\
      4 & 16 &  6 & 22 &  69 & 0.42 & 144.93 \\
      8 & 26 &  8 & 27 &  81 & 0.82 & 123.46 \\

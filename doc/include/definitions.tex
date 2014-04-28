@@ -26,16 +26,19 @@
   #1\ignorespaces
 }
 
-\newcommand{\eE}{$\delta\mathbb{E}$}
-\newcommand{\eV}{$\delta{\mathbb{V}\text{ar}}$}
-\newcommand{\eD}{$\delta\density$}
+\newcommand{\error}[1]{$\delta#1$}
+\newcommand{\errorE}{\error{\w_1}}
+\newcommand{\errorQ}{\error{\w_2}}
+\newcommand{\errorT}{\error{\w_3}}
 
 %
 % Format
 %
+\usepackage{lettrine}
 \usepackage{url}
 \usepackage[bottom]{footmisc}
 \usepackage[factor=1700]{microtype}
+\newcommand{\subscript}[1]{\text{\kern0.1em#1}}
 
 %
 % References
@@ -62,30 +65,37 @@
 % Text shortcuts
 %
 
-\newcommand{\abbr}[1]{\textsc{\MakeLowercase{#1}}}
+% \newcommand{\abbr}[1]{\textsc{\MakeLowercase{#1}}}
+\newcommand{\abbr}[1]{#1}
 
 % Latin abbreviation
 \newcommand{\ie}{i.e.}
 \newcommand{\eg}{e.g.}
 \newcommand{\etc}{etc.}
+\newcommand{\etal}{\emph{et~al.}}
 \newcommand{\apriori}{\emph{a~priori}}
 \newcommand{\perse}{\emph{per~se}}
 
 % Temperature analysis
 \newcommand{\ta}{temperature analysis}
 \newcommand{\Ta}{Temperature analysis}
+
 \newcommand{\tta}{transient \ta}
 \newcommand{\Tta}{Transient \ta}
-
-\newcommand{\dss}{dynamic steady-state}
-\newcommand{\Dss}{Dynamic steady-state}
-\newcommand{\dssta}{\dss\ \ta}
-\newcommand{\Dssta}{\Dss\ \ta}
 
 \newcommand{\sss}{static steady-state}
 \newcommand{\Sss}{Static steady-state}
 \newcommand{\sssta}{\sss\ \ta}
 \newcommand{\Sssta}{\Sss\ \ta}
+
+\newcommand{\dss}{dynamic steady-state}
+\newcommand{\Dss}{Dynamic steady-state}
+\newcommand{\dssta}{\dss\ \ta}
+\newcommand{\Dssta}{\Dss\ \ta}
+\newcommand{\DSS}{\abbr{DSS}}
+
+\newcommand{\tp}{temperature profile}
+\newcommand{\dsstp}{\dss\ \tp}
 
 % Probability theory
 \newcommand{\rv}{random variable}
@@ -93,6 +103,7 @@
 
 \newcommand{\MC}{\abbr{MC}}
 \newcommand{\KLD}{\abbr{KLD}}
+\newcommand{\PC}{\abbr{PC}}
 
 %
 % Algorithms
@@ -247,7 +258,7 @@
 \renewcommand{\t}{t}
 \newcommand{\vt}{\v{t}}
 \newcommand{\dt}{\Delta \t}
-\newcommand{\period}{\t_\text{period}}
+\newcommand{\period}{\t_\subscript{period}}
 
 %
 % Uncertain parameters
@@ -294,8 +305,8 @@
 
 \newcommand{\mM}{\m{M}}
 
-\newcommand{\dynamic}{\text{dyn}}
-\newcommand{\static}{\text{stat}}
+\newcommand{\dynamic}{\subscript{dyn}}
+\newcommand{\static}{\subscript{stat}}
 
 %
 % Temperature analysis
@@ -304,7 +315,7 @@
 \newcommand{\vq}{\v{q}}
 \newcommand{\mQ}{\m{Q}}
 
-\newcommand{\ambient}{\text{amb}}
+\newcommand{\ambient}{\subscript{amb}}
 
 % Capacitance and conductance
 \newcommand{\mCth}{\m{C}}
@@ -364,7 +375,7 @@
 %
 % Other subscripts
 %
-\newcommand{\maximal}{\text{max}}
-\newcommand{\minimal}{\text{min}}
-\newcommand{\burn}{\text{burn}}
-\newcommand{\wear}{\text{wear}}
+\newcommand{\maximal}{\subscript{max}}
+\newcommand{\minimal}{\subscript{min}}
+\newcommand{\burn}{\subscript{burn}}
+\newcommand{\wear}{\subscript{wear}}

@@ -5,6 +5,7 @@ We consider a 45-nm technological process and rely on the 45-nm standard-cell li
 The effective channel length and gate-oxide thickness are assumed to have nominal values equal to 22.5~nm and 1~nm, respectively.
 Following the information about process variation reported by \abbr{ITRS} \cite{itrs}, we assume that each process parameter can deviate up to 12\% of its nominal value, and this percentage is treated as three standard deviations.
 The corresponding probabilistic model is the one described in \sref{parameter-preprocessing} where the correlation function is taken from \cite{ukhov2014}, and the model-order reduction procedure is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
+The tuning parameter $\anisotropyKnob$ in \eref{dimension-anisotropy} is set to 0.25.
 
 Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of tasks is uniformly distributed between 10 and 20~ms, and their dynamic power between 8 and 12~W.
 The floorplans of the platforms are regular grids wherein each processing element occupies $2 \times 2\,\text{mm}^2$.
@@ -22,20 +23,23 @@ The output of the constructed leakage model is scaled up to account for about 40
 Since the reliability optimization in \sref{reliability-optimization} embraces all the techniques developed throughout the paper, that is, in \sref{uncertainty-analysis}, \sref{temperature-analysis}, and \sref{reliability-analysis}, we shall perform our assessment directly in the context of that optimization.
 
 \subsection{Calibration} \slab{experimental-results-calibration}
-As described in \sref{reliability-optimization}, the driving force of our optimization is a genetic algorithm; in this regard, the quantity of interest in \eref{quantity-of-interest} plays the key role since the objective function in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} are entirely based on it.
-Hence, we begin with an assessment of the accuracy and computational speed of the proposed solutions applied to $\vw$ in \eref{quantity-of-interest}, which also servers a calibration stage for the forthcoming design-space exploration.
+Since the proposed framework is to be placed inside an intensive design-space exploration loop (discussed in the next subsection), our foremost objective is to identify such a configuration of the framework which has a low computational demand and is still sufficiently accurate.
+In this regard, the quantity of interest in \eref{quantity-of-interest} plays the key role as the objective function in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} are entirely based on it.
+Therefore, we first assess a single application of the proposed framework to $\vw$ in \eref{quantity-of-interest}.
 To this end, we shall compare our performance with the performance of Monte Carlo (\MC) sampling.
 The operations performed by the \MC-based approach for one sample are the same as those performed by our technique for one quadrature point.
 The only exception is that no reduction of any kind is undertaken inside \MC\ simulations in order to keep the corresponding results accurate.
-In the following experiments, the number of \MC\ samples is set to $10^4$.
+In what follows, the number of \MC\ samples is set to $10^4$.
 
 \input{include/tables/accuracy.tex}
 The results concerning accuracy are displayed in \tref{accuracy} where we study a quad-core system, \ie, $\nprocs = 4$, and vary the level of polynomial expansions $\nclevel$ from one to seven.
-For each of the three components of $\vw$, we report three error metrics: the relative errors of the expected value and variance and the Kullback--Leibler divergence of the empirical probability distribution functions.
-The three metrics are denoted by \eE, \eV, and \eD, respectively.
-The numbers of polynomial terms $\ncorder$ and quadrature points $\nqorder$ corresponding to each value of $\nclevel$ can also be found in the table.
+The errors for the three components of $\vw$ are denoted by \errorE, \errorQ, and \errorT, respectively.
+The first one is the relative error of the expected value given in percentage, and the other two are the Kullback--Leibler divergence of the empirical probability distribution functions.
 In general, the errors decrease as $\nclevel$ increases.
-However, the trend is not strictly monotonic.
+However, the trend is not monotonic with respect to \errorE.
+\tref{accuracy} also contains the numbers of polynomial terms $\ncorder$ and quadrature points $\nqorder$ corresponding to each value of $\nclevel$.
+
+We consider $\nclevel$ to three as it gives sufficiently accurate results
 
 \tref{speed} displays the time needed to perform one characterization of $\vw$.
 Naturally, no parallel computing is utilized in these experiments.
@@ -51,6 +55,7 @@ Each parent undergoes a uniform mutation wherein each gene is altered with proba
 The top five-percent individuals always survive from one generation to the next one.
 The stopping condition is the absence of improvement within 20 successive generations.
 
+\input{include/tables/optimization.tex}
 In order to speed up the computational process, we employ a number of auxiliary techniques.
 First of all, we perform model-order reduction of the thermal model in \eref{thermal-model}, which decreases the dimensionality of the state space of the thermal system given by $\nnodes$.
 Second, we cache the fitness value of each evaluated chromosome such that we do not need to recompute it for other chromosomes that have the same genes.
