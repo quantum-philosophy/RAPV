@@ -1,0 +1,20 @@
+\begin{table*}[t]
+  \centering
+  \caption{Reliability-aware Optimization}
+  \vspace{-0.5em}
+  \begin{tabular*}{1\linewidth}{rrrrrrr}
+    \toprule
+    & \multicolumn{4}{c}{Stochastic} & \multicolumn{2}{c}{Deterministic} \\
+    $\nprocs$ & Time, m & Energy, \% & Temperature, \% & Lifetime, \% &  Time, m & Failed, \% \\
+    \cmidrule( r){1-1}
+    \cmidrule(l ){2-5}
+    \cmidrule(l ){6-7}
+     2 &   0.68 & 0 & 0 & 0 &  0.53 &  80 \\
+     4 &   4.95 & 0 & 0 & 0 &  1.85 &  90 \\
+     8 &  10.82 & 0 & 0 & 0 &  3.00 & 100 \\
+    16 &  57.37 & 0 & 0 & 0 &  8.62 & 100 \\
+    32 & 374.38 & 0 & 0 & 0 & 45.03 & 100 \\
+    \bottomrule
+  \end{tabular*}
+  \tlab{optimization}
+\end{table*}

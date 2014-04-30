@@ -1,10 +1,13 @@
-Monte Carlo (\MC) sampling remains one of the most well known and widely used methods for the analysis of stochastic systems.
+Monte Carlo (\MC) sampling remains one of the most well-known and widely used methods for the analysis of stochastic systems.
 The reason for this popularity lies in the ease of implementation, in the independence of the stochastic dimensionality, and in the asymptotic behavior of the quantities estimated using this technique.
 The crucial problem with \MC\ sampling, however, is the low rate of convergence: in order to get an additional decimal point of accuracy, one has to obtain hundred times more samples.
 Each such sample implies a complete realization of the whole system, which renders \MC-based methods slow and often infeasible since the needed number of simulations can be extremely large.
 
-In order to overcome the limitations of deterministic temperature analysis and, at the same time, to completely eliminate or, at least, mitigate the costs associated with \abbr{MC} sampling, a number of alternative stochastic techniques have been recently introduced.
-Due to the fact that the leakage component of the power dissipation is influenced by process variation the most, the techniques discussed below primarily focus on the variability of leakage.
-
-\Dssta\ for electronic systems was developed in \cite{ukhov2012}.
-Probabilistic \tta was presented in \cite{ukhov2014}.
+In order to overcome the limitations of deterministic \ta\ and, at the same time, to completely eliminate or, at least, mitigate the costs associated with \abbr{MC} sampling, a number of alternative stochastic techniques have been introduced.
+The vast majority of the literature concerned with temperature-induced issues relies on \sssta; an example is the work in \cite{lee2013}, which employs stochastic collocation \cite{maitre2010} as a means of uncertainty quantification.
+The omnipresent assumption about static temperatures, however, can rarely be justified since power profiles are not invariant in reality.
+Nevertheless, the other two types of \ta, \ie, transient and \DSS, are deprived of attention.
+Only recently a probabilistic framework for the characterization of transient temperature profiles was introduced in \cite{ukhov2014}; the framework is based on polynomial-chaos (\PC) expansions \cite{maitre2010}.
+Regarding the \DSS\ case, to the best of our knowledge, it has not been studied in the literature from the stochastic perspective at all.
+However, as mentioned earlier, the knowledge of \DSS\ variations are of practical importance when designing systems whose workloads tend to be periodic.
+In particular, it allows the designer to undertake such crucial procedures as reliability optimization addressing the thermal-cycling fatigue, which we illustrate in this paper.
