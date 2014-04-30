@@ -74,6 +74,8 @@ pairs.each do |processor_count, task_count, case_count|
     puts "  #{ i }:"
 
     while true
+      seed += 1
+
       tgffopt_filename = File.join current_path, ("%03d.tgffopt" % i)
       puts "    - TGFF options: #{ tgffopt_filename }"
 
@@ -99,8 +101,6 @@ pairs.each do |processor_count, task_count, case_count|
       end
 
       break if generated_task_count == task_count
-
-      seed += 1
     end
   end
 end
