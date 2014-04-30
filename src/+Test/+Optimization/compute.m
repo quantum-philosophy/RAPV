@@ -2,7 +2,7 @@ function compute(varargin)
   setup;
   rng(0);
 
-  processorCount = 32;
+  processorCount = 4;
   taskCount = 20 * processorCount;
 
   caseCount = 10;

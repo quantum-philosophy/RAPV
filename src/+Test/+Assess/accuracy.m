@@ -5,44 +5,21 @@ function accuracy
   comparisonOptions = Options('quantity', 'pdf', 'range', 'unbounded', ...
     'method', 'smooth', 'distanceMetric', 'KLD', 'errorMetric', 'NRMSE');
 
+  processorCount = 4;
+  taskCount = 20 * processorCount;
+
   caseCount = 10;
   iterationCount = 10;
 
-  orderSet = 1:5;
-  levelSet = 1:5;
-  xCount = length(orderSet);
+  polynomialOrder = 1:5;
+  quadratureLevel = 1:5;
+  xCount = length(polynomialOrder);
 
-  sampleSet = 1e4;
-  yCount = length(sampleSet);
+  sampleCount = 1e4;
+  yCount = length(sampleCount);
 
   quantityNames = SystemVariation.Base.quantityNames;
   quantityCount = length(quantityNames);
-
-  %
-  % Monte Carlo
-  %
-  options = Configure.problem('surrogate', 'MonteCarlo', ...
-    'surrogateOptions', Options('sampleCount', max(sampleSet)));
-
-  mc = SystemVariation(options);
-
-  %
-  % Polynomial chaos
-  %
-  surrogates = cell(1, xCount);
-
-  options = Configure.problem('surrogate', 'PolynomialChaos');
-
-  fprintf('%20s%20s%20s%20s\n', 'Polynomial order', ...
-    'Polynomial terms', 'Quadrature level', 'Quadrature nodes');
-  for i = 1:xCount
-    options.surrogateOptions.order = orderSet(i);
-    options.surrogateOptions.quadratureOptions.level = levelSet(i);
-    surrogates{i} = SystemVariation(options);
-    fprintf('%20d%20d%20d%20d\n', orderSet(i), ...
-      surrogates{i}.surrogate.termCount, levelSet(i), ...
-      surrogates{i}.surrogate.nodeCount);
-  end
 
   %
   % Error metrics
@@ -62,34 +39,67 @@ function accuracy
     end
   end
 
-  Plot.figure(1200, 600);
-  for l = 1:caseCount
-    mapping = randi(options.processorCount, 1, options.taskCount);
-    priority = rand(1, options.taskCount);
+  %
+  % Additional stats
+  %
+  polynomialTermCount = NaN(1, xCount);
+  quadratureNodeCount = NaN(1, xCount);
 
-    schedule = options.scheduler.compute(mapping, priority);
-    dynamicPower = options.power.compute(schedule);
+  Plot.figure(1200, 600);
+
+  for l = 1:caseCount
+    %
+    % Monte Carlo
+    %
+    options = Configure.problem( ...
+      'processorCount', processorCount, ...
+      'taskCount', taskCount, ...
+      'caseNumber', l, ...
+      'surrogate', 'MonteCarlo', ...
+      'surrogateOptions', Options( ...
+        'sampleCount', max(sampleCount)));
+
+    mc = SystemVariation(options);
 
     mcStats = struct;
     mcStats.expectation = cell(yCount, 1);
     mcStats.variance = cell(yCount, 1);
     mcStats.data = cell(yCount, 1);
 
-    stats = cache(mc, dynamicPower, iterationCount);
+    stats = cache(mc, options.dynamicPower, iterationCount);
 
     for i = 1:yCount
-      mcStats.data{i} = stats.data(1:sampleSet(i), :);
+      mcStats.data{i} = stats.data(1:sampleCount(i), :);
       mcStats.expectation{i} = stats.expectation;
       mcStats.variance{i} = stats.variance;
     end
 
-    for i = xCount:-1:1
-      surrogate = surrogates{i};
+    %
+    % Polynomial chaos
+    %
+    options = Configure.problem( ...
+      'processorCount', processorCount, ...
+      'taskCount', taskCount, ...
+      'caseNumber', l, ...
+      'surrogate', 'PolynomialChaos');
 
-      fprintf('%s: evaluating order %d...\n', class(surrogate), orderSet(i));
+    for i = 1:xCount
+      options.surrogateOptions.order = polynomialOrder(i);
+      options.surrogateOptions.quadratureOptions.level = quadratureLevel(i);
+      surrogate = SystemVariation(options);
+
+      if l == 1
+        polynomialTermCount(i) = surrogate.surrogate.termCount;
+        quadratureNodeCount(i) = surrogate.surrogate.nodeCount;
+      else
+        assert(polynomialTermCount(i) == surrogate.surrogate.termCount);
+        assert(quadratureNodeCount(i) == surrogate.surrogate.nodeCount);
+      end
+
+      fprintf('%s: evaluating order %d...\n', class(surrogate), polynomialOrder(i));
       time = tic;
 
-      output = surrogate.compute(dynamicPower, 'raw', true);
+      output = surrogate.compute(options.dynamicPower, 'raw', true);
       count = size(output.coefficients, 1);
       for j = 1:1
         subplot(1, 1, j);
@@ -97,13 +107,13 @@ function accuracy
           'Marker', Marker.pick(i), 'Color', Color.pick(i));
       end
       stats = surrogate.analyze(output);
-      stats.data = surrogate.sample(output, max(sampleSet));
+      stats.data = surrogate.sample(output, max(sampleCount));
 
       fprintf('%s: done in %.2f seconds.\n', class(surrogate), toc(time));
 
       for j = 1:yCount
         fprintf('%s: comparing with %d samples...\n', ...
-          class(surrogate), sampleSet(j));
+          class(surrogate), sampleCount(j));
         time = tic;
 
         error.expectation{i, j} = error.expectation{i, j} + ...
@@ -140,7 +150,7 @@ function accuracy
     for i = 1:metricCount
       for j = 1:yCount
         fprintf('%15s', sprintf('%s, 10^%d', ...
-          metricNames{i}, log10(sampleSet(j))));
+          metricNames{i}, log10(sampleCount(j))));
       end
       fprintf(' | ');
     end
@@ -150,9 +160,9 @@ function accuracy
     % Data
     %
     for i = 1:xCount
-      fprintf('%5d%10d%10d%10d%10d | ', i, orderSet(i), ...
-        surrogates{i}.surrogate.termCount, levelSet(i), ...
-        surrogates{i}.surrogate.nodeCount);
+      fprintf('%5d%10d%10d%10d%10d | ', i, ...
+        polynomialOrder(i), polynomialTermCount(i), ...
+        quadratureLevel(i), quadratureNodeCount(i));
       fprintf('%15.4f', 100 * cellfun(@(x) x(k), error.expectation(i, :)));
       fprintf(' | ');
       fprintf('%15.4f', 100 * cellfun(@(x) x(k), error.variance(i, :)));
