@@ -20,8 +20,9 @@ function quantities = configure(this, options)
   for i = 1:length(options.targetNames)
     for j = 1:quantities.count
       if strcmpi(options.targetNames{i}, quantities.names{j})
-      quantities.targetIndex(j) = true;
-      break;
+        quantities.targetIndex(j) = true;
+        break;
+      end
     end
   end
 
