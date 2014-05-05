@@ -26,10 +26,20 @@
   #1\ignorespaces
 }
 
-\newcommand{\error}[1]{$\delta#1$}
-\newcommand{\errorE}{\error{\w_1}}
-\newcommand{\errorQ}{\error{\w_2}}
-\newcommand{\errorT}{\error{\w_3}}
+\newcommand{\error}[1]{$\epsilon_{#1}$}
+\newcommand{\errorE}{\error{\qoiE}}
+\newcommand{\errorQ}{\error{\qoiQ}}
+\newcommand{\errorT}{\error{\qoiT}}
+
+\newcommand{\change}[1]{$\delta_{#1}$}
+\newcommand{\changeE}{\change{\qoiE}}
+\newcommand{\changeQ}{\change{\qoiQ}}
+\newcommand{\changeT}{\change{\qoiT}}
+
+\newcommand{\violation}[1]{$\varepsilon_{#1}$}
+\newcommand{\violationE}{\violation{\qoiE}}
+\newcommand{\violationQ}{\violation{\qoiQ}}
+\newcommand{\violationT}{\violation{\qoiT}}
 
 %
 % Format
@@ -75,6 +85,7 @@
 \newcommand{\etal}{\emph{et~al.}}
 \newcommand{\apriori}{\emph{a~priori}}
 \newcommand{\perse}{\emph{per~se}}
+\newcommand{\versus}{vs.}
 
 % Temperature analysis
 \newcommand{\ta}{temperature analysis}
@@ -132,6 +143,7 @@
 %
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{euscript}
 
 \usepackage{amsthm}
 \newtheorem{remark}{Remark}
@@ -296,6 +308,10 @@
 \newcommand{\ew}{v}
 \newcommand{\evw}{\v{v}}
 \newcommand{\emW}{\evw}
+
+\newcommand{\qoiE}{\EuScript{E}}
+\newcommand{\qoiQ}{\EuScript{Q}}
+\newcommand{\qoiT}{\EuScript{T}}
 
 %
 % Power analysis
