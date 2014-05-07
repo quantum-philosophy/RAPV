@@ -1,20 +1,20 @@
-\begin{table*}[t]
+\begin{table}[t]
   \centering
-  \caption{Reliability-aware Optimization}
+  \caption{Stochastic \versus\ Deterministic Optimization}
   \vspace{-0.5em}
-  \begin{tabular*}{1\linewidth}{rrrrrrr}
+  \begin{tabular*}{1\linewidth}{R{20pt}R{60pt}R{60pt}R{60pt}}
     \toprule
-    & \multicolumn{4}{c}{Stochastic} & \multicolumn{2}{c}{Deterministic} \\
-    $\nprocs$ & Time, m & Energy, \% & Temperature, \% & Lifetime, \% &  Time, m & Failed, \% \\
+    & \multicolumn{1}{c}{Stochastic} & \multicolumn{2}{c}{Deterministic} \\
+    $\nprocs$ & Time, m & Time, m & Failure rate, \% \\
     \cmidrule( r){1-1}
-    \cmidrule(l ){2-5}
-    \cmidrule(l ){6-7}
-     2 &   0.68 & 0 & 0 & 0 &  0.53 &  80 \\
-     4 &   4.95 & 0 & 0 & 0 &  1.85 &  90 \\
-     8 &  10.82 & 0 & 0 & 0 &  3.00 & 100 \\
-    16 &  57.37 & 0 & 0 & 0 &  8.62 & 100 \\
-    32 & 374.38 & 0 & 0 & 0 & 45.03 & 100 \\
+    \cmidrule(l ){2-2}
+    \cmidrule(l ){3-4}
+     2 &   0.68 &  0.53 &  80 \\
+     4 &   4.33 &  1.71 &  90 \\
+     8 &  10.82 &  3.00 & 100 \\
+    16 &  57.37 &  8.62 & 100 \\
+    32 & 374.38 & 45.03 & 100 \\
     \bottomrule
   \end{tabular*}
   \tlab{optimization}
-\end{table*}
+\end{table}
