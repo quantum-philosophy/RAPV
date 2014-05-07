@@ -14,10 +14,13 @@ function compute(varargin)
 
   ... 2 cores
   constraintMap('002_040'    ) = [ 1.00,  5.00, 1.20 ];
+  constraintMap('002_040/002') = [ 1.02,  4.00, 1.20 ];
   constraintMap('002_040/003') = [ 1.02,  2.00, 1.20 ];
-  constraintMap('002_040/006') = [ 1.01,  5.00, 1.20 ];
-  constraintMap('002_040/008') = [ 1.01,  4.00, 1.20 ];
-  constraintMap('002_040/010') = [ 1.02,  4.00, 1.20 ];
+  constraintMap('002_040/004') = [ 1.01,  5.00, 1.20 ];
+  constraintMap('002_040/005') = [ 1.00,  4.00, 1.20 ];
+  constraintMap('002_040/006') = [ 1.01,  4.00, 1.20 ];
+  constraintMap('002_040/008') = [ 1.01,  3.00, 1.20 ];
+  constraintMap('002_040/010') = [ 1.02,  3.00, 1.20 ];
 
   ... 4 cores
   constraintMap('004_080'    ) = [ 1.01,  1.00, 1.30 ];
@@ -103,7 +106,7 @@ function compute(varargin)
       fprintf('Using the data from "%s"...\n', filename);
       load(filename);
     else
-      rng(mod(1e6 * sum(options.dynamicPower(:)), 2^32));
+      rng(i);
 
       caseStochasticTime = zeros(1, iterationCount);
       caseStochasticOutput = cell(1, iterationCount);

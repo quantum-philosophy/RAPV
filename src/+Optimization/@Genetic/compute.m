@@ -15,6 +15,11 @@ function output = compute(this, varargin)
 
   populationSize = geneticOptions.PopulationSize;
 
+  randomState = cell(1, populationSize);
+  for i = 1:populationSize
+    randomState{i} = rng(mod(1e6 * rand, 2^32));
+  end
+
   function population = populate
     population = zeros(populationSize, 2 * taskCount);
     population(:, 1:taskCount) = randi(processorCount, ...
@@ -100,8 +105,12 @@ function output = compute(this, varargin)
     newObjectiveOutput = cell(newCount, 1);
 
     parfor i = 1:newCount
+      rng(randomState{i});
+
       schedule = scheduler.compute(newMapping(i, :), newPriority(i, :));
       newObjectiveOutput{i} = objective.compute(schedule);
+
+      randomState{i} = rng;
     end
 
     objectiveOutput(I) = newObjectiveOutput;
