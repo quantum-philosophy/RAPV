@@ -42,7 +42,15 @@ classdef Base < handle
       %
       % NOTE: Here we ignore the computed fitness.
       %
-      output.fitness(:) = this.maximalFitness + sum(output.violation(I));
+      if I(end)
+        %
+        % NOTE: The last item correspond to the timing constraint.
+        % If it is violated, the other constraints are not being cheched.
+        %
+        output.fitness(:) = 2 * this.maximalFitness + output.violation(end);
+      else
+        output.fitness(:) = this.maximalFitness + sum(output.violation(I));
+      end
     end
   end
 

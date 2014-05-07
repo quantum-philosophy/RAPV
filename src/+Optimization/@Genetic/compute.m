@@ -25,8 +25,8 @@ function output = compute(this, varargin)
   geneticOptions.InitialPopulation = populate;
 
   if ~isempty(options.get('initialSolution', []))
-    geneticOptions.InitialPopulation(1, :) = ...
-      [ options.initialSolution(1, :), options.initialSolution(2, :) ];
+    geneticOptions.InitialPopulation(1, :) = [ ...
+      options.initialSolution(1, :), options.initialSolution(2, :) ];
   end
 
   mutationRate = geneticOptions.MutationRate;
