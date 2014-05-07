@@ -1,12 +1,53 @@
 function compute(varargin)
   setup;
-  rng(0);
 
-  processorCount = 4;
+  processorCount = 2;
   taskCount = 20 * processorCount;
 
   caseCount = 10;
   iterationCount = 1;
+
+  constraintMap = containers.Map;
+
+  ... Constraints on Temperature/Energy, Lifetime, and Time
+  ... C - cases, I - iterations, NA - w/o solution, F - failures
+
+  ... 2 cores
+  constraintMap('002_040'    ) = [ 1.00,  5.00, 1.20 ];
+  constraintMap('002_040/003') = [ 1.02,  2.00, 1.20 ];
+  constraintMap('002_040/006') = [ 1.01,  5.00, 1.20 ];
+  constraintMap('002_040/008') = [ 1.01,  4.00, 1.20 ];
+  constraintMap('002_040/010') = [ 1.02,  4.00, 1.20 ];
+
+  ... 4 cores
+  constraintMap('004_080'    ) = [ 1.01,  1.00, 1.30 ];
+
+  ... 8 cores
+  constraintMap('008_160'    ) = [ 1.02,  1.00, 1.30 ];
+
+  ... 16 cores
+  constraintMap('016_320'    ) = [ 1.02,  1.00, 1.30 ];
+
+  ... 32 cores
+  constraintMap('032_640'    ) = [ 1.00,  1.50, 1.30 ];
+
+  function range = boundRange(constraintKey, name, nominal, ~)
+    constraints = constraintMap(constraintKey);
+    switch lower(name)
+    case { 'temperature', 'energy' }
+      range = [ 0, constraints(1) * nominal ];
+    case 'lifetime'
+      range = [ constraints(2) * nominal, Inf ];
+    case 'time'
+      range = [ 0, constraints(3) * nominal ];
+    otherwise
+      assert(false);
+    end
+  end
+
+  function probability = boundProbability(~, ~)
+    probability = 0.99;
+  end
 
   stochasticTime = zeros(caseCount, iterationCount);
   stochasticOutput = cell(caseCount, iterationCount);
@@ -17,13 +58,53 @@ function compute(varargin)
   assessmentOutput = cell(caseCount, iterationCount);
 
   for i = 1:caseCount
-    filename = sprintf('optimization_%03d_%03d_%03d_%03d.mat', ...
-      processorCount, taskCount, i, iterationCount);
+    options = Configure.case('processorCount', processorCount, ...
+      'taskCount', taskCount, 'caseNumber', i, varargin{:});
+
+    if constraintMap.isKey(options.caseName)
+      constraintKey = options.caseName;
+    elseif constraintMap.isKey(options.setupName)
+      constraintKey = options.setupName;
+    else
+      assert(false);
+    end
+
+    options = Configure.problem(options);
+
+    objectiveOptions = Options( ...
+      'targetNames', { 'energy' }, ...
+      'constraintNames', { 'temperature', 'lifetime' }, ...
+      'power', options.power, ...
+      'schedule', options.schedule, ...
+      'boundRange', @(varargin) boundRange(constraintKey, varargin{:}), ...
+      'boundProbability', @(varargin) boundProbability(varargin{:}), ...
+      'sampleCount', 1e4);
+
+    geneticOptions = Options( ...
+      'Generations', 100, ...
+      'StallGenLimit', 10, ...
+      'PopulationSize', 4 * taskCount, ...
+      'CrossoverFraction', 0.8, ...
+      'MutationRate', 0.05, ...
+      'SelectionFcn', { @selectiontournament, ...
+        floor(0.05 * 4 * taskCount) });
+
+    optimizationOptions = Options( ...
+      'scheduler', options.scheduler, ...
+      'verbose', true, ...
+      'visualize', false, ...
+      'geneticOptions', geneticOptions);
+
+    filename = sprintf('optimization_%03d_%03d_%03d_%03d_%s.mat', ...
+      processorCount, taskCount, i, iterationCount, ...
+      DataHash({ options.dynamicPower, constraintMap(constraintKey) }));
 
     if File.exist(filename)
       fprintf('Using the data from "%s"...\n', filename);
       load(filename);
     else
+      rng(mod(1e6 * sum(options.dynamicPower(:)), 2^32));
+
       caseStochasticTime = zeros(1, iterationCount);
       caseStochasticOutput = cell(1, iterationCount);
 
@@ -32,20 +113,17 @@ function compute(varargin)
 
       caseAssessmentOutput = cell(1, iterationCount);
 
-      options = Configure.problem('processorCount', processorCount, ...
-        'taskCount', taskCount, 'caseNumber', i, varargin{:});
-
       surrogate = SystemVariation(options);
 
       %
       % Stochastic
       %
       stochasticObjective = Objective.Stochastic( ...
-        'surrogate', surrogate, options.objectiveOptions);
+        'surrogate', surrogate, objectiveOptions);
       display(stochasticObjective);
 
       stochasticOptimization = Optimization.Genetic( ...
-        'objective', stochasticObjective, options.optimizationOptions);
+        'objective', stochasticObjective, optimizationOptions);
 
       %
       % Deterministic
@@ -53,19 +131,23 @@ function compute(varargin)
       deterministicObjective = Objective.Deterministic(stochasticObjective);
 
       deterministicOptimization = Optimization.Genetic( ...
-        'objective', deterministicObjective, options.optimizationOptions);
+        'objective', deterministicObjective, optimizationOptions);
+
+      baseSolution = objectiveOptions.schedule;
 
       for j = 1:iterationCount
         fprintf('Stochastic: case %d, iteration %d...\n', i, j);
         ticStamp = tic;
-        caseStochasticOutput{j} = stochasticOptimization.compute();
+        caseStochasticOutput{j} = stochasticOptimization.compute( ...
+          'initialSolution', baseSolution);
         caseStochasticTime(j) = toc(ticStamp);
         fprintf('Stochastic: done in %.2f minutes.\n', ...
           caseStochasticTime(j) / 60);
 
         fprintf('Deterministic: case %d, iteration %d...\n', i, j);
         ticStamp = tic;
-        caseDeterministicOutput{j} = deterministicOptimization.compute();
+        caseDeterministicOutput{j} = deterministicOptimization.compute( ...
+          'initialSolution', baseSolution);
         caseDeterministicTime(j) = toc(ticStamp);
         fprintf('Deterministic: done in %.2f minutes.\n', ...
           caseDeterministicTime(j) / 60);
@@ -73,12 +155,15 @@ function compute(varargin)
         fprintf('Assessment: case %d, iteration %d...\n', i, j);
         ticStamp = tic;
         solutionCount = size(caseDeterministicOutput{j}.solutions, 1);
-        iterationAssessmentOutput = cell(1, solutionCount);
+        iterationAssessmentOutput = struct;
+        iterationAssessmentOutput.solutions = cell(1, solutionCount);
         for k = 1:solutionCount
           chromosome = caseDeterministicOutput{j}.solutions{k}.chromosome;
-          schedule = options.scheduler.compute( ...
+          schedule = stochasticOptimization.scheduler.compute( ...
             chromosome(1:taskCount), chromosome((taskCount + 1):end));
-          iterationAssessmentOutput{k} = stochasticObjective.compute(schedule);
+          iterationAssessmentOutput.solutions{k} = ...
+            stochasticObjective.compute(schedule);
+          iterationAssessmentOutput.solutions{k}.chromosome = chromosome;
         end
         caseAssessmentOutput{j} = iterationAssessmentOutput;
         fprintf('Assessment: done in %.2f minutes.\n', toc(ticStamp) / 60);
@@ -115,6 +200,11 @@ function compute(varargin)
 
   fprintf('\n');
   fprintf('Assessment of the deterministic solutions:\n');
+  fprintf('--------------------------------------------------\n');
+  reportOptimization(quantities, assessmentOutput, 0 * deterministicTime);
+
+  fprintf('\n');
+  fprintf('Summary of the assessment:\n');
   fprintf('--------------------------------------------------\n');
   reportAssessment(quantities, deterministicOutput, assessmentOutput);
 end
@@ -222,7 +312,7 @@ function reportAssessment(quantities, optimizationOutput, assessmentOutput)
       assert(solutionCount == 1);
 
       solution = optimizationOutput{i, j}.solutions{1};
-      assessment = assessmentOutput{i, j}{1};
+      assessment = assessmentOutput{i, j}.solutions{1};
 
       if all(solution.fitness < Objective.Base.maximalFitness)
         fitness(j) = solution.fitness;

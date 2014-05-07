@@ -58,6 +58,14 @@ pairs = [
 ]
 pairs = eval(ARGV[2]) if ARGV.length > 2
 
+exclude = {
+   2 => [],
+   4 => [],
+   8 => [],
+  16 => [],
+  32 => []
+}
+
 template = Template.new template_filename
 
 pairs.each do |processor_count, task_count, case_count|
@@ -74,7 +82,7 @@ pairs.each do |processor_count, task_count, case_count|
     puts "  #{ i }:"
 
     while true
-      seed += 1
+      begin seed += 1 end until !exclude[processor_count].include?(seed)
 
       tgffopt_filename = File.join current_path, ("%03d.tgffopt" % i)
       puts "    - TGFF options: #{ tgffopt_filename }"

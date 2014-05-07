@@ -1,14 +1,11 @@
 function options = problem(varargin)
   options = Options(varargin{:});
 
-  processorCount = options.get('processorCount', 4);
-  taskCount = options.get('taskCount', 20 * processorCount);
-  caseNumber = options.get('caseNumber', 1);
-
-  setupName = sprintf('%03d_%03d', processorCount, taskCount);
-  caseName = File.join(setupName, sprintf('%03d', caseNumber));
-
-  fprintf('Configuring "%s"...\n', caseName);
+  if options.has('caseName')
+    caseName = options.caseName;
+  else
+    caseName = Configure.caseName(options);
+  end
 
   %
   % System simulation
@@ -22,6 +19,7 @@ function options = problem(varargin)
   %
   options = Configure.deterministicAnalysis( ...
     'processParameters', { 'Leff', 'Tox' }, ...
+    'samplingInterval', 1e-3, ...
     'temperatureOptions', Options( ...
       'analysis', 'DynamicSteadyState', ...
       'modelOrderReduction', Options( ...
@@ -29,8 +27,6 @@ function options = problem(varargin)
       'algorithm', 'condensedEquationMultipleFixed', ...
       'iterationLimit', 2, ...
       'errorThreshold', Inf), ... a fixed number of iterations
-    'leakageOptions', Options( ...
-      'referencePower', 2 / 3 * options.platform.computeAveragePower), ...
     options);
 
   %
@@ -50,76 +46,4 @@ function options = problem(varargin)
   % Reliability analysis
   %
   options = Configure.reliabilityAnalysis(options);
-
-  %
-  % Optimization
-  %
-  constraints = containers.Map;
-
-  ... Constraints on Temperature/Energy, Lifetime, and Time
-  ... C - cases, I - iterations, NA - w/o solution, F - failures
-
-  ... 2 cores
-  constraints('002_040'    ) = [ 0.99, 10.00, 1.10 ]; % C 10, I 1, NA 1, F 8
-
-  ... 4 cores
-  constraints('004_080'    ) = [ 1.02,  1.00, 1.30 ]; % C 10, I 1, NA 1, F 9
-
-  ... 8 cores
-  constraints('008_160'    ) = [ 1.02,  1.00, 1.30 ]; % C 10, I 1, NA 0, F 10
-
-  ... 16 cores
-  constraints('016_320'    ) = [ 1.02,  1.00, 1.30 ]; % C 10, I 1, NA 0, F 10
-
-  ... 32 cores
-  constraints('032_640'    ) = [ 1.00,  1.50, 1.30 ]; % C 10, I 1, NA 0, F 0
-
-  if constraints.isKey(caseName)
-    constraints = constraints(caseName);
-  elseif constraints.isKey(setupName)
-    constraints = constraints(setupName);
-  else
-    assert(false);
-  end
-
-  function range = boundRange(name, nominal, ~)
-    switch lower(name)
-    case { 'temperature', 'energy' }
-      range = [ 0, constraints(1) * nominal ];
-    case 'lifetime'
-      range = [ constraints(2) * nominal, Inf ];
-    case 'time'
-      range = [ 0, constraints(3) * nominal ];
-    otherwise
-      assert(false);
-    end
-  end
-
-  function probability = boundProbability(~, ~)
-    probability = 0.99;
-  end
-
-  options.objectiveOptions = Options( ...
-    'targetNames', { 'energy' }, ...
-    'constraintNames', { 'temperature', 'lifetime' }, ...
-    'power', options.power, ...
-    'schedule', options.schedule, ...
-    'boundRange', @boundRange, ...
-    'boundProbability', @boundProbability, ...
-    'sampleCount', 1e4);
-
-  geneticOptions = Options( ...
-    'Generations', 100, ...
-    'StallGenLimit', 10, ...
-    'PopulationSize', 4 * options.taskCount, ...
-    'CrossoverFraction', 0.8, ...
-    'MutationRate', 0.05, ...
-    'SelectionFcn', { @selectiontournament, ...
-      floor(0.05 * 4 * options.taskCount) });
-
-  options.optimizationOptions = Options( ...
-    'scheduler', options.scheduler, ...
-    'verbose', true, ...
-    'visualize', false, ...
-    'geneticOptions', geneticOptions);
 end
