@@ -32,7 +32,10 @@ function compute(varargin)
   constraintMap('004_080/010') = [ 1.01,  3.00, 1.30 ];
 
   ... 8 cores
-  constraintMap('008_160'    ) = [ 1.01,  4.00, 1.30 ];
+  constraintMap('008_160'    ) = [ 1.01,  3.00, 1.30 ];
+  constraintMap('008_160/006') = [ 1.01,  1.50, 1.30 ];
+  constraintMap('008_160/007') = [ 1.00,  2.00, 1.30 ];
+  constraintMap('008_160/008') = [ 1.01,  1.50, 1.30 ];
 
   ... 16 cores
   constraintMap('016_320'    ) = [ 1.02,  1.00, 1.30 ];
