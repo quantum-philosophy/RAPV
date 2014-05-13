@@ -38,10 +38,13 @@ function compute(varargin)
   constraintMap('008_160/008') = [ 1.01,  1.50, 1.30 ];
 
   ... 16 cores
-  constraintMap('016_320'    ) = [ 1.02,  1.00, 1.30 ];
+  constraintMap('016_320'    ) = [ 1.01,  1.50, 1.30 ];
+  constraintMap('016_320/006') = [ 1.01,  1.40, 1.40 ];
+  constraintMap('016_320/007') = [ 1.01,  1.40, 1.40 ];
+  constraintMap('016_320/009') = [ 1.00,  1.40, 1.40 ];
 
   ... 32 cores
-  constraintMap('032_640'    ) = [ 1.00,  1.50, 1.30 ];
+  constraintMap('032_640'    ) = [ 1.00,  2.00, 1.40 ];
 
   function range = boundRange(constraintKey, name, nominal, ~)
     constraints = constraintMap(constraintKey);
