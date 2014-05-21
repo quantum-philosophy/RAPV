@@ -1,11 +1,8 @@
 function options = problem(varargin)
   options = Options(varargin{:});
 
-  if options.has('caseName')
-    caseName = options.caseName;
-  else
-    caseName = Configure.caseName(options);
-  end
+  if ~options.has('caseName'), options = Configure.case(options); end
+  caseName = options.caseName;
 
   %
   % System simulation

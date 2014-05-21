@@ -10,6 +10,4 @@ function options = Case(varargin)
 
   options.caseName = File.join(options.setupName, ...
     sprintf('%03d', options.caseNumber));
-
-  fprintf('Configuring "%s"...\n', options.caseName);
 end
