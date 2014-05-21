@@ -44,7 +44,9 @@ function compute(varargin)
   constraintMap('016_320/009') = [ 1.00,  1.40, 1.40 ];
 
   ... 32 cores
-  constraintMap('032_640'    ) = [ 1.00,  2.00, 1.40 ];
+  constraintMap('032_640'    ) = [ 1.00,  1.50, 1.60 ];
+  constraintMap('032_640/006') = [ 1.00,  1.50, 1.70 ];
+  constraintMap('032_640/009') = [ 0.98,  1.60, 1.80 ];
 
   function range = boundRange(constraintKey, name, nominal, ~)
     constraints = constraintMap(constraintKey);
