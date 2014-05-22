@@ -8,32 +8,36 @@ The scheduler constructs a schedule using the information provided by two vector
 The former is an assignment of the tasks to the processing elements, and the latter is an ordering of the tasks according to their priorities.
 The goal of our optimization is to find such a pair of $\mapping$ and $\priority$ that minimizes the energy consumed by the system while satisfying certain constraints.
 
-Since energy is a function of power, and power depends on a set of uncertain parameters, the energy consumption is a \rv\ at the design stage.
-Our objective is then to minimize the expected value of this variable:
+Since energy is a function of power, and power depends on a set of uncertain parameters, the energy consumption is a \rv\ at the design stage, which we denote by $\qoiE$.
+Our objective is then to minimize the expected value of $\qoiE$:
 \begin{equation} \elab{objective}
-  \min_{\mapping, \priority} \expectation{\dt \sum \mP(\mapping, \priority)}
+  \min_{\mapping, \priority} \expectation{\qoiE(\mapping, \priority)}.
 \end{equation}
-where $\dt$ is the sampling interval of the power profile $\mP$, and $\sum \mP$ denotes the summation over all elements of $\mP$.
-Here we also emphasize the dependency of $\mP$ on $\mapping$ and $\priority$.
+Hereafter, we also emphasize the dependency on $\mapping$ and $\priority$.
 Our constraints are time, temperature, and reliability:
 \begin{align}
   & \period(\mapping, \priority) \leq \t_\maximal, \elab{timing-constraint} \\
-  & \probabilityMeasure\left( \norm[\infty]{\mQ(\mapping, \priority)} \geq \q_\maximal \right) \leq \pr_\burn, \text{ and} \elab{thermal-constraint} \\
-  & \probabilityMeasure\left( \expectation{\T(\mapping, \priority) \, | \, \eta} \leq \T_\minimal \right) \leq \pr_\wear, \elab{reliability-constraint}
+  & \probabilityMeasure\left( \qoiQ(\mapping, \priority) \geq \q_\maximal \right) \leq \pr_\burn, \text{ and} \elab{thermal-constraint} \\
+  & \probabilityMeasure\left( \qoiT(\mapping, \priority) \leq \T_\minimal \right) \leq \pr_\wear. \elab{reliability-constraint}
 \end{align}
-where $\period$ is the duration of the application according to the schedule; $\t_\maximal$ is an upper bound on this duration, that is, a deadline; $\q_\maximal$ is the maximal temperature that the system can tolerate; $\pr_\burn$ is an acceptable probability of burning the chip; $\T_\minimal$ is the minimal time that the system should survive; and $\pr_\wear$ is an acceptable probability of having a premature fault due to wear.
+In \eref{objective}--\eref{reliability-constraint},
+\begin{align*}
+  & \qoiE(\mapping, \priority) = \dt \sum \mP(\mapping, \priority); \\
+  & \qoiQ(\mapping, \priority) = \norm[\infty]{\mQ(\mapping, \priority)}; \\
+  & \qoiT(\mapping, \priority) = \expectation{\T(\mapping, \priority) \, | \, \eta} = \eta(\mapping, \priority) \, \Gamma\left(1 + \frac{1}{\beta}\right);
+\end{align*}
+$\dt$ is the sampling interval of the power profile $\mP$; $\sum \mP$ denotes the summation over all elements of $\mP$; $\period$ is the duration of the application according to the schedule; $\t_\maximal$ is an upper bound on this duration, \ie, a deadline; $\q_\maximal$ is the maximal temperature that the system can tolerate; $\pr_\burn$ is an acceptable probability of burning the chip; $\T_\minimal$ is the minimal time that the system should survive; and $\pr_\wear$ is an acceptable probability of having a premature fault due to wear.
 The last two constraints are probabilistic as the quantities under consideration are so.
 Due to the nested structure of the reliability model described in \rref{two-level-probabilistic-modeling}, the constraint in \eref{reliability-constraint} involving $\T$ requires an extra care.
-We have decided to set an upper bound on the probability of the expected value of $\T$ (this expectation is itself a \rv).
+We have decided to set an upper bound on the probability of the expected value of $\T$.
+It should be note, though, that this expectation is a \rv\ itself.
 
-In our experiment, we use a genetic algorithm for optimization.
-Each chromosome is a $2 \ntasks$-element vector concatenating a pair of $\mapping$ and $\priority$.
-The fitness of a chromosome is either the expected consumption of energy, as in \eref{objective}, or zero if any of the constraints in \eref{timing-constraint}--\eref{reliability-constraint} is violated.
-In order to perform these computations, we utilize the uncertainty analysis technique presented in \sref{uncertainty-analysis}.
+In order to evaluate \eref{objective}--\eref{reliability-constraint}, we utilize the uncertainty analysis technique presented in \sref{uncertainty-analysis}.
 In this case, the quantity of interest is a vector with three elements:
 \begin{equation} \elab{quantity-of-interest}
-  \vw = \left( \dt \sum \mP, \; \norm[\infty]{\mQ}, \; \eta \right).
+  \vw = (\qoiE, \qoiQ, \qoiT).
 \end{equation}
-The first element corresponds to the energy consumption needed in \eref{objective}, the second element is the maximal temperature needed in \eref{thermal-constraint}, and the last one is the scale parameter of the reliability model (see \sref{reliability-analysis}) needed in \eref{reliability-constraint}.
+Although it is not spelled out, each quantity depends on $\mapping$ and $\priority$.
+The first element corresponds to the energy consumption used in \eref{objective}, the second element is the maximal temperature used in \eref{thermal-constraint}, and the last one is the scale parameter of the reliability model (see \sref{reliability-analysis}) used in \eref{reliability-constraint}.
 The uncertainty analysis in \sref{uncertainty-analysis} should be applied as explained in \rref{multiple-dimensions}.
 In \aref{surrogate-construction}, Algorithm~X is an intermediate procedure that makes a call to \aref{temperature-solution} and processes the resulting power and temperature profiles as required by \eref{quantity-of-interest}.

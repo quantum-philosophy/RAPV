@@ -1,0 +1,41 @@
+Due to the fact that the proposed framework is to be placed inside an intensive design-space-exploration loop (the corresponding results are discussed in the next subsection), our foremost objective is to identify such a configuration of the framework which has a low computational demand while delivering sufficiently accurate results.
+In this regard, the quantity of interest in \eref{quantity-of-interest} plays the key role as the objective function in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} are entirely based on it.
+Therefore, we first assess a single application of the proposed framework to $\vw$ in \eref{quantity-of-interest}.
+To this end, we shall compare our performance with the performance of Monte Carlo (\MC) sampling.
+The operations performed by the \MC-based approach for one sample are the same as those performed by our technique for one quadrature point.
+The only difference is that no reduction of any kind is undertaken inside \MC\ simulations so that the corresponding results are unbiased.
+In what follows, the number of \MC\ samples is set to $10^4$.
+
+\input{include/tables/accuracy.tex}
+The results concerning accuracy are displayed in \tref{accuracy} where we vary the level of polynomial expansions $\nclevel$ from one to seven.
+The subject of this study is a quad-core platform, \ie, $\nprocs = 4$ and 10 randomly generated applications.
+The errors for the three components of $\vw$ are denoted by \errorE, \errorQ, and \errorT, respectively.
+The utilized error metric is the Kullback--Leibler divergence of the corresponding empirical probability distribution functions.
+In general, the errors decrease as $\nclevel$ increases.
+This trend, however, is not monotonic for expansions of high orders (see \errorQ\ and \errorT\ for $\ncorder = 5$).
+The observation can be ascribed to the random nature of sampling and the fact that the reduction procedures, which we undertake to gain speed, might impose limitations on the accuracy that can be attained by polynomial expansions.
+\tref{accuracy} also contains the numbers of polynomial terms $\ncorder$ and quadrature points $\nqorder$ corresponding to each value of $\nclevel$.
+We also performed the above experiment for platforms with fewer/more processing elements; the observations were similar to the ones in \tref{accuracy}.
+
+Based on \tref{accuracy}, we consider the results delivered by third-level polynomial expansions to be sufficiently accurate, and, therefore, we fix $\nclevel = 3$ for the rest of the experiments.
+
+\input{include/tables/speed.tex}
+\tref{speed} displays the time needed to perform one characterization of $\vw$ depending on the number of processing elements $\nprocs$ swept from 2 to 32.
+Naturally, no parallel computing is utilized in this experiment.
+It can be seen that the computational time ranges from a fraction of a second to around two seconds.
+More importantly, \tref{speed} provides information about a number of complementary quantities that are of high interest for the user of the proposed techniques, which we discuss below.
+
+The first quantity to pay attention to is the number of thermal nodes $\nnodes$ left after the reduction of the thermal system described at the end of the third paragraph of the current section; without this reduction, $\nnodes$ would be $4 \nprocs + 12$.
+In all the cases, around 40\% of nodes have been dropped, which is the maximal amount allowed by our setup.
+This means that certain configurations could be reduced even further while satisfying the 95-percent constraint on the energy of the corresponding systems.
+
+The next quantity to look at is the number of \rvs\ $\nvars$ preserved after the reduction procedure described in \sref{parameter-preprocessing} and \xref{model-order-reduction}; without this reduction, $\nvars$ would be $2 \nprocs$ as there are two process parameters per core.
+It can be seen that the duel-core platform has no reduction while around 80\% of stochastic dimensions have been eliminated for the platform with 32 cores.
+In addition, one can note that $\nvars$ is the same for the last two platforms.
+The magnitude of such reductions is solely determined by the correlation patterns assumed (see \sref{parameter-preprocessing}) and the floorplans of the platforms; the interested reader is referred to \cite{ukhov2014} for additional details.
+
+Finally, let us turn to the number of quadrature nodes $\nqorder$ shown in \tref{speed}.
+This number is the main indicator of the computational complexity of the optimization procedure: it equals to the number of times Algorithm~X in \aref{surrogate-construction} is executed to construct a polynomial expansion of \eref{quantity-of-interest} needed for the evaluation of the fitness function.
+It can be seen that $\nqorder$ is rather low taking into account the fact that the straightforward MC sampling typically requires thousands of samples \cite{ukhov2014, lee2013, xiang2010, juan2012}.
+To illustrate this, the last column of \tref{speed} shows the speedup of our approach with respect to $10^4$ \MC\ samples; our solution is faster by approximately 100--200 times.
+It should be noted that the comparison has been drawn based on the number of evaluation points rather than on the actual time since the relative cost of other computations is negligible.
