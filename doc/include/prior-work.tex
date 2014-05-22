@@ -19,10 +19,11 @@ In particular, it allows the designer to undertake such crucial procedures as re
 Let us now discuss temperature-aware reliability-driven studies.
 Reliability analysis is probabilistic by nature; however, certain components of a reliability model can be treated as either stochastic or deterministic, depending on the phenomena that the model is designed to account for.
 Temperature is an example of such a component: it can be considered as deterministic if the effect of process variation on temperature is neglected and as stochastic otherwise.
-The former scenario is the commonly presented one in the literature related to reliability.
+The former scenario is the one that is typically addressed in the literature related to reliability.
 For instance, the reliability modeling framework proposed in \cite{xiang2010} has a treatment of process variation, but temperature is included in the model as a deterministic quantity.
 Likewise, the aging-minimization procedure in \cite{ukhov2012} assumes temperature to be unaffected by process variation.
 In \cite{das2014a}, a design methodology minimizing the energy consumption and temperature-related wear-outs of multiprocessor systems is introduced; yet neither energy nor temperature is aware of the uncertainty due to process variation.
+A similar observation can be made with respect to the work in \cite{das2014c} wherein a reinforcement learning algorithm is used to improve the lifetime of multiprocessor systems.
 An extensive and up-to-date survey on reliability-aware system-level design techniques given in \cite{das2014b} confirms the trend outlined above: the widespread device-level models of failure mechanisms generally ignore the impact of process variation on temperature.
 However, as motivated in the introduction, deterministic temperature is a strong assumption that can lead to substantial yield losses.
 
