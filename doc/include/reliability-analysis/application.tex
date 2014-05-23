@@ -28,7 +28,7 @@ Let $\mQ$ be the temperature profile of the system under analysis and denote by 
 First, $\mQ(i, :)$ is analyzed using a peak-detection procedure in order to extract the extrema of this curve.
 The found extrema are then fed to the rainflow counting algorithm \cite{xiang2010} for an adequate identification of thermal cycles.
 Denote by $\ncycles[ij]$ the expected number of cycles to failure corresponding to the $i$th processing element and its $j$th cycle (as if it was the only cycle damaging the processing element).
-$\ncycles[ij]$ is computed using the corresponding physical model of wear given in \cite{jedec, xiang2010}.
+$\ncycles[ij]$ is computed using the corresponding physical model of wear that can be found in \cite{jedec, xiang2010}.
 Let $\eta_{ij}$ and $\mu_{ij}$ be the scale parameter and expectation of the lifetime corresponding to the $i$th processing element under the stress of the $j$th cycle; the two are related as shown in \eref{weibull-expectation}.
 Then \cite{ukhov2012, xiang2010}
 \begin{equation} \elab{weibull-eta}
@@ -50,8 +50,8 @@ Then it can be show that the compositional survival function $\survival_\T(\cdot
   \eta = \left(\sum \left( \frac{1}{\eta_i} \right)^\beta \right)^{-\frac{1}{\beta}}
 \end{equation}
 where $\eta_i$ is as in \eref{weibull-eta}.
-Consequently, the parametrization of the reliability model has boiled down to two parameters, $\eta$ and $\beta$, among which only $\eta$ is random.
+Consequently, the parameterization of the reliability model has boiled down to two parameters, $\eta$ and $\beta$, among which only $\eta$ is random.
 
 Now we let our quantity of interest $\w$ be $\eta$ and apply the technique in \sref{uncertainty-analysis} to this quantity.
 In this case, Algorithm~X in \aref{surrogate-construction} is an auxiliary function that makes a call to \aref{temperature-solution}, processes the resulting temperature profile as it was described earlier in this subsection, and returns $\eta$ computed according to the formula in \eref{compound-weibull-eta}.
-Consequently, we obtain a light polynomial surrogate of the parametrization of the reliability model, which can be then studied from various perspectives at practically negligible computational costs.
+Consequently, we obtain a light polynomial surrogate of the parameterization of the reliability model, which can be then studied from various perspectives at practically negligible computational costs.

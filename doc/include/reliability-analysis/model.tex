@@ -19,14 +19,14 @@ All of the aforementioned mechanisms have exponentially dependencies on the oper
 At the same time, temperature is tightly related to process parameters, such as the effective channel length and gate-oxide thickness, and can vary dramatically when those parameters deviate from their nominal values \cite{ukhov2014, juan2012}.
 Meanwhile, the state-of-the-art techniques for reliability analysis of electronic systems lack a systematic treatment of process variation and, in particular, of the effect of process variation on temperature.
 
-Second, having determined a probabilistic model $\survival_\T(\cdot | \pvw)$ of the considered system, the major portion of the associated computational time is ascribed to the evaluation of the parametrization $\pvw$ rather than to the model \perse, that is, when $\pvw$ is known.
+Second, having determined a probabilistic model $\survival_\T(\cdot | \pvw)$ of the considered system, the major portion of the associated computational time is ascribed to the evaluation of the parameterization $\pvw$ rather than to the model \perse, that is, when $\pvw$ is known.
 For instance, $\pvw$ often contains estimates of the mean time to failure of each processing element given for a range of stress levels.
 Therefore, $\pvw$ typically involves (computationally intensive) full-system simulations including power analysis paired with temperature analysis \cite{xiang2010}.
 
 \begin{remark} \rlab{two-level-probabilistic-modeling}
 It is important to realize that there are two levels of probabilistic modeling here.
 First of all, the reliability model \perse\ is a probabilistic model describing the lifetime of the system.
-Second, the parametrization $\pvw$ is another probabilistic model characterizing the impact of the uncertainty due to process variation on the reliability model.
+Second, the parameterization $\pvw$ is another probabilistic model characterizing the impact of the uncertainty due to process variation on the reliability model.
 Consequently, the overall model can be thought of as a probability distribution over probability distributions.
 Given an outcome of the fabrication process, that is, $\pvw$, the lifetime remains random.
 \end{remark}
