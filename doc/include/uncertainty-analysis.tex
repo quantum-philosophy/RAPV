@@ -24,10 +24,10 @@ However, from the mathematical standpoint, it is sufficient to consider just one
 \end{remark}
 
 A description of $\vu$ is an input to our analysis given by the user.
-A proper (complete) way to describe a set of \rvs\ is to specify their joint probability distribution.
+A proper (complete, unambiguous) way to describe a set of \rvs\ is to specify their joint probability distribution function.
 In practice, however, such exhaustive information is often unavailable, in particular, due to the high dimensionality in the presence of prominent dependencies inherent to the considered problem.
 A more realistic assumption is the knowledge of the marginal distributions and correlation matrix of $\u$.
-For concreteness, we shall orientate our framework towards the practical scenario; one should keep in mind though that, in general, the marginals and correlation matrix are not sufficient to recover the joint distribution.
+For concreteness, we shall orientate our framework towards the practical scenario; one should keep in mind, though, that, in general, the marginals and correlation matrix are not sufficient to recover the joint distribution.
 Denote by $\{ \distribution_{\u_i} \}_{i = 1}^{\nparams \nprocs}$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of $\vu$ in \eref{uncertain-parameters}, respectively.
 Note that the number of distinct marginals is only $\nparams$ since $\nprocs$ components of $\vu$ correspond to the same uncertain parameter.
 

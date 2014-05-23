@@ -1,38 +1,36 @@
-In this subsection, we report the result of the energy-driven reliability-aware optimization procedure presented in \sref{reliability-optimization}.
-Since the ability to rapidly explore the design space is crucial, apart from the two reduction procedures mentioned earlier, we appeal to a number of auxiliary strategies and techniques.
-
-The first one concerns the evaluation of a chromosome's fitness.
-We begin by checking the timing constraint in \eref{timing-constraint} as it does not require any probabilistic analysis; the constraint is purely deterministic.
-If \eref{timing-constraint} is violated, we set the fitness to the amount of this violation relative to the constraint---that is, to the difference between the actual application period and the deadline $\t_\maximal$ divided by $\t_\maximal$---and add a large constant, say, $C$, on top.
-If \eref{timing-constraint} is satisfied, we perform our probabilistic analysis and proceed to \eref{thermal-constraint} and \eref{reliability-constraint}.
-If any of the two is violated, we set the fitness to the total relative amount of violation plus $C/2$.
-If all the constraints are satisfied, the fitness is set to the expected consumption of energy, as in shown in \eref{objective}.
-
-Secondly, we make use of caching: the fitness value of each evaluated chromosome is stored in memory and pulled out when a chromosome with the same set of genes is encountered.
-
-Finally, we rely on parallel computing: in each generation, unseen (not cached) individuals are assessed in parallel using 16 \abbr{CPU} cores, which is undertaken by virtue of the parallel computing toolbox of \abbr{MATLAB} \cite{matlab}.
-
-The goal of the experiments in this subsection is to justify the following assertion: reliability analysis has to account for the effect of process variation on temperature.
-We would like to demonstrate that the treatment of temperature as a deterministic quantity can severely compromise design decisions.
-To this end, for each configuration, we shall the optimization procedure twice: once using the exact setup that has been described so far and once making the objective in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} deterministic.
-To elaborate, the deterministic run assumes that that process parameters have nominal values, and, hence, it needs to perform only one system simulation to evaluate the fitness function.
-In this case, \eref{objective}, \eref{thermal-constraint}, and \eref{reliability-constraint} become, respectively,
+In this subsection, we report the results of the optimization procedure formulated in \sref{reliability-optimization} and further detailed in \sref{experimental-results-configuration}.
+The goal of this experiment is to justify the following assertion: reliability analysis has to account for the effect of process variation on temperature.
+To this end, for each problem (a pair of a platform and an application), we shall run the optimization procedure twice: once using the exact setup that has been described so far and once making the objective in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} deterministic.
+To elaborate, the second run assumes that temperature is deterministic and can be computed using the nominal values of the process parameters.
+Consequently, only one system simulation is needed in the deterministic case to evaluate the fitness function, and \eref{objective}, \eref{thermal-constraint}, and \eref{reliability-constraint} become, respectively,
 \[
   \min_{\mapping, \priority} \qoiE(\mapping, \priority), \hspace{0.7em} \qoiQ(\mapping, \priority) \geq \q_\maximal, \hspace{0.7em} \text{and} \hspace{0.7em} \qoiT(\mapping, \priority) \leq \T_\minimal.
 \]
 
 \input{include/tables/optimization.tex}
 We consider platforms with 2, 4, 8, 16, and 32 cores.
-Ten applications with the number of tasks equal to $20 \, \nprocs$ are randomly generated for each platform; thus, 50 applications in total.
+Ten applications with the number of tasks equal to $20 \, \nprocs$ are randomly generated for each platform; thus, 50 problems in total.
 The floorplans of the platforms and the task graphs of the applications, including the execution time and dynamic power consumption of each task for each core, are available online at \cite{sources}.
 $\pr_\burn$ and $\pr_\wear$ in \eref{thermal-constraint} and \eref{reliability-constraint}, respectively, are set to 0.01.
-Due to the diversity of the problems, $\t_\maximal$, $\q_\maximal$, and $\T_\minimal$ in \eref{timing-constraint}, \eref{thermal-constraint}, and \eref{reliability-constraint}, respectively, are found individually for each problem, ensuring that they make sense for the subsequent optimization.
+Due to the diversity of the problems, $\t_\maximal$, $\q_\maximal$, and $\T_\minimal$ are found individually for each problem, ensuring that they make sense for the subsequent optimization.
+Note, however, that these three parameters stay the same for both the probabilistic and deterministic variants of the optimization.
 
 The obtained results are reported in \tref{optimization}.
-No figures regarding the reduction of the probabilistic/deterministic objective function are displayed here as they are irrelevant for the goal of this experiment established earlier.
+No figures regarding the reduction of the energy consumption are displayed here as they are irrelevant for the goal of this discussion established earlier.
 The most important message is in the last column of \tref{optimization}.
 \emph{Failure rate} refers to the ratio of the solutions discovered by the deterministic optimization that, after being reevaluated using the probabilistic approach, have been found to be faulty.
-For the dual-core platform, for instance, four out of ten schedules proposed by the deterministic approach turned out to be violating the constraints on the maximal temperature and minimal lifetime with high probabilities.
-The more complex the problem becomes, the higher values the failure rate attains: with 16 and 32 processing elements (320 and 640 tasks, respectively), all the deterministic solutions have been rejected.
-Moreover, the constraint-violation probabilities of the deterministic solutions were found to be as high as 80\%, which by no means is acceptable.
-Consequently, when analyzing reliability-related aspects of an electronic system, the ignorance of the effect of process variation on temperature can decrease the usefulness of the corresponding design decisions in the best case and turns them into dangerous, harmful decisions in the worst scenario.
+To give an example, for the quad-core platform, six out of ten schedules proposed by the deterministic approach turned out to be violating the constraints on the maximal temperature and minimal lifetime with high probabilities.
+The more complex the problems become, the higher values the failure rate attains: with 16 and 32 processing elements (320 and 640 tasks, respectively), all deterministic solutions have been rejected.
+Moreover, the probabilities of violating the constraints were found to be as high as 80\% in some cases, which is by no means acceptable.
+
+In addition, we inspected those few deterministic solutions that passed the probabilistic reevaluation and observed the reported reduction of the energy consumption and maximal temperature as well as the reported increase of the lifetime were overoptimistic.
+More precisely, the expected values of these three quantities delivered by our uncertainty analysis were compared with the predictions produced by the deterministic optimization.
+The comparison shown that the expected energy consumption and maximal temperature were higher while the expected lifetime was shorter than their deterministic counterparts, which can mislead the designer.
+
+Consequently, when studying reliability-related aspects of an electronic system, the ignorance of the deteriorating effect of process variation on temperature can severely compromise the associated design decisions making them less profitable in the best case and dangerous, harmful in the worst scenario.
+
+Lastly, let us comment on the optimization time shown in \tref{optimization}.
+It can be seen that the prototype of the proposed framework takes from about one minute to six hours (utilizing 16 \abbr{CPU}s) in order to perform one optimization round, and the deterministic optimization is approximately 2--40 times faster.
+However, the price to pay when relying on the deterministic approach is considerably high as we discuss in the previous paragraphs.
+It can be summarized as ``blind guessing with highly unfavorable odds of succeeding."
+Consequently, we consider the computational time of our framework to be reasonable and affordable, especially in an industrial setting.
