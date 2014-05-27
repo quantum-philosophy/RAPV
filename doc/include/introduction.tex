@@ -7,10 +7,10 @@ Under these circumstances, uncertainty quantification \cite{maitre2010} has evol
 
 \Ta\ can be broadly classified into two categories: transient and steady-state.
 The latter can be further subdivided into static and dynamic.
-\Tta\ is concerned with studying the thermal behavior of the system as a function of time.
+\Tta\ is concerned with studying the thermal behavior of a system as a function of time.
 Intuitively speaking, the analysis takes a power curve and delivers the corresponding temperature curve.
-\Sssta\ addresses the hypothetical scenario in which the power dissipation is assumed to be constant, and one is interested in the temperature that the system attains when it reaches a static steady state.
-In this case, the analysis takes a single value of power (or a power curve which is immediately averaged out) and output the corresponding single value of temperature.
+\Sssta\ addresses the hypothetical scenario in which the power dissipation is constant, and one is interested in the temperature that the system will attain when it reaches a static steady state.
+In this case, the analysis takes a single value for power (or a power curve which is immediately averaged out) and output the corresponding single value for temperature.
 \Dss\ (\DSS) \ta\ is a combination of the previous two: it is also targeted at a steady state of the system, but this steady state, referred to as a dynamic steady state, is now a temperature curve rather than a single value.
 The considered scenario is that the system is exposed to a periodic workload or to such a workload that can be approximated as periodic, and one is interested in the repetitive evolution of temperature over time when the thermal behavior of the system stabilizes and starts exhibiting the same pattern over and over again.
 Prominent examples here are various multimedia applications.
@@ -23,8 +23,8 @@ Examples of the commonly considered failure mechanisms include electromigration,
 Among all failure mechanisms, thermal cycling has arguably the most prominent dependence on temperature: not only the average and maximum temperature but also the amplitude and frequency of temperature oscillations have a huge impact on the lifetime of the circuit.
 In this context, the availability of detailed temperature profiles is essential, which can be delivered by means of either transient or \DSS\ \ta.
 
-Due to the ever-increasing concern originating from process variation mentioned previously, deterministic temperature analysis and, thus, all the procedures based on it are no longer a viable option for the designer.
-The presence of uncertainty has to be addressed in order to pursue efficiency and fail-safeness, and probabilistic techniques are the way to go, which, however, implies a considerably higher level of complexity.
+Due to the urgent concern originating from process variation, deterministic temperature analysis and, thus, all procedures based on it are no longer a viable option for the designer.
+The presence of uncertainty has to be addressed in order to pursue efficiency and fail-safeness, and probabilistic techniques are the way to go, which, however, implies a higher level of complexity.
 This paper builds upon the state-of-the-art techniques for deterministic \DSS\ \ta\ proposed in \cite{ukhov2012} and probabilistic \tta\ proposed in \cite{ukhov2014} and presents a computationally efficient framework for the probabilistic \DSS\ \ta\ and the subsequent reliability analysis and optimization of electronic systems.
 
 The remainder of the paper is organized as follows.
@@ -32,7 +32,7 @@ The remainder of the paper is organized as follows.
 In \sref{present-work}, we summarize the contribution of the present paper.
 The objective of our study is formulated in \sref{problem-formulation}.
 The proposed frameworks for uncertainty, temperature, and reliability analyses are presented in \sref{uncertainty-analysis}, \sref{temperature-analysis}, and \sref{reliability-analysis}, respectively.
-An application of the proposed techniques to the context of reliability optimization is given in \sref{reliability-optimization}.
+An application of the proposed techniques in the context of reliability optimization is given in \sref{reliability-optimization}.
 The experimental results are reported and discussed in \sref{experimental-results}.
 \sref{conclusion} concludes the paper.
-The paper contains a set of supplementary materials with discussions on certain aspects of our solutions.
+The manuscript contains a set of supplementary materials with discussions on certain aspects of our solutions.
