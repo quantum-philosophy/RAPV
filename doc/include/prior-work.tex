@@ -1,23 +1,25 @@
-In this section, an overview of the literature related to the present paper is given.
+In this section, an overview of the literature related to our work is given.
 First, we discuss those studies that focus on probabilistic \ta, and then we turn to those that focus on temperature-aware reliability analysis.
 
-The most straightforward approach to probabilistic \ta\ is Monte Carlo (\MC) sampling.
-The technique is vastly general and has had a tremendous impact in the context of stochastic systems since its introduction in the middle of the twentieth century.
+The most straightforward approach to analyze a stochastic system is Monte Carlo (\MC) sampling.
+The technique is vastly general and has had a tremendous impact since the middle of the twentieth century when it was introduced.
 The success of \MC\ sampling is due to the ease of implementation, independence of the stochastic dimensionality, and asymptotic behavior of the quantities estimated using this approach.
-The crucial problem with \MC\ sampling, however, is the low rate of convergence: in order to get an additional decimal point of accuracy, one has to obtain hundred times more samples.
-Each such sample implies a complete realization of the whole system, which renders \MC-based methods slow and often infeasible since the needed number of simulations can be extremely large.
+The crucial problem with \MC\ sampling, however, is the low rate of convergence: in order to obtain an additional decimal point of accuracy, one has to draw hundred times more samples.
+Each such sample implies a complete realization of the whole system, which renders \MC-based methods slow and often infeasible as the needed number of simulations can be extremely large.
 
-In order to overcome the limitations of deterministic \ta\ and, at the same time, to completely eliminate or, at least, mitigate the costs associated with \abbr{MC} sampling, a number of alternative probabilistic techniques have been introduced.
-The overwhelming majority of the literature concerned with temperature-induced issues relies on \sssta; an example is the work in \cite{lee2013}, which employs stochastic collocation \cite{maitre2010} as a means of uncertainty quantification.
+In order to overcome the limitations of deterministic \ta\ and, at the same time, to completely eliminate or, at least, to mitigate the costs associated with \abbr{MC} sampling, a number of alternative probabilistic techniques have been introduced.
+The overwhelming majority of the literature concerned with temperature relies on \sssta.
+Examples include the work in \cite{lee2013}, which employs stochastic collocation \cite{maitre2010} as a means of uncertainty quantification, and the work in \cite{juan2012}, which makes use of the linearity property of Gaussian distributions and time-invariant systems.
 The omnipresent assumption about static temperatures, however, can rarely be justified since power profiles are not invariant in reality.
 Nevertheless, the other two types of \ta, \ie, transient and \DSS, are deprived of attention.
 Only recently a probabilistic framework for the characterization of transient temperature profiles was introduced in \cite{ukhov2014}; the framework is based on polynomial-chaos (\PC) expansions \cite{maitre2010}.
-Regarding the \DSS\ case, to the best of our knowledge, it has not been studied in the literature from the stochastic perspective yet.
+Regarding the \DSS\ case, to the best of our knowledge, it has not been studied yet in the literature from the stochastic perspective.
 However, as mentioned earlier, the knowledge of \DSS\ variations are of practical importance when designing systems whose workloads tend to be periodic.
-In particular, it allows the designer to undertake such crucial procedures as reliability optimization addressing the thermal-cycling fatigue, which we illustrate in this paper.
+In particular, the \DSS\ analysis allows the designer to address the thermal-cycling fatigue, which we illustrate in this paper.
 
 Let us now discuss temperature-aware reliability-driven studies.
-Reliability analysis is probabilistic by nature; however, certain components of a reliability model can be treated as either stochastic or deterministic, depending on the phenomena that the model is designed to account for.
+Reliability analysis is a probabilistic analysis by nature.
+Certain components of a reliability model, however, can be treated as either stochastic or deterministic, depending on the phenomena that the model is designed to account for.
 Temperature is an example of such a component: it can be considered as deterministic if the effect of process variation on temperature is neglected and as stochastic otherwise.
 The former scenario is the one that is typically addressed in the literature related to reliability.
 For instance, the reliability modeling framework proposed in \cite{xiang2010} has a treatment of process variation, but temperature is included in the model as a deterministic quantity.
@@ -28,8 +30,8 @@ An extensive and up-to-date survey on reliability-aware system-level design tech
 However, as motivated in the introduction, deterministic temperature is a strong assumption that can lead to substantial yield losses.
 
 An example of a different kind is the work in \cite{lee2013}: it provides a statistical simulator for reliability analysis under process variations and does consider temperature as a stochastic parameter.
-However, this study is bound to static steady-state temperatures discussed previously, and the presented reliability analysis is essentially an analysis of maximal temperatures without any relation to the typical failure mechanisms \cite{jedec}.
+However, as discussed previously, this study is bound to static steady-state temperatures, and the presented reliability analysis is essentially an analysis of maximal temperatures without any relation to the typical failure mechanisms \cite{jedec}.
 
 To conclude, the designer's toolbox does not yet include a tool for \DSS\ \ta\ under process variation, which is of high importance for certain classes of applications mentioned previously.
 Furthermore, the state-of-the-art reliability models are lacking a flexible approach for taking the effect of process variation on temperature into consideration.
-This work eliminates the aforementioned issues.
+This work eliminates the aforementioned concerns.

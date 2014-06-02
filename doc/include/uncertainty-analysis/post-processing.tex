@@ -1,8 +1,15 @@
 The function given by \eref{spectral-decomposition} is nothing more than a polynomial; hence, it is easy to interpret and easy to evaluate.
-Thus, having constructed such an expansion, various statistics about $\w$ can be estimated with no effort.
+Consequently, having constructed such an expansion, various statistics about $\w$ can be estimated with no effort.
 Moreover, \eref{spectral-decomposition} yields analytical formulae for the expected value and variance of $\w$ solely based on the coefficients of \eref{spectral-decomposition}:
 \begin{equation} \elab{probabilistic-moments}
   \expectation{\w} = \coefficient{\w}_\vZero \hspace{1em} \text{and} \hspace{1em} \variance{\w} = \sum_{\multiindex \in \multiindexSet{\level} \setminus \{ \vZero \}} \coefficient{\w}_{\multiindex}^2
 \end{equation}
 where $\vZero = (0)$ is a multi-index with all entries equal to zero.
 Such quantities as the cumulative distribution and probability density functions can be estimated by sampling \eref{spectral-decomposition}; each sample is a trivial evaluation of a polynomial.
+
+\begin{remark} \rlab{multiple-dimensions}
+When $\w$ is multidimensional, we shall consider it as a row vector with an appropriate number of elements.
+Then all the operation with respect to $\w$, such as those in \eref{spectral-decomposition}, \eref{numerical-integration}, and \eref{probabilistic-moments}, should be undertaken elementwise.
+In \eref{coefficient-evaluation}, \eref{quantity-evaluation}, and \aref{surrogate-construction}, $\evw$ and $\coefficient{\evw}$ are to be treated as matrices with $\ncorder$ rows, and $\w_i$ as a row vector.
+The output of Algorithm~X is assumed to be automatically reshaped into a row vector.
+\end{remark}

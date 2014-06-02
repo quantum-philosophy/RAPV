@@ -14,7 +14,7 @@ where the subscript $k$ stands for time $k \dt$, $\vs_0 = \vZero$,
 \[
   \mE = e^{\mA \dt}, \hspace{1em} \text{and} \hspace{1em} \mF = \mA^{-1} (e^{\mA \dt} - \mOne) \: \mB.
 \]
-For computational efficiency, we compute the eigendecomposition of the state matrix $\mA$:
+For computational efficiency, we perform the eigendecomposition of the state matrix $\mA$:
 \begin{equation} \elab{eigendecomposition}
   \mA = \mEDV \mEDL \mEDV^T
 \end{equation}
@@ -24,26 +24,25 @@ The matrices $\mE$ and $\mF$ are then
   & \mE = \mEDV \; \diagonal{e^{\lambda_i \dt}} \mEDV^T \text{ and} \\
   & \mF = \mEDV \; \diagonal{ \frac{e^{\lambda_i \dt} - 1}{\lambda_i} } \mEDV^T \mB.
 \end{align*}
-To sum up, the derivation up to this point is sufficient to for the \tta\ via \eref{recurrence} followed by \eref{thermal-model-outer}.
+To sum up, the derivation up to this point is sufficient for \tta\ via \eref{recurrence} followed by \eref{thermal-model-outer}.
 \begin{remark}
-Although we always refer to temperature, each temperature analysis developed in this paper is accompanied by the corresponding power analysis as the two are inseparable due to the leakage-temperature interplay.
+Although we refer to temperature, each temperature analysis developed in this paper is accompanied by the corresponding power analysis as the two are inseparable due to the leakage-temperature interplay.
 Consequently, when it is appropriate, one can easily extract only the (temperature-aware) power part of the presented solutions.
 \end{remark}
 
-Let us move on to the \dss\ case.
-Assume for now that $\vp_\static$ in \eref{power-model} does not depend on $\vq$, \ie, there is no interdependency between leakage and temperature.
-The \dss\ boundary condition is
+Let us move on to the \DSS\ case.
+Assume for now that $\vp_\static$ in \eref{power-model} does not depend on $\vq$, \ie, no interdependency between leakage and temperature.
+The \DSS\ boundary condition is
 \[
   \vs_1 = \vs_{\nsteps + 1}.
 \]
 This constraint and \eref{recurrence} yield a block-circulant system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
 As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigendecomposition}.
-The pseudocode of this algorithm, which delivers the exact solution under the made assumptions, is given in \aref{temperature-solution-without-leakage}.
-\input{include/algorithms/temperature-solution-without-leakage.tex}
-
+The pseudocode of this algorithm, which delivers the exact solution under the above assumptions, is given in \aref{temperature-solution-without-leakage}.
 Hereafter, we shall adopt \abbr{MATLAB}'s \cite{matlab} notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
 Also, auxiliary variables will be written with hats.
 $\mQ_\ambient$ is a matrix of the ambient temperature.
+\input{include/algorithms/temperature-solution-without-leakage.tex}
 \begin{remark}
 The time complexity of direct solutions of the system of linear equations is $\complexity{\nsteps^3 \nnodes^3}$ while the one of \aref{temperature-solution-without-leakage} is only $\complexity{\nsteps \nnodes^2 + \nnodes^3}$.
 Note that the complexity of \aref{temperature-solution-without-leakage} reported in \cite{ukhov2012} was overestimated.
@@ -63,15 +62,15 @@ As shown in \cite{liu2007}, already one linear segment can deliver sufficiently 
 One notable feature of such a linearization is that no looping-until-convergence is needed in this case; see \cite{ukhov2012}.
 However, this technique assumes that the only varying parameter of leakage is temperature, and all other parameters have nominal values.
 In that case, it is relatively easy to decide on a representative temperature range and undertake a one-dimensional curve-fitting procedure with respect to it.
-In our case, the power model has multiple parameters stepping far from their nominal values, making it difficult to construct a good linear fit with respect to temperature.
+In our case, the power model has multiple parameters stepping far from their nominal values, which makes it difficult to construct a good linear fit with respect to temperature.
 \end{remark}
 
-Now we turn to the stochastic scenario, that is, $\vu$ is no longer deterministic but random, and apply \aref{surrogate-construction} to a particular quantity of interest $\w$.
+Now we turn to the stochastic scenario, that is, $\vu$ is no longer deterministic but random, and apply \aref{surrogate-construction} to one particular quantity of interest $\w$.
 Specifically, $\w$ is now the temperature profile $\mQ$ corresponding to a given $\mP_\dynamic$.
 Since $\mQ$ is an $\nprocs \times \nsteps$ matrix, following \rref{multiple-dimensions}, $\w$ is viewed as an $\nprocs \nsteps$-dimensional row vector, in which case each coefficient $\coefficient{\w}_{\multiindex}$ in \eref{spectral-decomposition} is also such a vector.
 Then the projection in \eref{coefficient-evaluation} and, consequently, \aref{surrogate-construction} should be interpreted as follows.
 $\evw$ is an $\nqorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the temperature profile computed at the $i$th quadrature point and reshaped into a row vector.
-Similarly, $\coefficient{\evw}$ is an $\ncorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the $i$th coefficient $\coefficient{\w}_{\multiindex_i}$ of the spectral decomposition in \eref{spectral-decomposition} (recall that a certain ordering is assumed to be imposed on the multi-indices).
-Keeping the above in mind, a call to \aref{surrogate-construction} should be made such that Algorithm~X points at an auxiliary routine that receives $\vu$, forwards it to \aref{temperature-solution} along with $\mP_\dynamic$, and returns the resulting temperature profile to \aref{surrogate-construction}.
+Similarly, $\coefficient{\evw}$ is an $\ncorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the $i$th coefficient $\coefficient{\w}_{\multiindex_i}$ of the spectral decomposition in \eref{spectral-decomposition} (recall that a fixed ordering is assumed to be imposed on the multi-indices).
+Keeping the above in mind, a call to \aref{surrogate-construction} should be made such that Algorithm~X points at an auxiliary routine which receives $\vu$, forwards it to \aref{temperature-solution} along with $\mP_\dynamic$, and returns the resulting temperature profile to \aref{surrogate-construction}.
 Now the constructed expansion can be post-processed as needed; see \sref{post-processing}.
 For example, the row of $\coefficient{\evw}$ corresponding to the zero multi-index $\vZero$ (naturally, it is the first row) is a flattened version of the expected value of $\mQ$ as shown in \eref{probabilistic-moments}.

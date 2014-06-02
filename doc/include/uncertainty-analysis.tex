@@ -1,4 +1,4 @@
-The key building block of our solutions developed in \sref{temperature-analysis} and \sref{reliability-analysis} is the uncertainty quantification technique presented below.
+The key building block of our solutions developed in \sref{temperature-analysis} and \sref{reliability-analysis} is the uncertainty quantification technique presented in this section.
 The main task of this technique is the propagation of uncertainty through the system, that is, from a set of inputs to a set of outputs.
 Specifically, the inputs are the uncertain parameters $\vu$, and the outputs are the quantities that we are interested in studying.
 The latter can be, for instance, the energy consumption, maximal temperature, or temperature profile of the system over a certain period of time.
@@ -18,16 +18,18 @@ Thus, we redefine the parameterization of the problem as
   \vu = (\u_i)_{i = 1}^{\nparams \nprocs}
 \end{equation}
 such that there is a one-to-one correspondence between $\u_i$, $i = 1, \dots, \nparams \nprocs$, and $\u_{ij}$, $i = 1, \dots, \nparams$, $j = 1, \dots, \nprocs$.
+For instance, in our illustrative application with two process parameters, the total number of stochastic dimensions is $2 \nprocs$.
 \begin{remark}
 Some authors prefer to split the variability of a process parameter at a spatial location into several parts such as wafer-to-wafer, die-to-die, and within-die; see, \eg, \cite{juan2012}.
 However, from the mathematical standpoint, it is sufficient to consider just one random variable per location which is adequately correlated with the other locations of interest.
 \end{remark}
 
-A description of $\vu$ is an input to our analysis given by the user.
+A description of $\vu$ is an input to our analysis given by the user, and we consider it to be a part of the system specification $\specification$.
 A proper (complete, unambiguous) way to describe a set of \rvs\ is to specify their joint probability distribution function.
 In practice, however, such exhaustive information is often unavailable, in particular, due to the high dimensionality in the presence of prominent dependencies inherent to the considered problem.
 A more realistic assumption is the knowledge of the marginal distributions and correlation matrix of $\u$.
-For concreteness, we shall orientate our framework towards the practical scenario; one should keep in mind, though, that, in general, the marginals and correlation matrix are not sufficient to recover the joint distribution.
+For concreteness, we shall orientate our framework towards the practical scenario.
+One should keep in mind, though, that, in general, the marginals and correlation matrix are not sufficient to recover the joint distribution.
 Denote by $\{ \distribution_{\u_i} \}_{i = 1}^{\nparams \nprocs}$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of $\vu$ in \eref{uncertain-parameters}, respectively.
 Note that the number of distinct marginals is only $\nparams$ since $\nprocs$ components of $\vu$ correspond to the same uncertain parameter.
 
