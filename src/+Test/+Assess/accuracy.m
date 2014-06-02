@@ -8,7 +8,8 @@ function accuracy
   processorCount = 4;
   taskCount = 20 * processorCount;
 
-  caseCount = 10;
+  caseIndex = 1:10;
+  caseCount = length(caseIndex);
   iterationCount = 10;
 
   polynomialOrder = 1:5;
@@ -47,7 +48,7 @@ function accuracy
 
   Plot.figure(1200, 600);
 
-  for l = 1:caseCount
+  for l = caseIndex
     %
     % Monte Carlo
     %
@@ -88,7 +89,7 @@ function accuracy
       options.surrogateOptions.quadratureOptions.level = quadratureLevel(i);
       surrogate = SystemVariation(options);
 
-      if l == 1
+      if l == caseIndex(1)
         polynomialTermCount(i) = surrogate.surrogate.termCount;
         quadratureNodeCount(i) = surrogate.surrogate.nodeCount;
       else
