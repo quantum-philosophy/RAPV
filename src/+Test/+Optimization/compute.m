@@ -7,26 +7,6 @@ function compute(varargin)
   caseCount = 10;
   iterationCount = 1;
 
-  constraintMap = Configure.containts;
-
-  function range = boundRange(constraintKey, name, nominal, ~)
-    constraints = constraintMap(constraintKey);
-    switch lower(name)
-    case { 'temperature', 'energy' }
-      range = [ 0, constraints(1) * nominal ];
-    case 'lifetime'
-      range = [ constraints(2) * nominal, Inf ];
-    case 'time'
-      range = [ 0, constraints(3) * nominal ];
-    otherwise
-      assert(false);
-    end
-  end
-
-  function probability = boundProbability(~, ~)
-    probability = 0.99;
-  end
-
   stochasticTime = zeros(caseCount, iterationCount);
   stochasticOutput = cell(caseCount, iterationCount);
 
@@ -36,46 +16,11 @@ function compute(varargin)
   assessmentOutput = cell(caseCount, iterationCount);
 
   for i = 1:caseCount
-    options = Configure.case('processorCount', processorCount, ...
-      'taskCount', taskCount, 'caseNumber', i, varargin{:});
-
-    if constraintMap.isKey(options.caseName)
-      constraintKey = options.caseName;
-    elseif constraintMap.isKey(options.setupName)
-      constraintKey = options.setupName;
-    else
-      assert(false);
-    end
-
-    options = Configure.problem(options);
-
-    objectiveOptions = Options( ...
-      'targetNames', { 'energy' }, ...
-      'constraintNames', { 'temperature', 'lifetime' }, ...
-      'power', options.power, ...
-      'schedule', options.schedule, ...
-      'boundRange', @(varargin) boundRange(constraintKey, varargin{:}), ...
-      'boundProbability', @(varargin) boundProbability(varargin{:}), ...
-      'sampleCount', 1e4);
-
-    geneticOptions = Options( ...
-      'Generations', 100, ...
-      'StallGenLimit', 10, ...
-      'PopulationSize', 4 * taskCount, ...
-      'CrossoverFraction', 0.8, ...
-      'MutationRate', 0.05, ...
-      'SelectionFcn', { @selectiontournament, ...
-        floor(0.05 * 4 * taskCount) });
-
-    optimizationOptions = Options( ...
-      'scheduler', options.scheduler, ...
-      'verbose', true, ...
-      'visualize', false, ...
-      'geneticOptions', geneticOptions);
+    options = configure(processorCount, taskCount, i, varargin{:});
 
     filename = sprintf('optimization_%03d_%03d_%03d_%03d_%s.mat', ...
       processorCount, taskCount, i, iterationCount, ...
-      DataHash({ options.dynamicPower, constraintMap(constraintKey) }));
+      DataHash({ options.dynamicPower, options.constraintSet }));
 
     if File.exist(filename)
       fprintf('Using the data from "%s"...\n', filename);
@@ -97,11 +42,11 @@ function compute(varargin)
       % Stochastic
       %
       stochasticObjective = Objective.Stochastic( ...
-        'surrogate', surrogate, objectiveOptions);
+        'surrogate', surrogate, options.objectiveOptions);
       display(stochasticObjective);
 
       stochasticOptimization = Optimization.Genetic( ...
-        'objective', stochasticObjective, optimizationOptions);
+        'objective', stochasticObjective, options.optimizationOptions);
 
       %
       % Deterministic
@@ -109,9 +54,9 @@ function compute(varargin)
       deterministicObjective = Objective.Deterministic(stochasticObjective);
 
       deterministicOptimization = Optimization.Genetic( ...
-        'objective', deterministicObjective, optimizationOptions);
+        'objective', deterministicObjective, options.optimizationOptions);
 
-      baseSolution = objectiveOptions.schedule;
+      baseSolution = options.objectiveOptions.schedule;
 
       for j = 1:iterationCount
         fprintf('Stochastic: case %d, iteration %d...\n', i, j);
@@ -185,149 +130,4 @@ function compute(varargin)
   fprintf('Summary of the assessment:\n');
   fprintf('--------------------------------------------------\n');
   reportAssessment(quantities, deterministicOutput, assessmentOutput);
-end
-
-function reportOptimization(quantities, output, time)
-  [ caseCount, iterationCount ] = size(output);
-
-  globalValue = NaN(caseCount, iterationCount, quantities.count);
-  globalChange = NaN(caseCount, iterationCount, quantities.count);
-  bestIndex = NaN(caseCount, 1);
-
-  fprintf('%10s%10s%10s', 'Case', 'Iteration', 'Time, m');
-  for k = 1:quantities.count
-    fprintf('%15s (%15s)', quantities.names{k}, 'Change, %');
-  end
-  fprintf('\n');
-
-  for i = 1:caseCount
-    for j = 1:iterationCount
-      %
-      % NOTE: Not ready for multiple solutions.
-      %
-      solutionCount = length(output{i, j}.solutions);
-      assert(solutionCount == 1);
-
-      solution = output{i, j}.solutions{1};
-
-      fprintf('%10d%10d%10.2f', i, j, time(i, j) / 60);
-
-      if any(solution.fitness >= Objective.Base.maximalFitness)
-        fprintf('%15s (%15s)\n', 'NA', 'NA');
-        continue;
-      end
-
-      %
-      % NOTE: Not ready for multiobjective optimization.
-      %
-      if isnan(bestIndex(i)) || ...
-        solution.fitness < output{i, bestIndex(i)}.solutions{1}.fitness
-
-        bestIndex(i) = j;
-      end
-
-      for k = 1:quantities.count
-        value = solution.expectation(k);
-        change = value / quantities.nominal(k);
-
-        globalValue(i, j, k) = value;
-        globalChange(i, j, k) = change;
-
-        fprintf('%15.2e (%15.2f)', value, change * 100);
-      end
-
-      fprintf('\n');
-    end
-
-    if iterationCount == 1 || isnan(bestIndex(i)), continue; end
-
-    fprintf('%10s%10s%10.2f', 'Best', '', time(i, bestIndex(i)) / 60);
-    for k = 1:quantities.count
-      value = globalValue(i, bestIndex(i), k);
-      change = globalChange(i, bestIndex(i), k);
-
-      fprintf('%15.2e (%15.2f)', value, change * 100);
-    end
-    fprintf('\n\n');
-  end
-
-  I = find(~isnan(bestIndex));
-  J = bestIndex(I);
-
-  if isempty(I), return; end
-
-  time = select(time, I, J);
-
-  fprintf('%10s%10s%10.2f', 'Average', '', mean(time) / 60);
-  for k = 1:quantities.count
-    value = select(globalValue(:, :, k), I, J);
-    change = select(globalChange(:, :, k), I, J);
-
-    fprintf('%15.2e (%15.2f)', mean(value), mean(change) * 100);
-  end
-  fprintf('\n');
-end
-
-function reportAssessment(quantities, optimizationOutput, assessmentOutput)
-  [ caseCount, iterationCount ] = size(optimizationOutput);
-
-  failCount = 0;
-
-  fprintf('%10s%10s%10s (%40s)\n', 'Case', 'Iteration', 'Result', ...
-    'Offset / Violation, %');
-  for i = 1:caseCount
-    %
-    % NOTE: Not ready for multiple objectives.
-    %
-    fitness = NaN(1, iterationCount);
-    valid = false(1, iterationCount);
-
-    for j = 1:iterationCount
-      %
-      % NOTE: Not ready for multiple solutions.
-      %
-      solutionCount = length(optimizationOutput{i, j}.solutions);
-      assert(solutionCount == 1);
-
-      solution = optimizationOutput{i, j}.solutions{1};
-      assessment = assessmentOutput{i, j}.solutions{1};
-
-      if all(solution.fitness < Objective.Base.maximalFitness)
-        fitness(j) = solution.fitness;
-      end
-
-      fprintf('%10d%10d', i, j);
-      if any(assessment.violation > 0)
-        fprintf('%10s (', 'failed');
-        fprintf('%10.2f', assessment.violation * 100);
-        fprintf(')');
-      else
-        valid(j) = true;
-
-        fprintf('%10s (', 'passed');
-        change = solution.expectation ./ quantities.nominal;
-        trueChange = assessment.expectation ./ quantities.nominal;
-        fprintf('%10.2f', (trueChange - change) * 100);
-        fprintf(')');
-      end
-      fprintf('\n');
-    end
-
-    J = find(~isnan(fitness));
-    [ ~, k ] = min(fitness(J));
-
-    if isempty(J) || ~valid(J(k))
-      failCount = failCount + 1;
-    end
-  end
-
-  fprintf('\n');
-  fprintf('Failure rate: %.2f %%\n', failCount / caseCount * 100);
-end
-
-function result = select(A, I, J)
-  result = zeros(1, length(I));
-  for i = 1:length(I)
-    result(i) = A(I(i), J(i));
-  end
 end
