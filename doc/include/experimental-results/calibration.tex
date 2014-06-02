@@ -3,7 +3,7 @@ In this regard, the quantity of interest in \eref{quantity-of-interest} plays th
 Therefore, we first assess a single application of the proposed framework to $\vw$ in \eref{quantity-of-interest}.
 To this end, we shall compare our performance with the performance of Monte Carlo (\MC) sampling.
 The operations performed by the \MC-based approach for one sample are the same as those performed by our technique for one quadrature point.
-The only difference is that no reduction of any kind is undertaken inside \MC\ simulations so that the corresponding results are unbiased.
+The only difference is that no reduction of any kind is undertaken inside \MC\ simulations so that the corresponding results are accurate.
 In what follows, the number of \MC\ samples is set to $10^4$.
 
 \input{include/tables/accuracy.tex}
@@ -17,10 +17,10 @@ The observation can be ascribed to the random nature of sampling and the fact th
 \tref{accuracy} also contains the numbers of polynomial terms $\ncorder$ and quadrature points $\nqorder$ corresponding to each value of $\nclevel$.
 We also performed the above experiment for platforms with fewer/more processing elements; the observations were similar to the ones in \tref{accuracy}.
 
-Based on \tref{accuracy}, we consider the results delivered by third-level polynomial expansions to be sufficiently accurate, and, therefore, we fix $\nclevel = 3$ for the rest of the experiments.
+Based on \tref{accuracy}, we consider the results delivered by third-level polynomial expansions to be sufficiently accurate, and, therefore, we fix $\nclevel = \nqlevel = \level = 3$ for the rest of the experiments (recall the last paragraph of \sref{classical-decomposition}).
 
 \input{include/tables/speed.tex}
-\tref{speed} displays the time needed to perform one characterization of $\vw$ depending on the number of processing elements $\nprocs$ swept from 2 to 32.
+\tref{speed} displays the time needed to perform one characterization of $\vw$ for the number of processing elements $\nprocs$ swept from 2 to 32.
 Naturally, no parallel computing is utilized in this experiment.
 It can be seen that the computational time ranges from a fraction of a second to around two seconds.
 More importantly, \tref{speed} provides information about a number of complementary quantities that are of high interest for the user of the proposed techniques, which we discuss below.
@@ -32,7 +32,7 @@ This means that certain configurations could be reduced even further while satis
 The next quantity to look at is the number of \rvs\ $\nvars$ preserved after the reduction procedure described in \sref{parameter-preprocessing} and \xref{model-order-reduction}; without this reduction, $\nvars$ would be $2 \nprocs$ as there are two process parameters per core.
 It can be seen that the duel-core platform has no reduction while around 80\% of stochastic dimensions have been eliminated for the platform with 32 cores.
 In addition, one can note that $\nvars$ is the same for the last two platforms.
-The magnitude of such reductions is solely determined by the correlation patterns assumed (see \sref{parameter-preprocessing}) and the floorplans of the platforms; the interested reader is referred to \cite{ukhov2014} for additional details.
+The magnitude of reduction is solely determined by the correlation patterns assumed (see \sref{parameter-preprocessing}) and the floorplans of the platforms; the interested reader is referred to \cite{ukhov2014} for additional details.
 
 Finally, let us turn to the number of quadrature nodes $\nqorder$ shown in \tref{speed}.
 This number is the main indicator of the computational complexity of the optimization procedure: it equals to the number of times Algorithm~X in \aref{surrogate-construction} is executed to construct a polynomial expansion of \eref{quantity-of-interest} needed for the evaluation of the fitness function.

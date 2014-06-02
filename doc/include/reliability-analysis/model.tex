@@ -7,10 +7,10 @@ The survival function of the system is
 \]
 
 The overall lifetime $\T$ is a function of the lifetimes of the processing elements, which are denoted by a set of \rvs\ $\{ \T_i \}_{i = 1}^\nprocs$.
-Each $\T_i$ is characterized by a physical model of wear \cite{jedec} describing the fatigues that the corresponding processing element is suffering from.
-Each $\T_i$ is also assigned an individual survival function $\survival_{\T_i}(\cdot | \pvw)$ describing the rate of failures due to those fatigues.
+Each $\T_i$ is characterized by a physical model of wear \cite{jedec} describing the fatigues that the corresponding processing element is exposed to.
+Each $\T_i$ is also assigned an individual survival function $\survival_{\T_i}(\cdot | \pvw)$ describing the failures due to those fatigues.
 The structure of $\survival_\T(\cdot | \pvw)$ with respect to $\{ \survival_{\T_i}(\cdot | \pvw) \}_{i = 1}^\nprocs$ is problem specific, and it can be especially diverse in the context of fault-tolerant systems.
-Thus, $\survival_\T(\cdot | \pvw)$ is to be specified by the designer of the system.
+$\survival_\T(\cdot | \pvw)$ is to be specified by the designer of the system, and it is assumed to be included in the specification $\specification$ (see \sref{problem-formulation}).
 
 Our work in this context is motivated by the following two observations.
 First, temperature is the driving force of the dominant failure mechanisms.

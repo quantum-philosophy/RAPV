@@ -1,6 +1,6 @@
 Despite its generality, the proposed technique can be better appreciated considering a concrete example.
 Suppose that the system is experiencing a periodic workload due to the execution of a periodic or nearly periodic application with period $\period$.
-The corresponding temperature profile $\mQ$ is then a \dss\ temperature profile, which, for a given $\vu$, can be computed using \aref{temperature-solution}.
+The corresponding temperature profile $\mQ$ is then a \DSS\ profile, which, for a given $\vu$, can be computed using \aref{temperature-solution}.
 Assume that the power consumption is rapidly changing during the execution of the application, and, thus, the major concern of the designer is the thermal-cycling fatigue \cite{jedec}.
 This fatigue has a sophisticated dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
 
@@ -44,7 +44,7 @@ A cycle can be a half cycle meaning that only an upward or downward temperature 
 
 The shape parameter $\beta_i$ is known to be indifferent to temperature.
 For simplicity, we also assume that $\beta_i$ does not depend on process parameters and $\beta_i = \beta$ for all $i \in \{ 1, \dotsc, \nprocs \}$.
-However, we would like to emphasize that these assumptions are not a requirement of the proposed techniques.
+However, we would like to emphasize that these assumptions are not a limitation of the proposed techniques.
 Then it can be show that the compositional survival function $\survival_\T(\cdot | \pvw)$ corresponds to a Weibull distribution, and the shape parameter of this distribution is $\beta$ whereas the scale parameter is given by the following equation:
 \begin{equation} \elab{compound-weibull-eta}
   \eta = \left(\sum \left( \frac{1}{\eta_i} \right)^\beta \right)^{-\frac{1}{\beta}}

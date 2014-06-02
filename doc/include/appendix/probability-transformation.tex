@@ -2,9 +2,9 @@ The uncertain parameters $\vu$ should be preprocessed in order to extract a set 
 This task is accomplished by virtue of the Nataf transformation.
 Here we describe the algorithm in brief and refer the interested reader to \cite{li2008} for additional details.
 
-The transformation is typically presented in two steps.
+The transformation has two steps.
 First, $\vu \in \real^{\nparams \nprocs}$ are morphed into correlated standard Gaussian variables $\vh \in \real^{\nparams \nprocs}$ using the knowledge of the marginal distributions and correlation matrix of $\vu$.
 Second, the obtained variables are mapped into independent standard Gaussian variables $\vz \in \real^{\nparams \nprocs}$ using the eigendecomposition as follows.
 Let $\mCorr_\h$ be the correlation matrix of $\vh$.
-Since any correlation matrix is real and symmetric, $\mCorr_\h$ admits the eigendecomposition as $\mCorr_\h = \mEDV \mEDL \mEDV^T$ (see \sref{thermal-model} for the notation).
+Since any correlation matrix is real and symmetric, $\mCorr_\h$ admits the eigendecomposition: $\mCorr_\h = \mEDV \mEDL \mEDV^T$ (see \sref{thermal-model} for the notation).
 $\vh$ can then be represented as $\vh = \mEDV \mEDL^\frac{1}{2} \vz$ where the vector $\vz$ is standardized and uncorrelated, which is also independent as $\vz$ is Gaussian.
