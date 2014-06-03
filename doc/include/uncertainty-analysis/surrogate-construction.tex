@@ -3,7 +3,7 @@ For convenience, $\w$ is assumed to be one-dimension, which will be generalized 
 In order to give a computationally efficient probabilistic characterization of $\w$, we utilize non-intrusive spectral decompositions based on orthogonal polynomials.
 The corresponding mathematical foundation is outlined in \xref{spectral-decomposition} and \xref{numerical-integration}, and here we leap directly to the main results obtained in those sections.
 
-\subsubsection{Classical decomposition}
+\subsubsection{Classical decomposition} \slab{classical-decomposition}
 Assume that $\w \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$.
 Then $\w$ can be expanded into the following series:
 \begin{equation} \elab{spectral-decomposition}
@@ -22,7 +22,7 @@ The multivariate quadrature operator $\quadrature$ is based on a set of univaria
   \quadrature = \bigoplus_{\multiindex \in \quadratureMultiindexSet{\nqlevel}} \Delta_{\alpha_1} \otimes \cdots \otimes \Delta_{\alpha_\nvars}.
 \end{equation}
 The notation used in the above equation is not essential for the present discussion and can be found in \xref{numerical-integration}.
-The important aspect to note, though, is the structure of this operator, namely, the index set $\quadratureMultiindexSet{\nqlevel}$.
+The important aspect to note is the structure of this operator, namely, the index set $\quadratureMultiindexSet{\nqlevel}$, which we shall come back to shortly.
 
 The standard choice of $\multiindexSet{\nclevel}$ in \eref{spectral-decomposition} is $\{ \multiindex: \norm[1]{\multiindex} \leq \nclevel \}$, which is called an isotropic total-order index set.
 \emph{Isotropic} refers to the fact that all dimensions are trimmed identically, and \emph{total-order} to the structure of the corresponding polynomial space.
@@ -36,12 +36,12 @@ More generally, the index sets $\multiindexSet{\nclevel}$ and $\multiindexSet{\n
 \subsubsection{Anisotropic decomposition}
 In the context of sparse grids, an important generalization of the construction in \eref{smolyak-sparse-grid} is the so-called anisotropic Smolyak algorithm \cite{nobile2008}.
 The main difference between the isotropic and anisotropic versions lies in the constraints imposed on $\quadratureMultiindexSet{\level}$.
-An anisotropic total-order index set is as follows:
+An anisotropic total-order index set is defined as follows:
 \begin{equation} \elab{anisotropic-total-order-index-set}
   \chaosMultiindexSet{\level} = \left\{ \multiindex: \innerProduct{\dimensionAnisotropy, \multiindex} \leq \level \, \min_i c_i \right\}
 \end{equation}
 where $\dimensionAnisotropy = (c_i) \in \real^\nvars$, $c_i \geq 0$, is a vector assigning importance coefficients to each dimension, and $\innerProduct{\cdot, \cdot}$ is the standard inner product on $\real^\nvars$.
-Equation \eref{anisotropic-total-order-index-set} plugged into \eref{smolyak-sparse-grid} results in a sparse grid which is exact for the polynomial space which is tailored using the same index set.
+Equation \eref{anisotropic-total-order-index-set} plugged into \eref{smolyak-sparse-grid} results in a sparse grid which is exact for the polynomial space that is tailored using the same index set.
 
 The above approach allows one to leverage the highly anisotropic behaviors inherent for many practical problems \cite{nobile2008}.
 It provides a great control over the computational time associated with the construction of spectral decompositions: a carefully chosen importance vector $\dimensionAnisotropy$ in \eref{anisotropic-total-order-index-set} can significantly reduce the number of polynomial terms in \eref{spectral-decomposition} and the number of quadrature points needed in \eref{numerical-integration} to compute the coefficients of those terms.
@@ -54,7 +54,7 @@ Specifically, we let
 where $\anisotropyKnob \in [0, 1]$ is a tuning parameter.
 The isotropic scenario can be recovered by setting $\anisotropyKnob = 0$; the other values of $\anisotropyKnob$ correspond to various levels of anisotropy with the maximum attained by setting $\anisotropyKnob = 1$.
 
-Let us sum up what we have at this point.
+Let us sum up what we have achieved at this point.
 In order to give a probabilistic characterization of a quantity of interest, we perform chaotic expansions as shown in \eref{spectral-decomposition}.
 The coefficients of such expansions are evaluated by Gaussian quadratures as shown in \eref{numerical-integration}.
 The quadratures are constructed using the Smolyak formula given in \eref{smolyak-sparse-grid}.
@@ -86,10 +86,3 @@ It can be seen that \eref{coefficient-evaluation} is a matrix version of \eref{n
 $\projection$ is the one that should be precomputed.
 The pseudocode of the procedure is given in \aref{surrogate-construction} wherein Algorithm~X stands for the routine that calculates $\w$ for a given $\vu$.
 \input{include/algorithms/surrogate-construction.tex}
-
-\begin{remark} \rlab{multiple-dimensions}
-When $\w$ is multidimensional, we shall consider it as a row vector with an appropriate number of elements.
-Then all the operation with respect to $\w$, such as those in \eref{spectral-decomposition} and \eref{numerical-integration}, should be undertaken elementwise.
-In \eref{coefficient-evaluation}, \eref{quantity-evaluation}, and \aref{surrogate-construction}, $\evw$ and $\coefficient{\evw}$ are to be treated as matrices with $\ncorder$ rows, and $\w_i$ as a row vector.
-The output of Algorithm~X is assumed to be automatically reshaped into a row vector.
-\end{remark}

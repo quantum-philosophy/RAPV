@@ -1,4 +1,4 @@
-Our foremost task is to transform $\vu$ into mutually independent \rvs\ as independence is convenient for the forthcoming mathematical treatment and practical computations.
+Our foremost task now is to transform $\vu$ into mutually independent \rvs\ as independence is essential for the forthcoming mathematical treatment and practical computations.
 To this end, an adequate probability transformation should be undertaken depending on the available information; see \cite{eldred2008} for an overview.
 One transformation for which the assumed knowledge about $\vu$ is sufficient is the Nataf transformation \cite{li2008}.
 Denote this transformation by
@@ -14,7 +14,7 @@ Refer to \xref{probability-transformation} for further details about the Nataf t
 
 As we shall discuss later on, the stochastic dimensionality $\nvars$ of the problem has a considerable impact of the computational complexity of our framework.
 Therefore, an important part of the preprocessing stage is model order reduction.
-To this end, we preserve only those dimensions whose contribution to the total variance of $\vu$ is the most significant, which is identified by the eigenvalues of $\mCorr_\u$:
+To this end, we preserve only those stochastic dimensions whose contribution to the total variance of $\vu$ is the most significant, which is identified by the eigenvalues of $\mCorr_\u$:
 \begin{equation} \elab{dimension-contribution}
   \dimensionContribution = (\lambda_i)_{i = 1}^{\nparams \nprocs}, \hspace{1em} \norm[1]{\dimensionContribution} = 1,
 \end{equation}
@@ -29,11 +29,12 @@ With this in mind, we model the two process parameters using the four-parametric
 \begin{equation*}
   \u_i \sim \distribution_{\u_i} = \betaDistribution{a_i, b_i, c_i, d_i}
 \end{equation*}
-where $i = 1, \dots, \nparams \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond their supports.
+where $i = 1, \dots, 2 \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond their supports.
 Without loss of generality, we let the two considered process parameters be independent of each other, and the correlations among those elements of $\vu$ that correspond to the same process parameter be given by the following correlation function:
 \begin{equation} \elab{correlation-function}
   \fCorr(\vr_1, \vr_2) = \sum_i \varpi_i \; \fCorr_i(\vr_1, \vr_2)
 \end{equation}
 where $\{ \fCorr_i: \domain \times \domain \to \real \}$ are a number of kernel functions, and $\bm{\varpi} = (\varpi_i)$ are their weights such that $\varpi_i \geq 0$ and $\norm[1]{\bm{\varpi}} = 1$.
-Each kernel captures certain correlation features inherent to the fabrication process at hand; we shall use the same kernels as in \cite{ukhov2014}.
 The entries of $\mCorr_\u$ are computed using \eref{correlation-function}.
+Each kernel $\fCorr_i$ captures certain correlation features inherent to the fabrication process at hand.
+In this regard, we shall use the same setup as the one utilized in \cite{ukhov2014} with equal weights (the squared-exponential and Ornstein--Uhlenbeck kernels).

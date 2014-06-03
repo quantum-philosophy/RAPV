@@ -1,11 +1,12 @@
 Consider a heterogeneous electronic system that consists of $\nprocs$ processing elements and is equipped with a thermal package.
 The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, \abbr{SoC}s, \abbr{CPU}s, \abbr{ALU}s, caches).
 
-Denote by $\specification$ an abstract set containing all the information about the system that is relevant to our analysis; we shall refer to $\specification$ as the system specification.
-The content of $\specification$ is problem specific, and we shall gradually detail it when it is needed.
+We shall denote by $\specification$ an abstract set containing all information about the system that is relevant to our analysis and shall refer to it as the system specification.
+The content of $\specification$ is problem specific, and it will be gradually detailed when it is needed.
 For now, $\specification$ is assumed to include: (a) the floorplans of the active layers of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity and specific heat).
 
-A power profile of the system is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements which correspond to certain moments of time $(\t_k)_{k = 1}^\nsteps$ that partition a time interval $[0, \period]$ as
+A power profile is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements.
+The samples correspond to certain moments of time $(\t_k)_{k = 1}^\nsteps$ that partition a time interval $[0, \period]$ as
 \[
   0 = \t_0 < \t_1 < \dotsc < \t_\nsteps = \period.
 \]
@@ -13,20 +14,21 @@ Analogously, a temperature profile $\mQ \in \real^{\nprocs \times \nsteps}$ is a
 For clarity, power and temperature profiles are assumed to have a one-to-one correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, \dots, \nsteps$.
 
 The system depends on a set of parameters that are uncertain at the design stage due to process variation.
-We model such parameters using \rvs\ and denote them by the random vector $\vu = (\u_i)_{i = 1}^\nparams: \outcomes \to \real^\nparams$.
+We model such parameters using \rvs\ and denote them by a random vector $\vu = (\u_i)_{i = 1}^\nparams: \outcomes \to \real^\nparams$.
 In this work, we are only concerned with those parameters that manifest themselves in the deviation of the actual power dissipation from nominal values and, consequently, in the deviation of temperature from the one corresponding to the nominal power consumption.
 
 Given $\specification$, we pursue the following major objectives:
 \begin{itemize}
-  \item Extend the probabilistic temperature analysis to include the \DSS\ scenario under the uncertainty due to process variation specified by $\vu$.
-  \item Find the survival function of the system under an arbitrary workload given as a dynamic power profile $\mP_\dynamic$ taking into consideration the aforementioned uncertainty.
-  \item Develop a computationally tractable design-space exploration scheme exploiting the probabilistic guarantees delivered by our framework for the reliability analysis.
+  \item {\bfseries Objective~1.} Extend probabilistic \ta\ to include the \DSS\ scenario under the uncertainty due to process variation specified by $\vu$.
+  \item {\bfseries Objective~2.} Taking into consideration the effect of process variation on temperature, find the survival function of the system at hand under an arbitrary workload given as a dynamic power profile $\mP_\dynamic$.
+  \item {\bfseries Objective~3.} Develop a computationally tractable design-space exploration scheme exploiting the proposed framework for the temperature/reliability analysis.
 \end{itemize}
 
-In order to give a better intuition about our solutions presented in the sequel, we shall accompany the development of our framework with the development of a concrete application, which will eventually be utilized for the quantitative evaluation of the framework given in \sref{experimental-results}.
+In order to give a better intuition about our solutions, we shall accompany the development of our framework with the development of a concrete example/application, which will eventually be utilized for the quantitative evaluation of the framework given in \sref{experimental-results}.
 To this end, we have decided to focus on two process parameters, which are arguably the most crucial ones, namely, on the effective channel length $\Leff$ and gate-oxide thickness $\Tox$.
-Hence, in this example,
+In this example,
 \begin{equation} \elab{application-uncertain-parameters}
-  \vu = (\Leff, \Tox): \outcomes \to \real^2.
+  \vu = (\Leff, \Tox): \outcomes \to \real^2,
 \end{equation}
+which is to be discussed in detail shortly.
 Regarding reliability, we shall address the thermal-cycling fatigue as it is naturally connected with \DSS\ \ta\ that we develop.
