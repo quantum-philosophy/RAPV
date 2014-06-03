@@ -12,7 +12,7 @@ classdef Base < handle
 
   methods
     function this = Base(varargin)
-      if length(varargin) == 1
+      if length(varargin) == 1 && isa(varargin{1}, 'Objective.Base')
         that = varargin{1};
 
         this.power = that.power;
