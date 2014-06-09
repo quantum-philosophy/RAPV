@@ -29,8 +29,15 @@ The comparison shown that the expected energy consumption and maximal temperatur
 
 Consequently, when studying reliability-related aspects of electronic systems, the ignorance of the deteriorating effect of process variation on temperature can severely compromise the associated design decisions making them less profitable in the best case and dangerous, harmful in the worst scenario.
 
-Lastly, let us comment on the optimization time shown in \tref{optimization}.
+Let us now comment on the optimization time shown in \tref{optimization}.
 It can be seen that the prototype of the proposed framework takes from about one minute to six hours (utilizing 16 \abbr{CPU}s) in order to perform one optimization round, and the deterministic optimization is approximately 2--40 times faster.
-However, the price to pay when relying on the deterministic approach is considerably high as we discuss in the previous paragraphs.
+However, the price to pay when relying on the deterministic approach is considerably high as we have discussed in the previous paragraphs.
 It can be summarized as ``blind guessing with highly unfavorable odds of succeeding."
 Consequently, we consider the computational time of our framework to be reasonable and affordable, especially in an industrial setting.
+
+Lastly, let us mention in brief one additional experiment that we performed.
+The goal was to investigate the impact of the lifetime constraint in \eref{reliability-constraint} on the reduction of the expected energy consumption.
+To this end, we ran our probabilistic optimization (all 50 problems) without \eref{reliability-constraint} and compared the corresponding results with those obtained earlier.
+We observed that the expected energy consumption was higher when \eref{reliability-constraint} was taken into account, but the difference was vanishing when the complexity of the problems was increasing.
+On average, the cost of \eref{reliability-constraint} was below 5\% of the expected energy consumption.
+Without \eref{reliability-constraint}, however, no probabilistic guarantees on the lifetime of the considered systems can be given.

@@ -45,8 +45,4 @@ The inner product in \xeref{spectral-decomposition} projects $\w$ onto the corre
   \coefficient{\w}_{\multiindex} = \innerProduct{\w, \polynomial_{\multiindex}} = \int_{\real^{\nvars}} \w(\transformation[\point]) \, \polynomial_{\multiindex}(\point) \, \d\distribution_\z(\point).
 \end{equation}
 Recall that $\w$ is a function of $\vu$, and $\transformation$, defined in \eref{probability-transformation}, bridges $\vu$ with $\vz$.
-Lastly, we note that $\{ \polynomial_{\multiindex}: \multiindex \in \natural^\nvars \}$ are orthonormal with respect to $\d\distribution_\z$:
-\[
-  \innerProduct{\polynomial_{\multiindex}, \polynomial_{\multiindex[\beta]}} = \delta_{\multiindex \multiindex[\beta]}
-\]
-where $\multiindex = (\alpha_i)$ and $\multiindex[\beta] = (\beta_i)$ are two arbitrary multi-indices, $\delta_{\multiindex \multiindex[\beta]} := \prod_i \delta_{\alpha_i \beta_i}$, and $\delta_{ij}$ is the Kronecker delta.
+Lastly, we note that $\{ \polynomial_{\multiindex}: \multiindex \in \natural^\nvars \}$ are orthonormal with respect to $\d\distribution_\z$: $\innerProduct{\polynomial_{\multiindex}, \polynomial_{\multiindex[\beta]}} = \delta_{\multiindex \multiindex[\beta]}$ where $\multiindex = (\alpha_i)$ and $\multiindex[\beta] = (\beta_i)$ are two arbitrary multi-indices, $\delta_{\multiindex \multiindex[\beta]} := \prod_i \delta_{\alpha_i \beta_i}$, and $\delta_{ij}$ is the Kronecker delta.
