@@ -1,9 +1,9 @@
 Consider a heterogeneous electronic system that consists of $\nprocs$ processing elements and is equipped with a thermal package.
-The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, \abbr{SoC}s, \abbr{CPU}s, \abbr{ALU}s, caches).
+The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, \abbr{SoC}s, \abbr{CPU}s, and \abbr{ALU}s).
 
 We shall denote by $\specification$ an abstract set containing all information about the system that is relevant to our analysis and shall refer to it as the system specification.
 The content of $\specification$ is problem specific, and it will be gradually detailed when it is needed.
-For now, $\specification$ is assumed to include: (a) the floorplans of the active layers of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity and specific heat).
+For now, $\specification$ is assumed to include: (a) the floorplans of the active layers of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity).
 
 A power profile is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements.
 The samples correspond to certain moments of time $(\t_k)_{k = 1}^\nsteps$ that partition a time interval $[0, \period]$ as
@@ -11,7 +11,8 @@ The samples correspond to certain moments of time $(\t_k)_{k = 1}^\nsteps$ that 
   0 = \t_0 < \t_1 < \dotsc < \t_\nsteps = \period.
 \]
 Analogously, a temperature profile $\mQ \in \real^{\nprocs \times \nsteps}$ is a matrix containing samples of temperature.
-For clarity, power and temperature profiles are assumed to have a one-to-one correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, \dots, \nsteps$.
+For clarity, power and temperature profiles are assumed to have a one-to-one correspondence and a constant sampling interval $\dt$, that is, $\t_k - \t_{k - 1} = \dt$, for $k = 1, 2, \dots, \nsteps$.
+In what follows, a power profile that contains only the dynamic component of the (total) power dissipation will be denoted by $\mP_\dynamic$.
 
 The system depends on a set of parameters that are uncertain at the design stage due to process variation.
 We model such parameters using \rvs\ and denote them by a random vector $\vu = (\u_i)_{i = 1}^\nparams: \outcomes \to \real^\nparams$.

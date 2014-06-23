@@ -1,11 +1,11 @@
 In this section, an overview of the literature related to our work is given.
 First, we discuss those studies that focus on probabilistic \ta, and then we turn to those that focus on temperature-aware reliability analysis.
 
-The most straightforward approach to analyze a stochastic system is Monte Carlo (\MC) sampling.
+The most straightforward approach to analyze a stochastic system is Monte Carlo (\MC) sampling \cite{maitre2010}.
 The technique is vastly general and has had a tremendous impact since the middle of the twentieth century when it was introduced.
 The success of \MC\ sampling is due to the ease of implementation, independence of the stochastic dimensionality, and asymptotic behavior of the quantities estimated using this approach.
-The crucial problem with \MC\ sampling, however, is the low rate of convergence: in order to obtain an additional decimal point of accuracy, one has to draw hundred times more samples.
-Each such sample implies a complete realization of the whole system, which renders \MC-based methods slow and often infeasible as the needed number of simulations can be extremely large.
+The crucial problem with \MC\ sampling, however, is the low rate of convergence: in order to obtain an additional decimal point of accuracy, one has to draw usually hundred times more samples.
+Each sample implies a complete realization of the whole system, which renders \MC-based methods slow and often infeasible as the needed number of simulations can be extremely large.
 
 In order to overcome the limitations of deterministic \ta\ and, at the same time, to completely eliminate or, at least, to mitigate the costs associated with \abbr{MC} sampling, a number of alternative probabilistic techniques have been introduced.
 The overwhelming majority of the literature concerned with temperature relies on \sssta.
@@ -18,7 +18,7 @@ However, as mentioned earlier, the knowledge of \DSS\ variations are of practica
 In particular, the \DSS\ analysis allows the designer to address the thermal-cycling fatigue, which we illustrate in this paper.
 
 Let us now discuss temperature-aware reliability-driven studies.
-Reliability analysis is a probabilistic analysis by nature.
+Reliability analysis is probabilistic by nature.
 Certain components of a reliability model, however, can be treated as either stochastic or deterministic, depending on the phenomena that the model is designed to account for.
 Temperature is an example of such a component: it can be considered as deterministic if the effect of process variation on temperature is neglected and as stochastic otherwise.
 The former scenario is the one that is typically addressed in the literature related to reliability.

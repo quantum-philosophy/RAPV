@@ -3,21 +3,20 @@ The main task of this technique is the propagation of uncertainty through the sy
 Specifically, the inputs are the uncertain parameters $\vu$, and the outputs are the quantities that we are interested in studying.
 The latter can be, for instance, the energy consumption, maximal temperature, or temperature profile of the system over a certain period of time.
 
-Due to the inherent complexity, uncertainty quantification problems are typically viewed as approximation problems: one constructs a computationally efficient surrogate for the stochastic model under consideration first and then studies this light representation instead.
+Due to the inherent complexity, uncertainty quantification problems are typically viewed as approximation problems: one first constructs a computationally efficient surrogate for the stochastic model under consideration and then studies this computationally efficient representation instead of the original model.
 In order to construct such an approximation, we appeal to spectral methods \cite{maitre2010, janson1997, eldred2008}.
-The approach taken in this work can be classified as non-intrusive since the system is treated as a ``black box.''
 
 \subsection{Uncertainty Model}
-Before we proceed to the construction, let us first refine our definition of $\vu = (\u_i)_{i = 1}^\nparams$.
-Each $\u_i$ is a characteristic of a single transistor (consider, for example, the effective channel length), and, therefore, each device in the electrical circuits at hand can potentially have a different value of this parameter as, in general, the variability due to process variation is not uniform.
+Before we proceed to the construction of light surrogate models, let us first refine our definition of $\vu = (\u_i)_{i = 1}^\nparams$.
+Each $\u_i$ is a characteristic of a single transistor (consider, \eg, the effective channel length), and, therefore, each device in the electrical circuits at hand can potentially have a different value of this parameter as, in general, the variability due to process variation is not uniform.
 Consequently, each $\u_i$ can be viewed as a random process $\u_i: \outcomes \times \domain \to \real$ defined on an appropriate spatial domain $\domain \subset \real^3$.
 Since this work is system-level oriented, we model each processing element with one variable for each such random process.
 More specifically, we let $\u_{ij} = \u_i(\cdot, \vr_j)$ be the \rv\ representing the $i$th uncertain parameter at the $j$th processing element where $\vr_j$ stands for the spatial location of the processing element (\eg, the center of mass).
-Thus, we redefine the parameterization of the problem as
+Therefore, we redefine the parameterization $\vu$ of the problem at hand as
 \begin{equation} \elab{uncertain-parameters}
   \vu = (\u_i)_{i = 1}^{\nparams \nprocs}
 \end{equation}
-such that there is a one-to-one correspondence between $\u_i$, $i = 1, \dots, \nparams \nprocs$, and $\u_{ij}$, $i = 1, \dots, \nparams$, $j = 1, \dots, \nprocs$.
+such that there is a one-to-one correspondence between $\u_i$, $i = 1, 2, \dots, \nparams \nprocs$, and $\u_{ij}$, $i = 1, 2, \dots, \nparams$, $j = 1, 2, \dots, \nprocs$.
 For instance, in our illustrative application with two process parameters, the total number of stochastic dimensions is $2 \nprocs$.
 \begin{remark}
 Some authors prefer to split the variability of a process parameter at a spatial location into several parts such as wafer-to-wafer, die-to-die, and within-die; see, \eg, \cite{juan2012}.
@@ -29,7 +28,6 @@ A proper (complete, unambiguous) way to describe a set of \rvs\ is to specify th
 In practice, however, such exhaustive information is often unavailable, in particular, due to the high dimensionality in the presence of prominent dependencies inherent to the considered problem.
 A more realistic assumption is the knowledge of the marginal distributions and correlation matrix of $\u$.
 For concreteness, we shall orientate our framework towards the practical scenario.
-One should keep in mind, though, that, in general, the marginals and correlation matrix are not sufficient to recover the joint distribution.
 Denote by $\{ \distribution_{\u_i} \}_{i = 1}^{\nparams \nprocs}$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of $\vu$ in \eref{uncertain-parameters}, respectively.
 Note that the number of distinct marginals is only $\nparams$ since $\nprocs$ components of $\vu$ correspond to the same uncertain parameter.
 

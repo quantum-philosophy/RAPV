@@ -5,22 +5,21 @@ Denote this transformation by
 \begin{equation} \elab{probability-transformation}
   \vu = \transformation{\vz},
 \end{equation}
-which relates $\nparams \nprocs$ dependent \rvs, \ie, $\vu$, with $\nvars$ independent \rvs
+which relates $\nparams \nprocs$ dependent \rvs, \ie, $\vu$, with $\nvars = \nparams \nprocs$ independent \rvs
 \begin{equation} \elab{independent-random-variables}
   \vz = (\z_i)_{i = 1}^\nvars.
 \end{equation}
-Regardless of the marginals, $\z_i \sim \gaussianDistribution{0, 1}$, $i = 1, \dots, \nvars$, that is, each $\z_i$ has the standard Gaussian distribution.
+Regardless of the marginals, $\z_i \sim \gaussianDistribution{0, 1}$, $i = 1, 2, \dots, \nvars$, that is, each $\z_i$ has the standard Gaussian distribution.
 Refer to \xref{probability-transformation} for further details about the Nataf transformation.
 
-As we shall discuss later on, the stochastic dimensionality $\nvars$ of the problem has a considerable impact of the computational complexity of our framework.
+As we shall discuss later on, the stochastic dimensionality $\nvars$ has a considerable impact on the computational complexity of our framework.
 Therefore, an important part of the preprocessing stage is model order reduction.
-To this end, we preserve only those stochastic dimensions whose contribution to the total variance of $\vu$ is the most significant, which is identified by the eigenvalues of $\mCorr_\u$:
+To this end, we preserve only those stochastic dimensions whose contribution to the total variance of $\vu$ is the most significant, which is identified by the eigenvalues of the correlation matrix $\mCorr_\u$:
 \begin{equation} \elab{dimension-contribution}
   \dimensionContribution = (\lambda_i)_{i = 1}^{\nparams \nprocs}, \hspace{1em} \norm[1]{\dimensionContribution} = 1,
 \end{equation}
 as it is further discussed in \xref{model-order-reduction}.
-Without introducing additional transformations, we let $\transformation$ be augmented with such a reduction procedure.
-Thus, we have that $\nvars \leq \nparams \nprocs$.
+Without introducing additional transformations, we let $\transformation$ in \eref{probability-transformation} be augmented with such a reduction procedure and redefine $\vz \in \real^\nvars$ as the reduced independent random variables where $\nvars \leq \nparams \nprocs$.
 
 Let us turn to the illustrative application.
 Recall that we exemplify our framework considering the effective channel length and gate-oxide thickness with the notation given in \eref{application-uncertain-parameters}.
@@ -29,7 +28,7 @@ With this in mind, we model the two process parameters using the four-parametric
 \begin{equation*}
   \u_i \sim \distribution_{\u_i} = \betaDistribution{a_i, b_i, c_i, d_i}
 \end{equation*}
-where $i = 1, \dots, 2 \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond their supports.
+where $i = 1, 2, \dots, 2 \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond to their supports.
 Without loss of generality, we let the two considered process parameters be independent of each other, and the correlations among those elements of $\vu$ that correspond to the same process parameter be given by the following correlation function:
 \begin{equation} \elab{correlation-function}
   \fCorr(\vr_1, \vr_2) = \sum_i \varpi_i \; \fCorr_i(\vr_1, \vr_2)
@@ -37,4 +36,6 @@ Without loss of generality, we let the two considered process parameters be inde
 where $\{ \fCorr_i: \domain \times \domain \to \real \}$ are a number of kernel functions, and $\bm{\varpi} = (\varpi_i)$ are their weights such that $\varpi_i \geq 0$ and $\norm[1]{\bm{\varpi}} = 1$.
 The entries of $\mCorr_\u$ are computed using \eref{correlation-function}.
 Each kernel $\fCorr_i$ captures certain correlation features inherent to the fabrication process at hand.
-In this regard, we shall use the same setup as the one utilized in \cite{ukhov2014} with equal weights (the squared-exponential and Ornstein--Uhlenbeck kernels).
+In this regard, we shall use the same setup as the one utilized in \cite{ukhov2014} with equal weights.
+To elaborate, we rely on two kernels: the squared-exponential and Ornstein--Uhlenbeck kernels.
+This choice is based on the observations of the typical correlation patterns induced by the fabrication process: the kernels impose similarities between those locations that are close to each other and between those that are at the same distance from the center of the die (see, \eg, \cite{friedberg2005}).

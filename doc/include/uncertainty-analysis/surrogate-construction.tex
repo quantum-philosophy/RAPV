@@ -1,10 +1,10 @@
 Let $\w: \outcomes \to \real$ be a quantity of interest dependent on $\vu$.
 For convenience, $\w$ is assumed to be one-dimension, which will be generalized later on.
 In order to give a computationally efficient probabilistic characterization of $\w$, we utilize non-intrusive spectral decompositions based on orthogonal polynomials.
-The corresponding mathematical foundation is outlined in \xref{spectral-decomposition} and \xref{numerical-integration}, and here we leap directly to the main results obtained in those sections.
+The corresponding mathematical foundation is outlined in \xref{spectral-decomposition} and \xref{numerical-integration}, and here we go directly to the main results obtained in those sections.
 
 \subsubsection{Classical decomposition} \slab{classical-decomposition}
-Assume that $\w \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$.
+Assume $\w \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ (see \sref{preliminaries}).
 Then $\w$ can be expanded into the following series:
 \begin{equation} \elab{spectral-decomposition}
   \w \approx \chaos{\nvars}{\nclevel}{\w} := \sum_{\multiindex \in \chaosMultiindexSet{\nclevel}} \coefficient{\w}_{\multiindex} \, \polynomial_{\multiindex}(\vz)
@@ -21,11 +21,11 @@ The multivariate quadrature operator $\quadrature$ is based on a set of univaria
 \begin{equation} \elab{smolyak-sparse-grid}
   \quadrature = \bigoplus_{\multiindex \in \quadratureMultiindexSet{\nqlevel}} \Delta_{\alpha_1} \otimes \cdots \otimes \Delta_{\alpha_\nvars}.
 \end{equation}
-The notation used in the above equation is not essential for the present discussion and can be found in \xref{numerical-integration}.
+The notation used in the above equation is not essential for the present discussion and is explained in \xref{numerical-integration}.
 The important aspect to note is the structure of this operator, namely, the index set $\quadratureMultiindexSet{\nqlevel}$, which we shall come back to shortly.
 
 The standard choice of $\multiindexSet{\nclevel}$ in \eref{spectral-decomposition} is $\{ \multiindex: \norm[1]{\multiindex} \leq \nclevel \}$, which is called an isotropic total-order index set.
-\emph{Isotropic} refers to the fact that all dimensions are trimmed identically, and \emph{total-order} to the structure of the corresponding polynomial space.
+\emph{Isotropic} refers to the fact that all dimensions are trimmed identically, and \emph{total-order} refers to the structure of the corresponding polynomial space.
 In \eref{numerical-integration}, $\polynomial_{\multiindex}$ is a polynomial of total order at most $\nclevel$, and $\w$ is modeled as such a polynomial.
 Hence, the integrand in \eref{numerical-integration} is a polynomial of total order at most $2 \nclevel$.
 Having this aspect in mind, one usually constructs a quadrature rule such that it is exact for polynomials of total order $2 \nclevel$ \cite{eldred2008}.
@@ -55,7 +55,7 @@ where $\anisotropyKnob \in [0, 1]$ is a tuning parameter.
 The isotropic scenario can be recovered by setting $\anisotropyKnob = 0$; the other values of $\anisotropyKnob$ correspond to various levels of anisotropy with the maximum attained by setting $\anisotropyKnob = 1$.
 
 Let us sum up what we have achieved at this point.
-In order to give a probabilistic characterization of a quantity of interest, we perform chaotic expansions as shown in \eref{spectral-decomposition}.
+In order to give a probabilistic characterization of a quantity of interest, we perform chaos expansions as shown in \eref{spectral-decomposition}.
 The coefficients of such expansions are evaluated by Gaussian quadratures as shown in \eref{numerical-integration}.
 The quadratures are constructed using the Smolyak formula given in \eref{smolyak-sparse-grid}.
 The index sets used in both \eref{spectral-decomposition} and \eref{smolyak-sparse-grid} are the one given in \eref{anisotropic-total-order-index-set} wherein the anisotropic weights are set according to \eref{dimension-contribution} and \eref{dimension-anisotropy}.
@@ -63,8 +63,8 @@ The index sets used in both \eref{spectral-decomposition} and \eref{smolyak-spar
 \subsubsection{Efficient implementation}
 The pair of $\vz$ and $\dimensionAnisotropy$ uniquely characterizes the uncertainty quantification problem at hand.
 Once these two components have been identified, and the desired approximation level $\level = \nclevel = \nqlevel$ has been specified, the corresponding polynomial basis and quadrature stay the same for all quantities that one might be interested in studying.
-This observation is of high importance as a lot of preparatory work can and should be done only once and then stored/tabulated for future uses.
-In particular, the construction in \eref{spectral-decomposition} can be reduced one multiplication with a precomputed matrix as follows.
+This observation is of high importance as a lot of preparatory work can and should be done only once and then stored for future uses.
+In particular, the construction in \eref{spectral-decomposition} can be reduced to one matrix multiplication with a precomputed matrix, which we shall demonstrate next.
 
 Let $\ncorder = \cardinality{\multiindexSet{\level}}$ be the cardinality of $\multiindexSet{\level}$, which is also the number of polynomial terms and, hence, coefficients in \eref{spectral-decomposition}.
 Assume the multi-indices contained in $\multiindexSet{\level}$ are arranged in a vector $(\multiindex_i)_{i = 1}^\ncorder$, which gives a certain ordering.

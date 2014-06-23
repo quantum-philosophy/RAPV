@@ -1,10 +1,10 @@
-Let us now apply the proposed techniques in the context of design-space exploration.
+Let us now apply the proposed analysis techniques in the context of design-space exploration.
 To this end, we consider the setup utilized in \cite{ukhov2012}.
 Assume that the periodic application under consideration is composed of a number of tasks and is given as a directed acyclic graph.
 The graph has $\ntasks$ vertices representing the tasks, and the edges of the graph specify data dependencies between those tasks.
 Any processing element can execute any task, and each potential pair is characterized by an execution time and dynamic power consumption.
 The tasks are scheduled onto the processing elements using a list scheduler.
-The scheduler constructs a schedule using the information provided by two vectors: a mapping vector $\mapping \in \{ 1, \dotsc, \nprocs \}^\ntasks$ and a ranking vector $\priority \in \{ 1, \dotsc, \ntasks \}^\ntasks$.
+The scheduler constructs a schedule using the information provided by two vectors: a mapping vector $\mapping \in \{ 1, 2, \dotsc, \nprocs \}^\ntasks$ and a ranking vector $\priority \in \{ 1, 2, \dotsc, \ntasks \}^\ntasks$.
 The former is an assignment of the tasks to the processing elements, and the latter is an ordering of the tasks according to their priorities.
 The goal of our optimization is to find such a pair of $\mapping$ and $\priority$ that minimizes the energy consumed by the system while satisfying certain constraints.
 
@@ -30,7 +30,7 @@ $\dt$ is the sampling interval of the power profile $\mP$; $\sum \mP$ denotes th
 The last two constraints are probabilistic as the quantities under consideration are so.
 Due to the nested structure of the reliability model described in \rref{two-level-probabilistic-modeling}, the constraint in \eref{reliability-constraint} involving $\T$ requires an extra care.
 We have decided to set an upper bound on the probability of the expected value of $\T$.
-It should be note, though, that this expectation is a \rv\ itself.
+It should be noted, though, that this expectation is a \rv\ itself.
 
 In order to evaluate \eref{objective}--\eref{reliability-constraint}, we utilize the uncertainty analysis technique presented in \sref{uncertainty-analysis}.
 In this case, the quantity of interest is a vector with three elements:
