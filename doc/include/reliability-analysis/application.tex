@@ -1,10 +1,10 @@
 Despite its generality, the proposed technique can be better appreciated considering a concrete example.
 Suppose that the system is experiencing a periodic workload due to the execution of a periodic or nearly periodic application with period $\period$.
 The corresponding temperature profile $\mQ$ is then a \DSS\ profile, which, for a given $\vu$, can be computed using \aref{temperature-solution}.
-Assume that the power consumption is rapidly changing during the execution of the application, and, thus, the major concern of the designer is the thermal-cycling fatigue \cite{jedec}.
+Assume that the power consumption is changing during the execution of the application, and, thus, the major concern of the designer is the thermal-cycling fatigue \cite{jedec}.
 This fatigue has a sophisticated dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
 
-Suppose that any fault of any processing element makes the system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given the parameters gathered in $\pvw$.
+Suppose that the failure of any processing element makes the system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given the parameters gathered in $\pvw$.
 In this scenario,
 \[
   \T = \min_{i = 1}^\nprocs \T_i \hspace{1em} \text{and} \hspace{1em} \survival_\T(\t | \pvw) = \prod_{i = 1}^\nprocs \survival_{\T_i}(\t | \pvw).
@@ -52,6 +52,7 @@ Then it can be show that the compositional survival function $\survival_\T(\cdot
 where $\eta_i$ is as in \eref{weibull-eta}.
 Consequently, the parameterization of the reliability model has boiled down to two parameters, $\eta$ and $\beta$, among which only $\eta$ is random.
 
-Now we let our quantity of interest $\w$ be $\eta$ and apply the technique in \sref{uncertainty-analysis} to this quantity.
+Now we let the scale parameter $\eta$ be our quantity of interest $\w$ apply the technique in \sref{uncertainty-analysis} to this quantity.
 In this case, Algorithm~X in \aref{surrogate-construction} is an auxiliary function that makes a call to \aref{temperature-solution}, processes the resulting temperature profile as it was described earlier in this subsection, and returns $\eta$ computed according to the formula in \eref{compound-weibull-eta}.
-Consequently, we obtain a light polynomial surrogate of the parameterization of the reliability model, which can be then studied from various perspectives at practically negligible computational costs.
+Consequently, we obtain a light polynomial surrogate of the parameterization of the reliability model, which can be then studied from various perspectives.
+The example for a dual-core system given at the end of \sref{temperature-solution} can be considered in this context as well with the only change that the dimensionality of the polynomial coefficients would be two here (since $\eta \in \real^\nprocs$ and $\nprocs = 2$).

@@ -38,11 +38,10 @@ The \DSS\ boundary condition is
 \]
 In other words, the system is required to come back to its original state by the end of the analyzed time frame.
 This constraint and \eref{recurrence} yield a block-circulant system of $\nnodes \nsteps$ linear equations with $\nnodes \nsteps$ unknowns.
-As shown in \cite{ukhov2012}, this problem can be efficiently solved by exploiting the particular structure of the system and the decomposition in \eref{eigendecomposition}.
+As describe in detail in \cite{ukhov2012}, the system can be efficiently solved by exploiting its particular structure and the decomposition in \eref{eigendecomposition}.
 The pseudocode of this algorithm, which delivers the exact solution under the above assumptions, is given in \aref{temperature-solution-without-leakage}.
-Hereafter, we shall adopt \abbr{MATLAB}'s \cite{matlab} notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
-Also, auxiliary variables will be written with hats.
-$\mQ_\ambient$ is a matrix of the ambient temperature.
+Here we adopt \abbr{MATLAB}'s \cite{matlab} notations $\m{A}(k, :)$ and $\m{A}(:, k)$ to refer to the $k$th row and the $k$th column of a matrix $\m{A}$, respectively.
+In the pseudocode, auxiliary variables are written with hats, and $\mQ_\ambient$ is a matrix of the ambient temperature.
 \input{include/algorithms/temperature-solution-without-leakage.tex}
 \begin{remark}
 The time complexity of  direct dense and sparse solvers (\eg, the LU decomposition) of the system of linear equations is $\complexity{\nsteps^3 \nnodes^3}$ while the one of \aref{temperature-solution-without-leakage} is only $\complexity{\nsteps \nnodes^2 + \nnodes^3}$, which the algorithm is able to achieve by exploiting the specific structure of the system; see \cite{ukhov2012}.
@@ -65,7 +64,9 @@ In that case, it is relatively easy to decide on a representative temperature ra
 In our case, the power model has multiple parameters stepping far from their nominal values, which makes it difficult to construct a good linear fit with respect to temperature.
 \end{remark}
 
-Now we turn to the stochastic scenario, that is, $\vu$ is no longer deterministic but random, and apply \aref{surrogate-construction} to one particular quantity of interest $\w$.
+So far in this subsection, $\vu$ was assumed to be deterministic.
+Now we turn to the stochastic scenario and let $\vu$ be random again.
+Then we apply \aref{surrogate-construction} to one particular quantity of interest $\w$.
 Specifically, $\w$ is now the temperature profile $\mQ$ corresponding to a given $\mP_\dynamic$.
 Since $\mQ$ is an $\nprocs \times \nsteps$ matrix, following \rref{multiple-dimensions}, $\w$ is viewed as an $\nprocs \nsteps$-dimensional row vector, in which case each coefficient $\coefficient{\w}_{\multiindex}$ in \eref{spectral-decomposition} is also such a vector.
 Then the projection in \eref{coefficient-evaluation} and, consequently, \aref{surrogate-construction} should be interpreted as follows.
@@ -73,4 +74,10 @@ $\evw$ is an $\nqorder \times \nprocs \nsteps$ matrix, and the $i$th row of this
 Similarly, $\coefficient{\evw}$ is an $\ncorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the $i$th coefficient $\coefficient{\w}_{\multiindex_i}$ of the spectral decomposition in \eref{spectral-decomposition} (recall that a fixed ordering is assumed to be imposed on the multi-indices).
 Keeping the above in mind, a call to \aref{surrogate-construction} should be made such that Algorithm~X points at an auxiliary routine which receives $\vu$, forwards it to \aref{temperature-solution} along with $\mP_\dynamic$, and returns the resulting temperature profile to \aref{surrogate-construction}.
 Now the constructed expansion can be post-processed as needed; see \sref{post-processing}.
-For example, the row of $\coefficient{\evw}$ corresponding to the zero multi-index $\vZero$ (naturally, it is the first row) is a flattened version of the expected value of $\mQ$ as shown in \eref{probabilistic-moments}.
+To give an example, for a dual-core system ($\nprocs = 2$) with one independent random variable ($\nvars = 1$), a second-level expansion ($\nclevel = 2$) of the temperature profile with 100 time steps ($\nsteps = 100$) can be written as follows (see \eref{spectral-decomposition}):
+\[
+  \w \approx \coefficient{\w}_0 + \coefficient{\w}_1 \z + \coefficient{\w}_2(\z^2 - 1),
+\]
+which is a polynomial in $\z$, and each coefficient is a vector with $\nprocs \nsteps = 200$ elements.
+Then, for any outcome $\z \equiv \z(\o)$, the corresponding temperature profile $\mQ$ can be evaluated by plugging in $\z$ into the above equation and reshaping the result into an $\nprocs \times \nsteps = 2 \times 100$ matrix.
+In this case, the three rows of $\coefficient{\evw}$ are $\coefficient{\w}_0$, $\coefficient{\w}_1$, and $\coefficient{\w}_2$; the first one is also a flattened version of the expected value of $\mQ$ as shown in \eref{probabilistic-moments}.

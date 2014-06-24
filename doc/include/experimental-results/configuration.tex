@@ -1,7 +1,7 @@
 We consider a 45-nm technological process and rely on the 45-nm standard-cell library published and maintained by NanGate \cite{nangate}.
 The effective channel length and gate-oxide thickness are assumed to have nominal values equal to 22.5~nm and 1~nm, respectively.
 Following the information about process variation reported by \abbr{ITRS} \cite{itrs}, we assume that each process parameter can deviate up to 12\% of its nominal value, and this percentage is treated as three standard deviations.
-The corresponding probabilistic model is the one described in \sref{parameter-preprocessing} where the correlation function is taken from \cite{ukhov2014}, and the model-order reduction procedure is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
+The corresponding probabilistic model is the one described in \sref{parameter-preprocessing}, and the model-order reduction procedure is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
 The tuning parameter $\anisotropyKnob$ in \eref{dimension-anisotropy} is set to 0.25.
 
 Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of tasks is uniformly distributed between 10 and 30~ms, and their dynamic power between 6 and 20~W.
@@ -22,7 +22,7 @@ Since the optimization procedure described in \sref{reliability-optimization} em
 In other words, we do not consider \ta\ or reliability analysis as a separate uncertainty quantification problem and shall focus on the quantification of \eref{quantity-of-interest}.
 
 We use a genetic algorithm for optimization.
-Each chromosome is a $2 \ntasks$-element vector concatenating a pair of $\mapping$ and $\priority$ (mapping and ranking).
+Each chromosome is a $2 \ntasks$-element vector (twice the number of tasks) concatenating a pair of $\mapping$ and $\priority$ (mapping and ranking).
 The fitness function will be discussed shortly.
 The population contains $4 \ntasks$ individuals which are initialized using uniform distributions.
 The parents for the next generation are chosen by a tournament selection with the number of competitors equal to 20\% of $\ntasks$.
@@ -30,12 +30,12 @@ A one-point crossover is then applied to 80\% of the parents.
 Each parent undergoes a uniform mutation wherein each gene is altered with probability 0.01.
 The top five-percent individuals always survive.
 The stopping condition is the absence of improvement within 10 successive generations.
-Since the ability to rapidly explore the design space is crucial, apart from the two reduction procedures mentioned earlier, we appeal to a number of auxiliary strategies and techniques, which we shall describe next.
+In order to speed up the computational process, we utilize a number of auxiliary strategies and techniques described next.
 
 The first one concerns the evaluation of a chromosome's fitness.
 We begin by checking the timing constraint in \eref{timing-constraint} as it does not require any probabilistic analysis; the constraint is purely deterministic.
 If \eref{timing-constraint} is violated, we set the fitness to the amount of this violation relative to the constraint---that is, to the difference between the actual application period and the deadline $\t_\maximal$ divided by $\t_\maximal$---and add a large constant, say, $C$, on top.
-If \eref{timing-constraint} is satisfied, we perform our probabilistic analysis and proceed to \eref{thermal-constraint} and \eref{reliability-constraint}.
+If \eref{timing-constraint} is satisfied, we perform our probabilistic analysis and proceed to checking \eref{thermal-constraint} and \eref{reliability-constraint}.
 If any of the two is violated, we set the fitness to the total relative amount of violation plus $C/2$.
 If all the constraints are satisfied, the fitness is set to the expected consumption of energy, as in shown in \eref{objective}.
 

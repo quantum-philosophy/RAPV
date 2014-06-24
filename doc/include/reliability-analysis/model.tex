@@ -1,5 +1,5 @@
 Let $\T: \outcomes \to \real$ be a \rv\ representing the lifetime of the considered system.
-The lifetime is the time until the system experiences a fault after which the system no longer meets the requirements imposed on this system.
+The lifetime is the time span until the system experiences a fault after which the system no longer meets the requirements imposed on this system.
 Let $\distribution_\T(\cdot | \pvw)$ be the distribution of $\T$ where $\pvw = (\pw_i)$ is a vector of parameters.
 The survival function of the system is
 \[
@@ -11,11 +11,12 @@ Each $\T_i$ is characterized by a physical model of wear \cite{jedec} describing
 Each $\T_i$ is also assigned an individual survival function $\survival_{\T_i}(\cdot | \pvw)$ describing the failures due to those fatigues.
 The structure of $\survival_\T(\cdot | \pvw)$ with respect to $\{ \survival_{\T_i}(\cdot | \pvw) \}_{i = 1}^\nprocs$ is problem specific, and it can be especially diverse in the context of fault-tolerant systems.
 $\survival_\T(\cdot | \pvw)$ is to be specified by the designer of the system, and it is assumed to be included in the specification $\specification$ (see \sref{problem-formulation}).
+To give an example, $\survival_\T = \survival_{\T_1} (1 - (1 - \survival_{\T_2})^2)$ can represent a system with two components wherein the second one has a hot spare.
 
 Our work in this context is motivated by the following two observations.
 First, temperature is the driving force of the dominant failure mechanisms.
 The most prominent examples include electromigration, time-dependent dielectric breakdown, stress migration, and thermal cycling \cite{xiang2010}; see \cite{jedec} for an exhaustive overview.
-All of the aforementioned mechanisms have exponentially dependencies on the operating temperature, which is taken into account by considering the parameters in $\pvw$ as adequate functions of temperature.
+All of the aforementioned mechanisms have exponential dependencies on the operating temperature, which is taken into account by considering the parameters in $\pvw$ as adequate functions of temperature.
 At the same time, temperature is tightly related to process parameters, such as the effective channel length and gate-oxide thickness, and can vary dramatically when those parameters deviate from their nominal values \cite{ukhov2014, juan2012}.
 Meanwhile, the state-of-the-art techniques for reliability analysis of electronic systems lack a systematic treatment of process variation and, in particular, of the effect of process variation on temperature.
 

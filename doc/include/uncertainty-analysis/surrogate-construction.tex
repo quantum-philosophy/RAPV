@@ -62,7 +62,7 @@ The index sets used in both \eref{spectral-decomposition} and \eref{smolyak-spar
 
 \subsubsection{Efficient implementation}
 The pair of $\vz$ and $\dimensionAnisotropy$ uniquely characterizes the uncertainty quantification problem at hand.
-Once these two components have been identified, and the desired approximation level $\level = \nclevel = \nqlevel$ has been specified, the corresponding polynomial basis and quadrature stay the same for all quantities that one might be interested in studying.
+Once they have been identified, and the desired approximation level $\level = \nclevel = \nqlevel$ has been specified, the corresponding polynomial basis and quadrature stay the same for all quantities that one might be interested in studying.
 This observation is of high importance as a lot of preparatory work can and should be done only once and then stored for future uses.
 In particular, the construction in \eref{spectral-decomposition} can be reduced to one matrix multiplication with a precomputed matrix, which we shall demonstrate next.
 

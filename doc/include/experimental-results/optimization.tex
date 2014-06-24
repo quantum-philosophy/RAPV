@@ -1,8 +1,8 @@
 In this subsection, we report the results of the optimization procedure formulated in \sref{reliability-optimization} and further detailed in \sref{experimental-results-configuration}.
 The goal of this experiment is to justify the following assertion: reliability analysis has to account for the effect of process variation on temperature.
-To this end, for each problem (a pair of a platform and an application), we shall run the optimization procedure twice: once using the exact setup that has been described so far and once making the objective in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} deterministic.
+To this end, for each problem (a pair of a platform and an application), we shall run the optimization procedure twice: once using the setup that has been described so far and once making the objective in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} deterministic.
 To elaborate, the second run assumes that temperature is deterministic and can be computed using the nominal values of the process parameters.
-Consequently, only one system simulation is needed in the deterministic case to evaluate the fitness function, and \eref{objective}, \eref{thermal-constraint}, and \eref{reliability-constraint} become, respectively,
+Consequently, only one simulation of the system is needed in the deterministic case to evaluate the fitness function, and \eref{objective}, \eref{thermal-constraint}, and \eref{reliability-constraint} become, respectively,
 \[
   \min_{\mapping, \priority} \qoiE(\mapping, \priority), \hspace{0.7em} \qoiQ(\mapping, \priority) \geq \q_\maximal, \hspace{0.7em} \text{and} \hspace{0.7em} \qoiT(\mapping, \priority) \leq \T_\minimal.
 \]
@@ -16,27 +16,26 @@ Due to the diversity of the problems, $\t_\maximal$, $\q_\maximal$, and $\T_\min
 Note, however, that these three parameters stay the same for both the probabilistic and deterministic variants of the optimization.
 
 The obtained results are reported in \tref{optimization}.
-No figures regarding the reduction of the energy consumption are displayed here as they are irrelevant for the goal of this discussion established earlier.
 The most important message is in the last column of \tref{optimization}.
-\emph{Failure rate} refers to the ratio of the solutions discovered by the deterministic optimization that, after being reevaluated using the probabilistic approach, have been found to be faulty.
+\emph{Failure rate} refers to the ratio of the solutions produced by the deterministic optimization that, after being reevaluated using the probabilistic approach (\ie, taking into account process variation), have been found to be violating the imposed constraints.
 To give an example, for the quad-core platform, six out of ten schedules proposed by the deterministic approach turned out to be violating the constraints on the maximal temperature and minimal lifetime with high probabilities.
 The more complex the problem becomes, the higher values the failure rate attains: with 16 and 32 processing elements (320 and 640 tasks, respectively), all deterministic solutions have been rejected.
 Moreover, the probabilities of violating the constraints were found to be as high as 80\% in some cases, which is by no means acceptable.
 
 In addition, we inspected those few deterministic solutions that passed the probabilistic reevaluation and observed the reported reduction of the energy consumption and maximal temperature as well as the reported increase of the lifetime were overoptimistic.
-More precisely, the expected values of these three quantities delivered by our uncertainty analysis were compared with the predictions produced by the deterministic optimization.
-The comparison shown that the expected energy consumption and maximal temperature were higher while the expected lifetime was shorter than their deterministic counterparts, which can mislead the designer.
+More precisely, the expected values of these three quantities delivered by our uncertainty analysis were compared with the predictions produced by the deterministic optimization ignoring variations.
+The comparison shows that the expected energy and maximal temperature were higher while the expected lifetime was considerably shorter than the ones estimated by the deterministic approach, which can mislead the designer.
 
-Consequently, when studying reliability-related aspects of electronic systems, the ignorance of the deteriorating effect of process variation on temperature can severely compromise the associated design decisions making them less profitable in the best case and dangerous, harmful in the worst scenario.
+Consequently, when studying those aspect of electronic systems that are concerned with power, temperature, and reliability, the ignorance of the deteriorating effect of process variation can severely compromise the associated design decisions making them less profitable in the best case and dangerous, harmful in the worst scenario.
 
 Let us now comment on the optimization time shown in \tref{optimization}.
-It can be seen that the prototype of the proposed framework takes from about one minute to six hours (utilizing 16 \abbr{CPU}s) in order to perform one optimization round, and the deterministic optimization is approximately 2--40 times faster.
+It can be seen that the prototype of the proposed framework takes from about one minute to six hours (utilizing 16 \abbr{CPU}s) in order to perform optimization, and the deterministic optimization is approximately 2--40 times faster.
 However, the price to pay when relying on the deterministic approach is considerably high as we have discussed in the previous paragraphs.
 It can be summarized as ``blind guessing with highly unfavorable odds of succeeding."
 Consequently, we consider the computational time of our framework to be reasonable and affordable, especially in an industrial setting.
 
 Lastly, we performed experiments also to investigate the impact of the lifetime constraint in \eref{reliability-constraint} on the reduction of the expected energy consumption.
-To this end, we ran our probabilistic optimization (all 50 problems) without \eref{reliability-constraint} and compared the corresponding results with those obtained earlier.
+To this end, we ran our probabilistic optimization (all 50 problems) without \eref{reliability-constraint} and compared the corresponding results with those obtained considering the lifetime constraint.
 We observed that the expected energy consumption was higher when \eref{reliability-constraint} was taken into account, but the difference vanishes when the complexity of the problems increases.
 On average, the cost of \eref{reliability-constraint} was below 5\% of the expected energy consumption.
-Without \eref{reliability-constraint}, however, no probabilistic guarantees on the lifetime of the considered systems can be given.
+Without \eref{reliability-constraint}, however, no (probabilistic) guarantees on the lifetime of the considered systems can be given.
