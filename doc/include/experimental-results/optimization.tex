@@ -1,10 +1,11 @@
 In this subsection, we report the results of the optimization procedure formulated in \sref{reliability-optimization} and further detailed in \sref{experimental-results-configuration}.
+Recall that we rely on a genetic algorithm, and we evaluate chromosomes in parallel using 16 processors; this job is delegated to the parallel computing toolbox available in \abbr{MATLAB} \cite{matlab}.
 The goal of this experiment is to justify the following assertion: reliability analysis has to account for the effect of process variation on temperature.
 To this end, for each problem (a pair of a platform and an application), we shall run the optimization procedure twice: once using the setup that has been described so far and once making the objective in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} deterministic.
 To elaborate, the second run assumes that temperature is deterministic and can be computed using the nominal values of the process parameters.
 Consequently, only one simulation of the system is needed in the deterministic case to evaluate the fitness function, and \eref{objective}, \eref{thermal-constraint}, and \eref{reliability-constraint} become, respectively,
 \[
-  \min_{\mapping, \priority} \qoiE(\mapping, \priority), \hspace{0.7em} \qoiQ(\mapping, \priority) \geq \q_\maximal, \hspace{0.7em} \text{and} \hspace{0.7em} \qoiT(\mapping, \priority) \leq \T_\minimal.
+  \min_{\schedule} \qoiE(\schedule), \hspace{0.7em} \qoiQ(\schedule) \geq \q_\maximal, \hspace{0.7em} \text{and} \hspace{0.7em} \qoiT(\schedule) \leq \T_\minimal.
 \]
 
 \input{include/tables/optimization.tex}

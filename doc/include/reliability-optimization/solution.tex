@@ -1,0 +1,30 @@
+In order to evaluate \eref{objective}--\eref{reliability-constraint}, we utilize the uncertainty analysis technique presented in \sref{uncertainty-analysis}.
+In this case, the quantity of interest is a vector with three elements:
+\begin{equation} \elab{quantity-of-interest}
+  \vw = (\qoiE, \qoiQ, \qoiT).
+\end{equation}
+Although it is not spelled out, each quantity depends on $\schedule$.
+The first element corresponds to the energy consumption used in \eref{objective}, the second element is the maximal temperature used in \eref{thermal-constraint}, and the last one is the scale parameter of the reliability model (see \sref{reliability-analysis}) used in \eref{reliability-constraint}.
+The uncertainty analysis in \sref{uncertainty-analysis} should be applied as explained in \rref{multiple-dimensions}.
+In \aref{surrogate-construction}, Algorithm~X is an intermediate procedure that makes a call to \aref{temperature-solution} and processes the resulting power and temperature profiles as required by \eref{quantity-of-interest}.
+
+We use a genetic algorithm for optimization.
+Each chromosome is a $2 \ntasks$-element vector (twice the number of tasks) concatenating a pair of two vectors that unambiguously encode a schedule $\schedule$.
+The first is a vector in $\{ 1, 2, \dotsc, \nprocs \}^\ntasks$ that maps the tasks onto the processing elements (\ie, a mapping).
+The second is a vector in $\{ 1, 2, \dotsc, \ntasks \}^\ntasks$ that orders the tasks according to their priorities (\ie, a ranking).
+The population contains $4 \ntasks$ individuals which are initialized using uniform distributions.
+The parents for the next generation are chosen by a tournament selection with the number of competitors equal to 20\% of $\ntasks$.
+A one-point crossover is then applied to 80\% of the parents.
+Each parent undergoes a uniform mutation wherein each gene is altered with probability 0.01.
+The top five-percent individuals always survive.
+The stopping condition is the absence of improvement within 10 successive generations.
+
+Let us turn to the evaluation of a chromosome's fitness.
+We begin by checking the timing constraint in \eref{timing-constraint} as it does not require any probabilistic analysis; the constraint is purely deterministic.
+If \eref{timing-constraint} is violated, we set the fitness to the amount of this violation relative to the constraint---that is, to the difference between the actual application end-to-end delay and the deadline $\t_\maximal$ divided by $\t_\maximal$---and add a large constant, say, $C$, on top.
+If \eref{timing-constraint} is satisfied, we perform our probabilistic analysis and proceed to checking the constraints in \eref{thermal-constraint} and \eref{reliability-constraint}.
+If any of the two is violated, we set the fitness to the total relative amount of violation plus $C/2$.
+If all the constraints are satisfied, the fitness value of the chromosome is set to the expected consumption of energy, as in shown in \eref{objective}.
+
+In order to speed up the optimization, we make use of caching and parallel computing.
+Specifically, the fitness value of each evaluated chromosome is stored in memory and pulled out when a chromosome with the same set of genes is encountered, and unseen (not cached) individuals are assessed in parallel.

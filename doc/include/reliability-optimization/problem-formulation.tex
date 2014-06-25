@@ -1,0 +1,38 @@
+Consider a periodic application which is composed of a number of tasks and is given as a directed acyclic graph.
+The graph has $\ntasks$ vertices representing the tasks and a number of edges specifying data dependencies between those tasks.
+Any processing element can execute any task, and each pair of a processing element and a task is characterized by an execution time and dynamic power.
+The application is scheduled using a list scheduler.
+A schedule is defined as a mapping of the tasks onto the processing elements and the corresponding starting times; we shall denote it by $\schedule$.
+The goal of our optimization is to find such a schedule $\schedule$ that minimizes the energy consumed by the system while satisfying certain constraints.
+
+Since energy is a function of power, and power depends on a set of uncertain parameters, the energy consumption is a \rv\ at the design stage, which we denote by $\qoiE$.
+Our objective is then to minimize the expected value of $\qoiE$:
+\begin{equation} \elab{objective}
+  \min_{\schedule} \expectation{\qoiE(\schedule)}
+\end{equation}
+where
+\[
+  \qoiE(\schedule) = \dt \sum \mP(\schedule),
+\]
+$\dt$ is the sampling interval of the power profile $\mP$, and $\sum \mP$ denotes the summation over all elements of $\mP$.
+Hereafter, we also emphasize the dependency on $\schedule$.
+Our constraints are (i) time, (ii) temperature, and (iii) reliability as follows.
+(i) The end-to-end delay of the application is constrained by $\t_\maximal$ (a deadline).
+(ii) The maximal temperature that the system can tolerate is constrained by $\q_\maximal$, and $\pr_\burn$ is an acceptable probability of burning the chip.
+(iii) The minimal time that the system should survive is constrained by $\T_\minimal$, and $\pr_\wear$ is an acceptable probability of having a premature fault due to wear.
+The three constraints are formalized as follows:
+\begin{align}
+  & \period(\schedule) \leq \t_\maximal, \elab{timing-constraint} \\
+  & \probabilityMeasure\left( \qoiQ(\schedule) \geq \q_\maximal \right) \leq \pr_\burn, \text{ and} \elab{thermal-constraint} \\
+  & \probabilityMeasure\left( \qoiT(\schedule) \leq \T_\minimal \right) \leq \pr_\wear. \elab{reliability-constraint}
+\end{align}
+In \eref{timing-constraint}--\eref{reliability-constraint}, $\period$ is the end-to-end delay of the application according to the schedule,
+\begin{align*}
+  & \qoiQ(\schedule) = \norm[\infty]{\mQ(\schedule)}, \\
+  & \qoiT(\schedule) = \expectation{\T(\schedule) \, | \, \eta} = \eta(\schedule) \, \Gamma\left(1 + \frac{1}{\beta}\right), \text{ and}
+\end{align*}
+$\norm[\infty]{\mQ}$ denotes the extraction of the maximal value from the temperature profile $\mQ$.
+The last two constraints, \ie, \eref{thermal-constraint} and \eref{reliability-constraint}, are probabilistic as the quantities under consideration are random.
+Due to the nested structure of the reliability model described in \rref{two-level-probabilistic-modeling}, the constraint in \eref{reliability-constraint} involving $\T$ requires an extra care.
+For illustration, we set an upper bound on the probability of the expected value of $\T$.
+It should be noted, though, that this expectation is a \rv\ itself.
