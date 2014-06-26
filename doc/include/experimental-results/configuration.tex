@@ -8,6 +8,7 @@ Heterogeneous platforms and periodic applications are generated randomly using \
 The floorplans of the platforms are regular grids wherein each processing element occupies $2 \times 2\,\text{mm}^2$.
 The granularity of power and temperature profiles, that is, $\dt$ in \sref{temperature-solution} and \xref{temperature-solution}, is set to 1~ms.
 The stopping condition in \aref{temperature-solution} is a decrease of the normalized root-mean-square error between two successive temperature profiles smaller than 1\%, which typically requires 3--5 iterations.
+
 In addition to the reduction of the stochastic dimensionality $\nvars$, we reduce the state-space dimensionality $\nnodes$ of the thermal system in \eref{thermal-model}.
 In this case, we discard the nodes with the smallest Hankel singular values and alter the remaining ones to preserve the \abbr{DC} gain of the system.
 The reduction procedure is configured to preserve 95\% of the energy of the system while ensuring that the decrease of $\nnodes$ is at most 40\%.
@@ -17,6 +18,3 @@ The leakage model needed for the calculation of $\mP_\static(\vu, \mQ)$ in \aref
 The simulations are performed on a fine-grained and sufficiently broad three-dimensional grid comprising the effective channel length, gate-oxide thickness, and temperature; the results are tabulated.
 The interpolation facilities of \abbr{MATLAB} \cite{matlab} are then utilized whenever we need to evaluate the leakage power for a particular point within the range of the grid.
 The output of the constructed leakage model is scaled up to account for about 40\% of the total power dissipation \cite{liu2007}.
-
-Since the optimization procedure described in \sref{reliability-optimization} embraces all the techniques developed throughout the paper, \ie, in \sref{uncertainty-analysis}--\sref[]{reliability-analysis}, we shall perform the assessment of those techniques directly in the design-space-exploration context.
-In other words, we do not consider \ta\ or reliability analysis as a separate uncertainty quantification problem and shall focus on the quantification of \eref{quantity-of-interest}.

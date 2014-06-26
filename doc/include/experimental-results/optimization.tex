@@ -1,5 +1,8 @@
-In this subsection, we report the results of the optimization procedure formulated in \sref{reliability-optimization} and further detailed in \sref{experimental-results-configuration}.
-Recall that we rely on a genetic algorithm, and we evaluate chromosomes in parallel using 16 processors; this job is delegated to the parallel computing toolbox available in \abbr{MATLAB} \cite{matlab}.
+In this subsection, we report the results of the optimization procedure formulated in \sref{reliability-optimization}.
+To reiterate, the objective is to minimize energy as shown in \eref{objective} while satisfying a set of constraints on the end-to-end delay, maximal temperature, and minimal lifetime as shown in \eref{timing-constraint}, \eref{thermal-constraint}, and \eref{reliability-constraint}, respectively.
+We employ a genetic algorithm for optimization.
+The population is evaluated in parallel using 16 processors; this job is delegated to the parallel computing toolbox of \abbr{MATLAB} \cite{matlab}.
+
 The goal of this experiment is to justify the following assertion: reliability analysis has to account for the effect of process variation on temperature.
 To this end, for each problem (a pair of a platform and an application), we shall run the optimization procedure twice: once using the setup that has been described so far and once making the objective in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} deterministic.
 To elaborate, the second run assumes that temperature is deterministic and can be computed using the nominal values of the process parameters.
@@ -18,14 +21,15 @@ Note, however, that these three parameters stay the same for both the probabilis
 
 The obtained results are reported in \tref{optimization}.
 The most important message is in the last column of \tref{optimization}.
-\emph{Failure rate} refers to the ratio of the solutions produced by the deterministic optimization that, after being reevaluated using the probabilistic approach (\ie, taking into account process variation), have been found to be violating the imposed constraints.
-To give an example, for the quad-core platform, six out of ten schedules proposed by the deterministic approach turned out to be violating the constraints on the maximal temperature and minimal lifetime with high probabilities.
-The more complex the problem becomes, the higher values the failure rate attains: with 16 and 32 processing elements (320 and 640 tasks, respectively), all deterministic solutions have been rejected.
-Moreover, the probabilities of violating the constraints were found to be as high as 80\% in some cases, which is by no means acceptable.
+\emph{Failure rate} refers to the ratio of the solutions produced by the deterministic optimization that, after being reevaluated using the probabilistic approach (\ie, after taking process variation into account), have been found to be violating the probabilistic constraints in \eref{thermal-constraint} and/or \eref{reliability-constraint}.
+To give an example, for the quad-core platform, six out of ten schedules proposed by the deterministic approach disregard the constraints on the maximal temperature and/or minimal lifetime.
+The more complex the problem becomes, the higher values the failure rate attains: with 16 and 32 processing elements (320 and 640 tasks, respectively), all deterministic solutions violate the imposed constraints.
+Moreover, the difference between the acceptable one percent of burn/wear (recall $\pr_\burn = \pr_\wear = 0.01$) and the actual probability of burn/wear was found to be as high as 80\% in some cases, which is by no means acceptable.
 
 In addition, we inspected those few deterministic solutions that passed the probabilistic reevaluation and observed the reported reduction of the energy consumption and maximal temperature as well as the reported increase of the lifetime were overoptimistic.
-More precisely, the expected values of these three quantities delivered by our uncertainty analysis were compared with the predictions produced by the deterministic optimization ignoring variations.
-The comparison shows that the expected energy and maximal temperature were higher while the expected lifetime was considerably shorter than the ones estimated by the deterministic approach, which can mislead the designer.
+More precisely, the predictions produced by the deterministic optimization, which ignores variations, were compared with the expected values obtained as a byproduct of the reevaluation.
+The comparison shows that the expected energy and maximal temperature are higher while the expected lifetime is substantially shorter than the ones estimated by the deterministic approach.
+This aspect of the deterministic optimization can mislead the designer.
 
 Consequently, when studying those aspect of electronic systems that are concerned with power, temperature, and reliability, the ignorance of the deteriorating effect of process variation can severely compromise the associated design decisions making them less profitable in the best case and dangerous, harmful in the worst scenario.
 
