@@ -64,12 +64,12 @@ In that case, it is relatively easy to decide on a representative temperature ra
 In our case, the power model has multiple parameters stepping far from their nominal values, which makes it difficult to construct a good linear fit with respect to temperature.
 \end{remark}
 
-So far in this subsection, $\vu$ was assumed to be deterministic.
-Now we turn to the stochastic scenario and let $\vu$ be random again.
+So far in this subsection, $\vu$ has been assumed to be deterministic.
+Now we turn to the stochastic scenario and let $\vu$ be random.
 Then we apply \aref{surrogate-construction} to one particular quantity of interest $\w$.
 Specifically, $\w$ is now the temperature profile $\mQ$ corresponding to a given $\mP_\dynamic$.
 Since $\mQ$ is an $\nprocs \times \nsteps$ matrix, following \rref{multiple-dimensions}, $\w$ is viewed as an $\nprocs \nsteps$-element row vector, in which case each coefficient $\coefficient{\w}_{\multiindex}$ in \eref{spectral-decomposition} is also such a vector.
-Then the projection in \eref{coefficient-evaluation} and, consequently, \aref{surrogate-construction} should be interpreted as follows.
+The projection in \eref{coefficient-evaluation} and, consequently, \aref{surrogate-construction} should be interpreted as follows.
 $\evw$ is an $\nqorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the temperature profile computed at the $i$th quadrature point and reshaped into a row vector.
 Similarly, $\coefficient{\evw}$ is an $\ncorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the $i$th coefficient $\coefficient{\w}_{\multiindex_i}$ of the spectral decomposition in \eref{spectral-decomposition} (recall that a fixed ordering is assumed to be imposed on the multi-indices).
 Keeping the above in mind, a call to \aref{surrogate-construction} should be made such that Algorithm~X points at an auxiliary routine which receives $\vu$, forwards it to \aref{temperature-solution} along with $\mP_\dynamic$, and returns the resulting temperature profile to \aref{surrogate-construction}.

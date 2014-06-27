@@ -3,7 +3,8 @@ The total dissipation of power is modeled as the following system of $\nprocs$ t
 \begin{equation} \elab{power-model}
   \vp(\t, \vu, \vq(\t, \vu)) = \vp_\dynamic(\t) + \vp_\static(\vu, \vq(\t, \vu))
 \end{equation}
-where, for time $\t \geq 0$, $\vp_\dynamic \in \real^\nprocs$ and $\vp_\static \in \real^\nprocs$ are vectors representing the dynamic and static components of the total power, respectively, and $\vq \in \real^\nprocs$ is the corresponding vector of temperature; $\vp_\dynamic$ is deterministic, and the rest are random.
+where, for time $\t \geq 0$, $\vp_\dynamic \in \real^\nprocs$ and $\vp_\static \in \real^\nprocs$ are vectors representing the dynamic and static components of the total power, respectively, and $\vq \in \real^\nprocs$ is the corresponding vector of temperature.
+$\vp_\dynamic$ is deterministic, and the rest are random.
 \begin{remark}
 In \eref{power-model}, \textnormal{$\vp_\dynamic$} has no dependency on $\vu$ as the influence of process variation on the dynamic power is known to be negligibly small \cite{srivastava2010}.
 On the other hand, the variability of \textnormal{$\vp_\static$} is substantial and is further magnified by the well-known interdependency between leakage and temperature.

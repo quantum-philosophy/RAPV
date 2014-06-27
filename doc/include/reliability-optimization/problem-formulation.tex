@@ -6,7 +6,7 @@ A schedule is defined as a mapping of the tasks onto the processing elements and
 The goal of our optimization is to find such a schedule $\schedule$ that minimizes the energy consumed by the system while satisfying certain constraints.
 
 Since energy is a function of power, and power depends on a set of uncertain parameters, the energy consumption is a \rv\ at the design stage, which we denote by $\qoiE$.
-Our objective is then to minimize the expected value of $\qoiE$:
+Our objective is to minimize the expected value of $\qoiE$:
 \begin{equation} \elab{objective}
   \min_{\schedule} \expectation{\qoiE(\schedule)}
 \end{equation}
