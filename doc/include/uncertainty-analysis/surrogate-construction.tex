@@ -3,7 +3,7 @@ For convenience, $\w$ is assumed to be one-dimension, which will be generalized 
 In order to give a computationally efficient probabilistic characterization of $\w$, we utilize non-intrusive spectral decompositions based on orthogonal polynomials.
 The corresponding mathematical foundation is outlined in \xref{spectral-decomposition} and \xref{numerical-integration}, and here we go directly to the main results obtained in those sections.
 
-\subsubsection{Classical decomposition} \slab{classical-decomposition}
+\subsubsection{Classical Decomposition} \slab{classical-decomposition}
 Assume $\w \in \L{2}(\outcomes, \sigmaAlgebra, \probabilityMeasure)$ (see \sref{preliminaries}).
 Then $\w$ can be expanded into the following series:
 \begin{equation} \elab{spectral-decomposition}
@@ -33,7 +33,7 @@ In this work, we employ Gaussian quadratures for integration, in which case a qu
 Therefore, it is sufficient to keep $\nclevel$ and $\nqlevel$ equal.
 More generally, the index sets $\multiindexSet{\nclevel}$ and $\multiindexSet{\nqlevel}$ should be synchronized; in what follows, we shall denote both by $\multiindexSet{\level}$.
 
-\subsubsection{Anisotropic decomposition}
+\subsubsection{Anisotropic Decomposition}
 In the context of sparse grids, an important generalization of the construction in \eref{smolyak-sparse-grid} is the so-called anisotropic Smolyak algorithm \cite{nobile2008}.
 The main difference between the isotropic and anisotropic versions lies in the constraints imposed on $\quadratureMultiindexSet{\level}$.
 An anisotropic total-order index set is defined as follows:
@@ -60,7 +60,7 @@ The coefficients of such expansions are evaluated by Gaussian quadratures as sho
 The quadratures are constructed using the Smolyak formula given in \eref{smolyak-sparse-grid}.
 The index sets used in both \eref{spectral-decomposition} and \eref{smolyak-sparse-grid} are the one given in \eref{anisotropic-total-order-index-set} wherein the anisotropic weights are set according to \eref{dimension-contribution} and \eref{dimension-anisotropy}.
 
-\subsubsection{Efficient implementation}
+\subsubsection{Efficient Implementation}
 The pair of $\vz$ and $\dimensionAnisotropy$ uniquely characterizes the uncertainty quantification problem at hand.
 Once they have been identified, and the desired approximation level $\level = \nclevel = \nqlevel$ has been specified, the corresponding polynomial basis and quadrature stay the same for all quantities that one might be interested in studying.
 This observation is of high importance as a lot of preparatory work can and should be done only once and then stored for future uses.

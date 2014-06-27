@@ -1,7 +1,7 @@
 We consider a 45-nm technological process and rely on the 45-nm standard-cell library published and maintained by NanGate \cite{nangate}.
 The effective channel length and gate-oxide thickness are assumed to have nominal values equal to 22.5~nm and 1~nm, respectively.
 Following the information about process variation reported by \abbr{ITRS} \cite{itrs}, we assume that each process parameter can deviate up to 12\% of its nominal value, and this percentage is treated as three standard deviations.
-The corresponding probabilistic model is the one described in \sref{parameter-preprocessing}, and the model-order reduction procedure is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
+The corresponding probabilistic model is the one described in \sref{parameter-preprocessing}, and the model order reduction is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
 The tuning parameter $\anisotropyKnob$ in \eref{dimension-anisotropy} is set to 0.25.
 
 Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of tasks is uniformly distributed between 10 and 30~ms, and their dynamic power between 6 and 20~W.
