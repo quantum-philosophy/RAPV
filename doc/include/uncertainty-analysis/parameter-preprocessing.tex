@@ -31,11 +31,14 @@ With this in mind, we model the two process parameters using the four-parametric
 where $i = 1, 2, \dots, 2 \nprocs$, $a_i$ and $b_i$ control the shape of the distributions, and $[ c_i, d_i ]$ correspond to their supports.
 Without loss of generality, we let the two considered process parameters be independent of each other, and the correlations among those elements of $\vu$ that correspond to the same process parameter be given by the following correlation function:
 \begin{equation} \elab{correlation-function}
-  \fCorr(\vr_1, \vr_2) = \sum_i \varpi_i \; \fCorr_i(\vr_1, \vr_2)
+  \fCorr(\vr_i, \vr_j) = \varpi \; \fCorrSE(\vr_i, \vr_j) + (1 - \varpi) \fCorrOU(\vr_i, \vr_j)
 \end{equation}
-where $\{ \fCorr_i: \domain \times \domain \to \real \}$ are a number of kernel functions, and $\bm{\varpi} = (\varpi_i)$ are their weights such that $\varpi_i \geq 0$ and $\norm[1]{\bm{\varpi}} = 1$.
-The entries of $\mCorr_\u$ are computed using \eref{correlation-function}.
-Each kernel $\fCorr_i$ captures certain correlation features inherent to the fabrication process at hand.
-In this regard, we shall use the same setup as the one utilized in \cite{ukhov2014} with equal weights.
-To elaborate, we rely on two kernels: the squared-exponential and Ornstein--Uhlenbeck kernels.
-This choice is based on the observations of the typical correlation patterns induced by the fabrication process: the kernels impose similarities between those locations that are close to each other and between those that are at the same distance from the center of the die (see, \eg, \cite{friedberg2005}).
+where $\vr_i \in \real^2$ is the center of the $i$th processing element relative to the center of the die. The correlation function is a composition of two kernels:
+\begin{align*}
+  & \fCorrSE(\vr_i, \vr_j) = \exp\left(- \frac{\norm{\vr_i - \vr_j}^2}{\lCorrSE^2} \right) \text{ and} \\
+  & \fCorrOU(\vr_i, \vr_j) = \exp\left(- \frac{\abs{\,\norm{\vr_i} - \norm{\vr_j}\,}}{\lCorrOU} \right),
+\end{align*}
+which are known as the squared-exponential and Ornstein--Uhlenbeck kernels, respectively.
+In the above formulae, $\varpi \in [0, 1]$ is a weight coefficient balancing the kernels; $\lCorrSE$ and $\lCorrOU > 0$ are so-called length-scale parameters; and $\norm{\cdot}$ stands for the Euclidean norm in $\real^2$.
+The choice of these two kernels is guided by the observations of the correlation patterns induced by the fabrication process: $\fCorrSE$ imposes similarities between those spatial locations that are close to each other, and $\fCorrOU$ imposes similarities between those locations that are at the same distance from the center of the die; see, \eg, \cite{friedberg2005} for additional details.
+The length-scale parameters $\lCorrSE$ and $\lCorrOU$ control the extend of these similarities, \ie, the range wherein the influence of one point on another is significant.

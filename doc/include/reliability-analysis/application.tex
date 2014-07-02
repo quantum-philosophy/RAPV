@@ -1,14 +1,10 @@
-Despite its generality, the proposed technique can be better appreciated considering a concrete example.
-Suppose that the system is experiencing a periodic workload due to the execution of a periodic or nearly periodic application with period $\period$.
-The corresponding temperature profile $\mQ$ is then a \DSS\ profile, which, for a given $\vu$, can be computed using \aref{temperature-solution}.
-Assume that the power consumption is changing during the execution of the application, and, thus, the major concern of the designer is the thermal-cycling fatigue \cite{jedec}.
+Let us now apply our general technique to address one of the major concerns of the designer of electronic systems: the thermal-cycling fatigue \cite{jedec}.
 This fatigue has a sophisticated dependency on temperature: apart from average/maximal temperatures, the frequencies and amplitudes of temperature fluctuations matter in this case.
+Suppose that the system at hand is experiencing a periodic workload due to the execution of a periodic or nearly periodic application with period $\period$.
+The power consumption is changing during the execution of the application, and, thus, the system is inevitably exposed to the damage from thermal oscillations.
+The corresponding temperature profile $\mQ$ is then a \DSS\ profile, which, for a given $\vu$, can be computed using \aref{temperature-solution}.
 
-Suppose that the failure of any processing element makes the system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given the parameters gathered in $\pvw$.
-In this scenario,
-\[
-  \T = \min_{i = 1}^\nprocs \T_i \hspace{1em} \text{and} \hspace{1em} \survival_\T(\t | \pvw) = \prod_{i = 1}^\nprocs \survival_{\T_i}(\t | \pvw).
-\]
+Assume further that the structure of the reliability model is the one shown in \eref{reliability-model}.
 Regarding the individual survival functions, we shall rely on Weibull distributions.
 In this case,
 \begin{equation} \elab{weibull-model}
@@ -24,11 +20,11 @@ At this point, $\pvw = (\eta_1, \dotsc, \eta_\nprocs, \beta_1, \dotsc, \beta_\np
 During one iteration of the application, the temperature of the $i$th processing element exhibits $\nsegments[i]$ cycles.
 Each cycle generally has different characteristics and, therefore, causes different damage to the system.
 This aspect is taken into account by adjusting $\eta_i$ as follows.
-Let $\mQ$ be the temperature profile of the system under analysis and denote by $\mQ(i, :)$ the $i$th row of $\mQ$, which corresponds to the temperature curve of the $i$th processing element.
+Let $\mQ$ be the \DSS\ temperature profile of the system under analysis and denote by $\mQ(i, :)$ the $i$th row of $\mQ$, which corresponds to the temperature curve of the $i$th processing element.
 First, $\mQ(i, :)$ is analyzed using a peak-detection procedure in order to extract the extrema of this curve.
 The found extrema are then fed to the rainflow counting algorithm \cite{xiang2010} for an adequate identification of thermal cycles.
 Denote by $\ncycles[ij]$ the expected number of cycles to failure corresponding to the $i$th processing element and its $j$th cycle (as if it was the only cycle damaging the processing element).
-$\ncycles[ij]$ is computed using the corresponding physical model of wear that can be found in \cite{jedec, xiang2010}.
+$\ncycles[ij]$ is computed using the corresponding physical model of wear that can be found in \cite{ukhov2012, jedec, xiang2010}.
 Let $\eta_{ij}$ and $\mu_{ij}$ be the scale parameter and expectation of the lifetime corresponding to the $i$th processing element under the stress of the $j$th cycle; the two are related as shown in \eref{weibull-expectation}.
 Then \cite{ukhov2012, xiang2010}
 \begin{equation} \elab{weibull-eta}
@@ -45,14 +41,14 @@ A cycle can be a half cycle meaning that only an upward or downward temperature 
 The shape parameter $\beta_i$ is known to be indifferent to temperature.
 For simplicity, we also assume that $\beta_i$ does not depend on process parameters and $\beta_i = \beta$ for $i = 1, 2, \dotsc, \nprocs$.
 However, we would like to emphasize that these assumptions are not a limitation of the proposed techniques.
-Then it can be show that the compositional survival function $\survival_\T(\cdot | \pvw)$ corresponds to a Weibull distribution, and the shape parameter of this distribution is $\beta$ whereas the scale parameter is given by the following equation:
+Then it can be shown that the compositional survival function $\survival_\T(\cdot | \pvw)$ corresponds to a Weibull distribution, and the shape parameter of this distribution is $\beta$ whereas the scale parameter is given by the following equation:
 \begin{equation} \elab{compound-weibull-eta}
   \eta = \left(\sum \left( \frac{1}{\eta_i} \right)^\beta \right)^{-\frac{1}{\beta}}
 \end{equation}
 where $\eta_i$ is as in \eref{weibull-eta}.
 Consequently, the parameterization of the reliability model has boiled down to two parameters, $\eta$ and $\beta$, among which only $\eta$ is random.
 
-Now we let the scale parameter $\eta$ be our quantity of interest $\w$ apply the technique in \sref{uncertainty-analysis} to this quantity.
+Now we let the scale parameter $\eta$ be our quantity of interest $\w$ and apply the technique in \sref{uncertainty-analysis} to this quantity.
 In this case, Algorithm~X in \aref{surrogate-construction} is an auxiliary function that makes a call to \aref{temperature-solution}, processes the resulting temperature profile as it was described earlier in this subsection, and returns $\eta$ computed according to the formula in \eref{compound-weibull-eta}.
 Consequently, we obtain a light polynomial surrogate of the parameterization of the reliability model, which can be then studied from various perspectives.
 The example for a dual-core system given at the end of \sref{temperature-solution} can be considered in this context as well with the only change that the dimensionality of the polynomial coefficients would be two here (since $\eta \in \real^\nprocs$ and $\nprocs = 2$).

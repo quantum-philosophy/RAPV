@@ -9,9 +9,10 @@ The uncertainty analysis in \sref{uncertainty-analysis} should be applied as exp
 In \aref{surrogate-construction}, Algorithm~X is an intermediate procedure that makes a call to \aref{temperature-solution} and processes the resulting power and temperature profiles as required by \eref{quantity-of-interest}.
 
 We use a genetic algorithm for optimization.
-Each chromosome is a $2 \ntasks$-element vector (twice the number of tasks) concatenating a pair of two vectors that unambiguously encode a schedule $\schedule$.
+Each chromosome is a $2 \ntasks$-element vector (twice the number of tasks) concatenating a pair of two vectors.
 The first is a vector in $\{ 1, 2, \dotsc, \nprocs \}^\ntasks$ that maps the tasks onto the processing elements (\ie, a mapping).
 The second is a vector in $\{ 1, 2, \dotsc, \ntasks \}^\ntasks$ that orders the tasks according to their priorities (\ie, a ranking).
+Since we rely on a static cyclic scheduler and the list scheduling policy, such a pair of vectors uniquely encodes a schedule $\schedule$.
 The population contains $4 \ntasks$ individuals which are initialized using uniform distributions.
 The parents for the next generation are chosen by a tournament selection with the number of competitors equal to 20\% of $\ntasks$.
 A one-point crossover is then applied to 80\% of the parents.
@@ -21,7 +22,7 @@ The stopping condition is the absence of improvement within 10 successive genera
 
 Let us turn to the evaluation of a chromosome's fitness.
 We begin by checking the timing constraint in \eref{timing-constraint} as it does not require any probabilistic analysis; the constraint is purely deterministic.
-If \eref{timing-constraint} is violated, we set the fitness to the amount of this violation relative to the constraint---that is, to the difference between the actual application end-to-end delay and the deadline $\t_\maximal$ divided by $\t_\maximal$---and add a large constant, say, $C$, on top.
+If \eref{timing-constraint} is violated, we set the fitness to the amount of this violation relative to the constraint---that is, to the difference between the actual application period and the deadline $\t_\maximal$ divided by $\t_\maximal$---and add a large constant, say, $C$, on top.
 If \eref{timing-constraint} is satisfied, we perform our probabilistic analysis and proceed to checking the constraints in \eref{thermal-constraint} and \eref{reliability-constraint}.
 If any of the two is violated, we set the fitness to the total relative amount of violation plus $C/2$.
 If all the constraints are satisfied, the fitness value of the chromosome is set to the expected consumption of energy, as in shown in \eref{objective}.

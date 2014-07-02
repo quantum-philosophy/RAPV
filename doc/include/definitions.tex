@@ -47,6 +47,7 @@
 \usepackage{lettrine}
 \usepackage{url}
 \usepackage[bottom]{footmisc}
+
 \usepackage[factor=1700]{microtype}
 \newcommand{\subscript}[1]{\text{\kern0.1em#1}}
 
@@ -55,8 +56,8 @@
 \setlength\intextsep{0pt}
 \linespread{1}
 
-\addtolength{\topmargin}{-0.15in}
-\addtolength{\textheight}{0.20in}
+\addtolength{\topmargin}{-0.25in}
+\addtolength{\textheight}{0.25in}
 
 %
 % References
@@ -197,6 +198,7 @@
 
 \newcommand{\sigmaAlgebra}{\mathcal{F}}
 
+\newcommand{\abs}[1]{| #1 |}
 \newcommand{\norm}[2][]{\| #2 \|_{#1}}
 \newcommand{\innerProduct}[1]{\langle #1 \rangle}
 \newcommand{\hull}[1]{\text{span}\left( #1 \right)}
@@ -228,6 +230,17 @@
 
 \newcommand{\mCorr}{\m{K}}
 \newcommand{\fCorr}{k}
+
+\newcommand{\SE}{\subscript{SE}}
+\newcommand{\OU}{\subscript{OU}}
+
+\newcommand{\lCorr}{\ell}
+
+\newcommand{\fCorrSE}{\fCorr_\SE}
+\newcommand{\fCorrOU}{\fCorr_\OU}
+
+\newcommand{\lCorrSE}{\lCorr_\SE}
+\newcommand{\lCorrOU}{\lCorr_\OU}
 
 %
 % Spectral decomposition
@@ -276,7 +289,7 @@
 \renewcommand{\t}{t}
 \newcommand{\vt}{\v{t}}
 \newcommand{\dt}{\Delta \t}
-\newcommand{\period}{\t_\subscript{end}}
+\newcommand{\period}{\t_\subscript{period}}
 
 %
 % Uncertain parameters

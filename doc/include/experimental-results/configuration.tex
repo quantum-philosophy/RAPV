@@ -1,18 +1,15 @@
 We consider a 45-nm technological process and rely on the 45-nm standard-cell library published and maintained by NanGate \cite{nangate}.
 The effective channel length and gate-oxide thickness are assumed to have nominal values equal to 22.5~nm and 1~nm, respectively.
 Following the information about process variation reported by \abbr{ITRS} \cite{itrs}, we assume that each process parameter can deviate up to 12\% of its nominal value, and this percentage is treated as three standard deviations.
-The corresponding probabilistic model is the one described in \sref{parameter-preprocessing}, and the model order reduction is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
+The corresponding probabilistic model is the one described in \sref{parameter-preprocessing}.
+Regarding the correlation function in \eref{correlation-function}, the weight coefficient $\varpi$ is set to 0.5, and the length-scale parameters $\lCorrSE$ and $\lCorrOU$ are set to half the size of the die (see the next paragraph).
+The model order reduction is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
 The tuning parameter $\anisotropyKnob$ in \eref{dimension-anisotropy} is set to 0.25.
 
 Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of tasks is uniformly distributed between 10 and 30~ms, and their dynamic power between 6 and 20~W.
 The floorplans of the platforms are regular grids wherein each processing element occupies $2 \times 2\,\text{mm}^2$.
 The granularity of power and temperature profiles, that is, $\dt$ in \sref{temperature-solution} and \xref{temperature-solution}, is set to 1~ms.
 The stopping condition in \aref{temperature-solution} is a decrease of the normalized root-mean-square error between two successive temperature profiles smaller than 1\%, which typically requires 3--5 iterations.
-
-In addition to the reduction of the stochastic dimensionality $\nvars$, we reduce the state-space dimensionality $\nnodes$ of the thermal system in \eref{thermal-model}.
-In this case, we discard the nodes with the smallest Hankel singular values and alter the remaining ones to preserve the \abbr{DC} gain of the system.
-The reduction procedure is configured to preserve 95\% of the energy of the system while ensuring that the decrease of $\nnodes$ is at most 40\%.
-These constraints have been found empirically, and the corresponding reduction does not have any significant impact on accuracy.
 
 The leakage model needed for the calculation of $\mP_\static(\vu, \mQ)$ in \aref{temperature-solution} is based on \abbr{SPICE} simulations of a series of \abbr{CMOS} invertors taken from the NanGate cell library and configured according to the high-performance 45-nm \abbr{PTM} \cite{ptm}.
 The simulations are performed on a fine-grained and sufficiently broad three-dimensional grid comprising the effective channel length, gate-oxide thickness, and temperature; the results are tabulated.

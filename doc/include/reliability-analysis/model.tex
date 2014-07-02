@@ -1,5 +1,5 @@
 Let $\T: \outcomes \to \real$ be a \rv\ representing the lifetime of the considered system.
-The lifetime is the time span until the system experiences a fault after which the system no longer meets the requirements imposed on this system.
+The lifetime is the time span until the system experiences a fault after which the system no longer meets the imposed requirements.
 Let $\distribution_\T(\cdot | \pvw)$ be the distribution of $\T$ where $\pvw = (\pw_i)$ is a vector of parameters.
 The survival function of the system is
 \[
@@ -11,7 +11,11 @@ Each $\T_i$ is characterized by a physical model of wear \cite{jedec} describing
 Each $\T_i$ is also assigned an individual survival function $\survival_{\T_i}(\cdot | \pvw)$ describing the failures due to those fatigues.
 The structure of $\survival_\T(\cdot | \pvw)$ with respect to $\{ \survival_{\T_i}(\cdot | \pvw) \}_{i = 1}^\nprocs$ is problem specific, and it can be especially diverse in the context of fault-tolerant systems.
 $\survival_\T(\cdot | \pvw)$ is to be specified by the designer of the system, and it is assumed to be included in the specification $\specification$ (see \sref{problem-formulation}).
-To give an example, $\survival_\T = \survival_{\T_1} (1 - (1 - \survival_{\T_2})^2)$ can represent a system with two components wherein the second one has a hot spare.
+To give an example, suppose the failure of any of the $\nprocs$ processing elements makes the system fail, and $\{ \T_i \}_{i = 1}^\nprocs$ are conditionally independent given the parameters gathered in $\pvw$.
+In this scenario,
+\begin{equation} \elab{reliability-model}
+  \T = \min_{i = 1}^\nprocs \T_i \hspace{1em} \text{and} \hspace{1em} \survival_\T(\t | \pvw) = \prod_{i = 1}^\nprocs \survival_{\T_i}(\t | \pvw).
+\end{equation}
 
 Our work in this context is motivated by the following two observations.
 First, temperature is the driving force of the dominant failure mechanisms.
@@ -26,7 +30,7 @@ Therefore, $\pvw$ typically involves (computationally intensive) full-system sim
 
 \begin{remark} \rlab{two-level-probabilistic-modeling}
 It is important to realize that there are two levels of probabilistic modeling here.
-First of all, the reliability model \perse\ is a probabilistic model describing the lifetime of the system.
+First, the reliability model \perse\ is a probabilistic model describing the lifetime of the system.
 Second, the parameterization $\pvw$ is another probabilistic model characterizing the impact of the uncertainty due to process variation on the reliability model.
 Consequently, the overall model can be thought of as a probability distribution over probability distributions.
 Given an outcome of the fabrication process, that is, $\pvw$, the lifetime remains random.

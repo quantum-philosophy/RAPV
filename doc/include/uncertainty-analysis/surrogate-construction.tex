@@ -1,5 +1,5 @@
 Let $\w: \outcomes \to \real$ be a quantity of interest dependent on $\vu$.
-For convenience, $\w$ is assumed to be one-dimension, which will be generalized later on.
+For convenience, $\w$ is assumed to be one-dimensional, which will be generalized later on.
 In order to give a computationally efficient probabilistic characterization of $\w$, we utilize non-intrusive spectral decompositions based on orthogonal polynomials.
 The corresponding mathematical foundation is outlined in \xref{spectral-decomposition} and \xref{numerical-integration}, and here we go directly to the main results obtained in those sections.
 
@@ -85,4 +85,5 @@ where
 It can be seen that \eref{coefficient-evaluation} is a matrix version of \eref{numerical-integration}.
 $\projection$ is the one that should be precomputed.
 The pseudocode of the procedure is given in \aref{surrogate-construction} wherein Algorithm~X stands for the routine that calculates $\w$ for a given $\vu$.
+Algorithm~X is problem specific and will be further discussed in \sref{temperature-analysis}--\sref[]{reliability-optimization}.
 \input{include/algorithms/surrogate-construction.tex}
