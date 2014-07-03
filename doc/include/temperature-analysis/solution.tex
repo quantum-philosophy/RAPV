@@ -70,7 +70,7 @@ Since $\mQ$ is an $\nprocs \times \nsteps$ matrix, following \rref{multiple-dime
 The projection in \eref{coefficient-evaluation} and, consequently, \aref{surrogate-construction} should be interpreted as follows: $\evw$ is an $\nqorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the temperature profile computed at the $i$th quadrature point and reshaped into a row vector.
 Similarly, $\coefficient{\evw}$ is an $\ncorder \times \nprocs \nsteps$ matrix, and the $i$th row of this matrix is the $i$th coefficient $\coefficient{\w}_{\multiindex_i}$ of the spectral decomposition in \eref{spectral-decomposition} (recall that a fixed ordering is assumed to be imposed on the multi-indices).
 Keeping the above in mind, a call to \aref{surrogate-construction} should be made such that Algorithm~X points at an auxiliary routine which receives $\vu$, forwards it to \aref{temperature-solution} along with $\mP_\dynamic$, and returns the resulting temperature profile to \aref{surrogate-construction}.
-Now the constructed expansion can be post-processed as needed; see \sref{post-processing}.
+The constructed expansion can now be postprocessed as needed; see \sref{postprocessing}.
 
 To give a concrete example, for a dual-core system ($\nprocs = 2$) with one independent random variable ($\nvars = 1$), a second-level expansion ($\nclevel = 2$) of the temperature profile with 100 time steps ($\nsteps = 100$) can be written as follows (see \eref{spectral-decomposition}):
 \[

@@ -1,9 +1,9 @@
 Consider a heterogeneous electronic system that consists of $\nprocs$ processing elements and is equipped with a thermal package.
 The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, \abbr{SoC}s, \abbr{CPU}s, and \abbr{ALU}s).
 
-We shall denote by $\specification$ an abstract set containing all information about the system that is relevant to our analysis and shall refer to it as the system specification.
+We shall denote by $\specification$ an abstract set containing all information about the system that is relevant to our analysis, and we shall refer to it as the system specification.
 The content of $\specification$ is problem specific, and it will be gradually detailed when it is needed.
-For now, $\specification$ is assumed to include: (a) the floorplan of the active layer of the chip, hosting the processing elements; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity).
+For now, $\specification$ is assumed to include: (a) the floorplan of the chip; (b) the geometry of the thermal package; and (c) the thermal parameters of the materials that the chip and package are made of (\eg, silicon thermal conductivity).
 
 A power profile is defined as a matrix $\mP \in \real^{\nprocs \times \nsteps}$ containing $\nsteps$ samples of the power dissipation of the processing elements.
 The samples correspond to certain moments of time $(\t_k)_{k = 1}^\nsteps$ that partition a time interval $[0, \period]$ as

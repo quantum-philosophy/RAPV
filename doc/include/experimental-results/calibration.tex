@@ -11,7 +11,7 @@ The number of \MC\ samples is set to $10^4$, which is a practical assumption tha
 Hence, we consider this setup of \MC\ sampling as a paragon of accuracy.
 
 \input{include/tables/accuracy.tex}
-The results concerning accuracy are displayed in \tref{accuracy} where we consider a quad-core platform, \ie, $\nprocs = 4$, with ten randomly generated applications and vary the level of polynomial expansions $\nclevel$ from one to five.
+The results concerning accuracy are displayed in \tref{accuracy} where we consider a quad-core platform, \ie, $\nprocs = 4$, with 10 randomly generated applications and vary the level of polynomial expansions $\nclevel$ from one to five.
 The errors for the three components of $\vw = (\qoiE, \qoiQ, \qoiT)$ are denoted by \errorE, \errorQ, and \errorT, respectively.
 Each error indicator shows the distance between the empirical probability distributions produced by our approach and the ones produced by \MC\ sampling, and the measure of this distance is the popular Kullback--Leibler divergence (\abbr{KLD}) wherein the results of \MC\ sampling are treaded as the ``true'' ones.
 The \abbr{KLD} takes nonnegative values and attains zero only when two distributions are equal almost everywhere \cite{durrett2010}.
@@ -28,11 +28,11 @@ Based on \tref{accuracy}, we consider the results delivered by third-level polyn
 It can be seen that the computational time ranges from a fraction of a second to around two seconds.
 More importantly, \tref{speed} provides information about a number of complementary quantities that are of high interest for the user of the proposed techniques, which we discuss below.
 
-The primary quantity to pay attention to is the number of \rvs\ $\nvars$ preserved after the reduction procedure described in \sref{parameter-preprocessing} and \xref{model-order-reduction}.
+The primary quantity to pay attention to is the number of \rvs\ $\nvars$ preserved after the reduction procedure described in \sref{preprocessing} and \xref{model-order-reduction}.
 Without this reduction, $\nvars$ would be $2 \nprocs$ as there are two process parameters per processing element.
 It can be seen that there is no reduction for the dual-core platform while around 80\% of the stochastic dimensions have been eliminated for the platform with 32 cores.
 In addition, one can note that $\nvars$ is the same for the last two platforms.
-The magnitude of reduction is solely determined by the correlation patterns assumed (see \sref{parameter-preprocessing}) and the floorplans of the considered platforms.
+The magnitude of reduction is solely determined by the correlation patterns assumed (see \sref{preprocessing}) and the floorplans of the considered platforms.
 
 Another important quantity displayed in \tref{speed} is the number of quadrature nodes $\nqorder$.
 This number is the main indicator of the computational complexity of our probabilistic analysis: it equals to the number of times Algorithm~X in \aref{surrogate-construction} is executed to construct a polynomial expansion of \eref{quantity-of-interest} needed for the evaluation of the fitness function.

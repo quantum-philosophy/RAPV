@@ -1,7 +1,7 @@
-In this section, we discuss the model order reduction procedure performed by $\transformation$ in \sref{parameter-preprocessing}.
+In this section, we discuss the model order reduction procedure performed by $\transformation$ in \sref{preprocessing}.
 This reduction is based on the eigendecomposition undertaken in \xref{probability-transformation}.
 The intuition is that, due to the correlations possessed by $\vu \in \real^{\nparams \nprocs}$, it can be recovered from a small subset with only $\nvars$ variables where $\nvars \ll \nparams \nprocs$.
-Such redundancies can be revealed by analyzing the eigenvalues $\dimensionContribution = (\lambda_i)_{i = 1}^{\nparams \nprocs}$ located on the diagonal of $\mEDL$, which are all non-negative.
+Such redundancies can be revealed by analyzing the eigenvalues $\dimensionContribution = (\lambda_i)_{i = 1}^{\nparams \nprocs}$ located on the diagonal of $\mEDL$, which are all nonnegative.
 Without loss of generality, we let $\lambda_i \geq \lambda_j$ whenever $i < j$ and assume $\norm[1]{\dimensionContribution} = 1$.
 Then we can identify the smallest $\nvars$ such that $\sum_{i = 1}^\nvars \lambda_i$ is greater than a certain threshold chosen from the interval $(0, 1]$.
 When this threshold is sufficiently high (close to one), the rest of the eigenvalues and the corresponding eigenvectors can be dropped as being insignificant, reducing the number of stochastic dimensions to $\nvars$.

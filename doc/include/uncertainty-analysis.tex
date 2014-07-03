@@ -26,15 +26,15 @@ However, from the mathematical point of view, it is sufficient to consider just 
 A description of $\vu$ is an input to our analysis given by the user, and we consider it to be a part of the system specification $\specification$.
 A proper (complete, unambiguous) way to describe a set of \rvs\ is to specify their joint probability distribution function.
 In practice, however, such exhaustive information is often unavailable, in particular, due to the high dimensionality in the presence of prominent dependencies inherent to the considered problem.
-A more realistic assumption is the knowledge of the marginal distributions and correlation matrix of $\u$.
+A more realistic assumption is the knowledge of the marginal distributions and correlation matrix of $\vu$.
 Denote by $\{ \distribution_{\u_i} \}_{i = 1}^{\nparams \nprocs}$ and $\mCorr_\u \in \real^{\nparams \nprocs \times \nparams \nprocs}$ the marginal distribution functions and correlation matrix of the uncertain parameters $\vu$ in \eref{uncertain-parameters}, respectively.
 Note that the number of distinct marginals is only $\nparams$ since $\nprocs$ components of $\vu$ correspond to the same uncertain parameter.
 
-\subsection{Parameter Preprocessing} \slab{parameter-preprocessing}
-\input{include/uncertainty-analysis/parameter-preprocessing.tex}
+\subsection{Parameter Preprocessing} \slab{preprocessing}
+\input{include/uncertainty-analysis/preprocessing.tex}
 
 \subsection{Surrogate Construction}
 \input{include/uncertainty-analysis/surrogate-construction.tex}
 
-\subsection{Post-processing} \slab{post-processing}
-\input{include/uncertainty-analysis/post-processing.tex}
+\subsection{Postprocessing} \slab{postprocessing}
+\input{include/uncertainty-analysis/postprocessing.tex}
