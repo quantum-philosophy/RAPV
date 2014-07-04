@@ -1,9 +1,9 @@
 Consider a periodic application which is composed of a number of tasks and is given as a directed acyclic graph.
 The graph has $\ntasks$ vertices representing the tasks and a number of edges specifying data dependencies between those tasks.
 Any processing element can execute any task, and each pair of a processing element and a task is characterized by an execution time and dynamic power.
-The application is scheduled using a static cyclic scheduler that follows the list scheduling policy.
+The application is scheduled using a static cyclic scheduler, and schedules are generated using the list scheduling policy \cite{adam1974}.
 A schedule is defined as a mapping of the tasks onto the processing elements and the corresponding starting times; we shall denote it by $\schedule$.
-The goal of our optimization is to find such a schedule $\schedule$ that minimizes the energy consumed by the system while satisfying certain constraints.
+The goal of our optimization is to find such a schedule $\schedule$ that minimizes the energy consumption while satisfying certain constraints.
 
 Since energy is a function of power, and power depends on a set of uncertain parameters, the energy consumption is a \rv\ at the design stage, which we denote by $\qoiE$.
 Our objective is to minimize the expected value of $\qoiE$:

@@ -12,7 +12,7 @@ We use a genetic algorithm for optimization.
 Each chromosome is a $2 \ntasks$-element vector (twice the number of tasks) concatenating a pair of two vectors.
 The first is a vector in $\{ 1, 2, \dotsc, \nprocs \}^\ntasks$ that maps the tasks onto the processing elements (\ie, a mapping).
 The second is a vector in $\{ 1, 2, \dotsc, \ntasks \}^\ntasks$ that orders the tasks according to their priorities (\ie, a ranking).
-Since we rely on a static cyclic scheduler and the list scheduling policy, such a pair of vectors uniquely encodes a schedule $\schedule$.
+Since we rely on a static cyclic scheduler and the list scheduling policy \cite{adam1974}, such a pair of vectors uniquely encodes a schedule $\schedule$.
 The population contains $4 \ntasks$ individuals which are initialized using uniform distributions.
 The parents for the next generation are chosen by a tournament selection with the number of competitors equal to 20\% of $\ntasks$.
 A one-point crossover is then applied to 80\% of the parents.
