@@ -21,7 +21,7 @@ The top five-percent individuals always survive.
 The stopping condition is the absence of improvement within 10 successive generations.
 
 Let us turn to the evaluation of a chromosome's fitness.
-We begin by checking the timing constraint in \eref{timing-constraint} as it does not require any probabilistic analysis; the constraint is purely deterministic.
+We begin by checking the timing constraint given in \eref{timing-constraint} as it does not require any probabilistic analysis; the constraint is purely deterministic.
 If \eref{timing-constraint} is violated, we set the fitness to the amount of this violation relative to the constraint---that is, to the difference between the actual application period and the deadline $\t_\maximal$ divided by $\t_\maximal$---and add a large constant, say, $C$, on top.
 If \eref{timing-constraint} is satisfied, we perform our probabilistic analysis and proceed to checking the constraints in \eref{thermal-constraint} and \eref{reliability-constraint}.
 If any of the two is violated, we set the fitness to the total relative amount of violation plus $C/2$.

@@ -1,17 +1,17 @@
 Our objective here is to study the accuracy and speed of the proposed solutions.
-Since the optimization procedure described in \sref{reliability-optimization} embraces all the techniques developed throughout the paper, \ie, in \sref{uncertainty-analysis}--\sref[]{reliability-analysis}, we shall perform the assessment directly in the design-space-exploration context.
-In other words, we do not consider \ta\ or reliability analysis as a separate uncertainty quantification problem and shall focus on the quantity of interest given in \eref{quantity-of-interest}.
+Since the optimization procedure described in \sref{reliability-optimization} embraces all the techniques developed throughout the paper, we shall perform the assessment directly in the design-space-exploration context.
+In other words, we do not consider \ta\ or reliability analysis as a separate uncertainty quantification problem in our experiments and shall focus on the quantity of interest given in \eref{quantity-of-interest}.
 This quantity plays the key role as the objective function in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} are entirely based on it.
 
 We shall compare our performance with the performance of Monte Carlo (\MC) sampling.
 The operations performed by the \MC-based approach for one sample are the same as those performed by our technique for one quadrature point.
 The only difference is that no reduction of any kind is undertaken prior to \MC\ sampling.
-In other words, the \MC-based approach samples the \emph{original} model and, hence, does not compromise the resulting accuracy.
+In other words, the \MC-based approach samples the \emph{original} model and, hence, does not compromise any resulting accuracy.
 The number of \MC\ samples is set to $10^4$, which is a practical assumption that conforms to the experience from the literature \cite{ukhov2014, lee2013, juan2012, xiang2010} and to the theoretical estimates given in \cite{diaz-emparanza2002}.
-Hence, we consider this setup of \MC\ sampling as a paragon of accuracy.
+Hence, we consider this setup of \MC\ sampling to be a paragon of accuracy.
 
 \input{include/tables/accuracy.tex}
-The results concerning accuracy are displayed in \tref{accuracy} where we consider a quad-core platform, \ie, $\nprocs = 4$, with 10 randomly generated applications and vary the level of polynomial expansions $\nclevel$ from one to five.
+The results concerning accuracy are displayed in \tref{accuracy} where we consider a quad-core platform, \ie, $\nprocs = 4$, with ten randomly generated applications and vary the level of polynomial expansions $\nclevel$ from one to five.
 The errors for the three components of $\vw = (\qoiE, \qoiQ, \qoiT)$ are denoted by \errorE, \errorQ, and \errorT, respectively.
 Each error indicator shows the distance between the empirical probability distributions produced by our approach and the ones produced by \MC\ sampling, and the measure of this distance is the popular Kullback--Leibler divergence (\abbr{KLD}) wherein the results of \MC\ sampling are treaded as the ``true'' ones.
 The \abbr{KLD} takes nonnegative values and attains zero only when two distributions are equal almost everywhere \cite{durrett2010}.

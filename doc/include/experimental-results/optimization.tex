@@ -12,19 +12,18 @@ Consequently, only one simulation of the system is needed in the deterministic c
 \]
 
 \input{include/tables/optimization.tex}
-We consider platforms with $\nprocs = 2$, 4, 8, 16, and 32 cores.
-Ten applications with the number of tasks $\ntasks = 20 \, \nprocs$ are randomly generated for each platform; thus, 50 problems in total.
+We consider platforms with $\nprocs = 2$, 4, 8, 16, and 32 processing elements, respectively.
+Ten applications with the number of tasks $\ntasks = 20 \, \nprocs$ are randomly generated for each platform; thus, there are 50 problems in total.
 The floorplans of the platforms and the task graphs of the applications, including the execution time and dynamic power consumption of each task on each core, are available online at \cite{sources}.
 $\pr_\burn$ and $\pr_\wear$ in \eref{thermal-constraint} and \eref{reliability-constraint}, respectively, are set to 0.01.
 Due to the diversity of the problems, $\t_\maximal$, $\q_\maximal$, and $\T_\minimal$ are found individually for each problem, ensuring that they make sense for the subsequent optimization.
 Note, however, that these three parameters stay the same for both the probabilistic and deterministic variants of the optimization.
 
-The obtained results are reported in \tref{optimization}.
-The most important message is in the last column of \tref{optimization}.
-\emph{Failure rate} refers to the ratio of the solutions produced by the deterministic optimization that, after being reevaluated using the probabilistic approach (\ie, after taking process variation into account), have been found to be violating the probabilistic constraints in \eref{thermal-constraint} and/or \eref{reliability-constraint}.
+The obtained results are reported in \tref{optimization}, and the most important message is in the last column.
+\emph{Failure rate} refers to the ratio of the solutions produced by the deterministic optimization that, after being reevaluated using the probabilistic approach (\ie, after taking process variation into account), have been found to be violating the probabilistic constraints given in \eref{thermal-constraint} and/or \eref{reliability-constraint}.
 To give an example, for the quad-core platform, six out of ten schedules proposed by the deterministic approach violate the constraints on the maximal temperature and/or minimal lifetime when evaluated considering process variation.
 The more complex the problem becomes, the higher values the failure rate attains: with 16 and 32 processing elements (320 and 640 tasks, respectively), all deterministic solutions violate the imposed constraints.
-Moreover, the difference between the acceptable one percent of burn/wear (recall $\pr_\burn = \pr_\wear = 0.01$) and the actual probability of burn/wear was found to be as high as 80\% in some cases, which is by no means acceptable.
+Moreover, the difference between the acceptable one percent of burn/wear (recall $\pr_\burn = \pr_\wear = 0.01$) and the actual probability of burn/wear was found to be as high as 80\% in some cases, which is unacceptable.
 
 In addition, we inspected those few deterministic solutions that had passed the probabilistic reevaluation and observed that the reported reduction of the energy consumption and maximal temperature as well as the reported increase of the lifetime were overoptimistic.
 More precisely, the predictions produced by the deterministic optimization, which ignores variations, were compared with the expected values obtained when process variation was taken into account.
