@@ -1,0 +1,34 @@
+\documentclass{article}
+\input{include/definitions.tex}
+\input{include/revision/definitions.tex}
+
+\begin{document}
+  \linespread{1.4}\selectfont
+
+  \header{Submission Notes}
+  \vspace{1em}
+  {\Large \input{include/submission/introduction.tex}}
+
+  \linespread{1.1}\selectfont
+
+  \clearpage
+  \header{Revision Notes}
+  \vspace{1em}
+  {\Large \input{include/revision/introduction.tex}}
+
+  \linespread{1}\selectfont
+
+  \clearpage
+  \header{Response to Reviewer 1}
+  \input{include/revision/reviewer1.tex}
+
+  \clearpage
+  \header{Response to Reviewer 2}
+  \input{include/revision/reviewer2.tex}
+
+  \clearpage
+  \header{Response to Reviewer 3}
+  \input{include/revision/reviewer3.tex}
+
+  \includepdf[pages={-}]{paper.pdf}
+\end{document}

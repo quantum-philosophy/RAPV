@@ -1,0 +1,70 @@
+\usepackage{anysize}
+\usepackage[a4paper,top=29mm,bottom=30mm,left=30mm,right=30mm]{geometry}
+
+\usepackage{pdfpages}
+
+\usepackage{mdframed,color}
+
+\definecolor{updated}{rgb}{1,0,0}
+\definecolor{updatedBackground}{rgb}{1,0.95,0.95}
+\definecolor{done}{rgb}{0,0,1}
+\definecolor{reviewerLine}{rgb}{0.1,0.1,0.1}
+\definecolor{reviewerBackground}{rgb}{0.95,0.95,1}
+
+\mdfdefinestyle{reviewer}{%
+  leftmargin=0cm,%
+  rightmargin=0cm,%
+  innerleftmargin=1em,%
+  innerrightmargin=1em,%
+  linecolor=reviewerLine,%
+  backgroundcolor=reviewerBackground%
+}
+
+\newcommand{\header}[1]{%
+  \begin{center}%
+  \section*{{\Huge #1}}%
+  \end{center}%
+}
+
+\newenvironment{reviewer}{%
+  \begin{mdframed}[style=reviewer]%
+}{%
+  \end{mdframed}%
+  \vspace{1.0em}%
+}
+\newenvironment{authors}{%
+}{%
+  \vspace{1.0em}%
+}
+
+\newenvironment{actions}{%
+  \vspace{1.0em}%
+  {\color{done}\uline{Actions taken:}}
+  \begin{itemize}
+}{%
+  \end{itemize}
+}
+
+\newcommand{\action}[1]{%
+  \item[\color{done}$\checkmark$]{\color{done}\uline{#1}}%
+}
+
+\newcommand{\done}[1]{%
+  {\color{done}$\checkmark$~\uline{#1}}%
+}
+
+\newcommand{\figureBox}[1]{%
+  \fcolorbox{updated}{updatedBackground}{#1}%
+}
+
+\newcommand{\reviewerBox}[1]{%
+  \fcolorbox{reviewerLine}{reviewerBackground}{#1}%
+}
+
+\newcommand{\feature}[1]{\textbf{Feature~#1}}
+
+\newcommand{\clabel}[2]{[\textbf{Comment~#1.#2}]}
+\newcommand{\cref}[2]{\textbf{Comment~#1.#2}}
+
+\usepackage[normalem]{ulem}
+\newcommand{\updated}[1]{{\color{updated}\uline{#1}}}

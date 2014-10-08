@@ -10,7 +10,7 @@
 *.synctex.gz
 *.bcf
 
-paper.pdf
-paper-blx.bib
-
-submission.pdf
+/paper.pdf
+/paper-blx.bib
+/submission.pdf
+/revision.pdf
