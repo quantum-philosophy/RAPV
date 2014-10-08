@@ -5,30 +5,68 @@ considering process variation in power and temperature modeling that is
 100--200$\times$ faster than Monte Carlo simulation. The motivation for
 considering process variation is well stated, and the results indeed show that
 deterministic modeling when used for optimization fails to meet performance
-targets once process variation is taken into account. As a proof of concept the
-authors propose a simple optimization algorithm for solving the scheduling
-problem. They show that their methodology is able to achieve optimization
-within the given constraints whereas deterministic optimization underestimates
-temperature and power such that constraints are not met. Although this
-optimization methodology is necessary and much faster than na\"{i}ve methods
-such as Monte Carlo simulation, the reviewer feel that the scheduling problem
-is a poor example to use since task scheduling is a problem that must be solved
-at run time not at design time. Six hours to optimize the scheduling for a 30ms
-program is not reasonable. However the reviewer can recognize how this
-methodology would be quite useful for design optimization. Perhaps a more
-realistic example could be used to motivate the results. Furthermore, the
-process variation is considered at the processor core level, but in reality
-process variation occurs at the transistor level. The reviewer is wondering how
-this methodology would scale down to finer granularity, and whether a design
-optimized at the core level would actually meat the design requirements in real
-silicon, where process variation occurs at the transistor level. It is clear to
-the reviewer that this is an important and well developed piece of work, and
-should be accepted for publication with minor revisions addressing the two
-comments above.
+targets once process variation is taken into account.
+\end{reviewer}
+
+\begin{authors}
+Thank you.
+\end{authors}
+
+\begin{reviewer}
+\clabel{1}{2}\\
+As a proof of concept the authors propose a simple optimization algorithm for
+solving the scheduling problem. They show that their methodology is able to
+achieve optimization within the given constraints whereas deterministic
+optimization underestimates temperature and power such that constraints are not
+met. Although this optimization methodology is necessary and much faster than
+na\"{i}ve methods such as Monte Carlo simulation, the reviewer feel that the
+scheduling problem is a poor example to use since task scheduling is a problem
+that must be solved at run time not at design time. Six hours to optimize the
+scheduling for a 30ms program is not reasonable.
 \end{reviewer}
 
 \begin{authors}
 \begin{actions}
-  \action{Action.}
+  \action{One.}
 \end{actions}
+\end{authors}
+
+\begin{reviewer}
+\clabel{1}{3}\\
+However the reviewer can recognize how this methodology would be quite useful
+for design optimization. Perhaps a more realistic example could be used to
+motivate the results.
+\end{reviewer}
+
+\begin{authors}
+\begin{actions}
+  \action{One.}
+\end{actions}
+\end{authors}
+
+\begin{reviewer}
+\clabel{1}{4}\\
+Furthermore, the process variation is considered at the processor core level,
+but in reality process variation occurs at the transistor level. The reviewer
+is wondering how this methodology would scale down to finer granularity, and
+whether a design optimized at the core level would actually meat the design
+requirements in real silicon, where process variation occurs at the transistor
+level.
+\end{reviewer}
+
+\begin{authors}
+\begin{actions}
+  \action{One.}
+\end{actions}
+\end{authors}
+
+\begin{reviewer}
+\clabel{1}{5}\\
+It is clear to the reviewer that this is an important and well developed
+piece of work, and should be accepted for publication with minor revisions
+addressing the two comments above.
+\end{reviewer}
+
+\begin{authors}
+  Thank you for your appreciation.
 \end{authors}
