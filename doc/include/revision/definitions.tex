@@ -5,7 +5,6 @@
 
 \usepackage{mdframed,color}
 
-\definecolor{updated}{rgb}{1,0,0}
 \definecolor{updatedBackground}{rgb}{1,0.95,0.95}
 \definecolor{done}{rgb}{0,0,1}
 \definecolor{reviewerLine}{rgb}{0.1,0.1,0.1}
@@ -38,11 +37,13 @@
 }
 
 \newenvironment{actions}{%
+  \begin{minipage}{\textwidth}
   \vspace{1.0em}%
   {\color{done}\uline{Actions taken:}}
   \begin{itemize}
 }{%
   \end{itemize}
+  \end{minipage}
 }
 
 \newcommand{\action}[1]{%
@@ -65,6 +66,3 @@
 
 \newcommand{\clabel}[2]{[\textbf{Comment~#1.#2}]}
 \newcommand{\cref}[2]{\textbf{Comment~#1.#2}}
-
-\usepackage[normalem]{ulem}
-\newcommand{\updated}[1]{{\color{updated}\uline{#1}}}

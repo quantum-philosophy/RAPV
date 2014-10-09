@@ -6,9 +6,9 @@ Regarding the correlation function in \eref{correlation-function}, the weight co
 The model order reduction is set to preserve 95\% of the variance of the problem (see also \xref{model-order-reduction}).
 The tuning parameter $\anisotropyKnob$ in \eref{dimension-anisotropy} is set to 0.25.
 
-Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of tasks is uniformly distributed between 10 and 30~ms, and their dynamic power between 6 and 20~W.
+\updated{Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of each task is uniformly distributed between 10 and 30~ms, and its dynamic power between 6 and 20~W.}
 The floorplans of the platforms are regular grids wherein each processing element occupies $2 \times 2\,\text{mm}^2$.
-The granularity of power and temperature profiles, that is, $\dt$ in \sref{temperature-solution} and \xref{temperature-solution}, is set to 1~ms.
+\updated{The granularity of power and temperature profiles, that is, $\dt$ in \sref{temperature-solution} and \xref{temperature-solution}, is set to 1~ms; in practice, $\dt$ should be set to a value that is reasonable for the problem at hand.}
 The stopping condition in \aref{temperature-solution} is a decrease of the normalized root-mean-square error between two successive temperature profiles smaller than 1\%, which typically requires 3--5 iterations.
 
 The leakage model needed for the calculation of $\mP_\static(\vu, \mQ)$ in \aref{temperature-solution} is based on \abbr{SPICE} simulations of a series of \abbr{CMOS} invertors taken from the NanGate cell library and configured according to the high-performance 45-nm \abbr{PTM} \cite{ptm}.

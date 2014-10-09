@@ -21,31 +21,83 @@ optimization underestimates temperature and power such that constraints are not
 met. Although this optimization methodology is necessary and much faster than
 na\"{i}ve methods such as Monte Carlo simulation, the reviewer feel that the
 scheduling problem is a poor example to use since task scheduling is a problem
-that must be solved at run time not at design time. Six hours to optimize the
-scheduling for a 30ms program is not reasonable.
+that must be solved at run time not at design time.
 \end{reviewer}
 
 \begin{authors}
+The reviewer is right that some problems require dynamic scheduling. In this
+paper, however, we consider an optimization problem (Sec.~IX-A) that involves
+static scheduling, which is typically done offline, that is, at design time.
+Since our work is targeted at the design stage, we consider static scheduling
+to be a prominent application area of the proposed techniques.
+
+Let us also note that the importance of dynamic scheduling is well understood
+and gives us a reach set of potential directions for future work.
+
 \begin{actions}
-  \action{One.}
+  \action{The motivation behind static scheduling has been clarified in
+  Sec.~IX-A.}
 \end{actions}
 \end{authors}
 
 \begin{reviewer}
 \clabel{1}{3}\\
+Six hours to optimize the scheduling for a 30ms program is not reasonable.
+\end{reviewer}
+
+\begin{authors}
+We agree that such a computational demand would not be acceptable for online
+usage and might not be justifiable for certain classes of offline problems.
+However, as noted earlier, our methodology has been developed with design-time
+applications in mind, and, in that case, computational time plays an important
+but secondary role. Even days might be readily acceptable if they can help to
+decrease the maintenance costs of a product which is to serve well for years.
+In our opinion, the reported optimization time is affordable, especially for
+the industry.
+
+Let us clarify the 30~ms mentioned by the reviewer. In our experiments, the
+execution time of \emph{one} task is distributed between 10 and 30~ms, and the
+number of tasks per application varies from 40 to 640 (Sec.~X-C). Therefore,
+the actual application periods, which we apply our analysis to, are much longer
+than 30~ms. It is also worth noting that the granularity of the analysis---in
+particular, the sampling interval $\dt$ (Sec.~VII-C and Appendix~A)---is a
+variable that the user is free to tune and set to the value that makes the most
+sense to the problem at hand. As a result, an application with a period of one
+second might be comparable in terms of optimization time with, for example, an
+application with a period of one minute.
+
+We would like to emphasize that the focal point of this work is the
+mathematical foundation and basic structure of the proposed solutions, and the
+corresponding implementation is merely a proof of concept, as pointed out by
+the reviewer in \cref{1}{2}.
+
+\begin{actions}
+  \action{The confusion regarding the execution time of a task has been
+  eliminated in Sec.~X-A.}
+  \action{The number of tasks per application has been spelled out explicitly
+  in Sec.~X-C.}
+  \action{It has been noted in Sec.~X-A that $\dt$ might be adjusted when it is
+  needed.}
+\end{actions}
+\end{authors}
+
+\begin{reviewer}
+\clabel{1}{4}\\
 However the reviewer can recognize how this methodology would be quite useful
 for design optimization. Perhaps a more realistic example could be used to
 motivate the results.
 \end{reviewer}
 
 \begin{authors}
+We agree with the reviewer.
+
 \begin{actions}
   \action{One.}
 \end{actions}
 \end{authors}
 
 \begin{reviewer}
-\clabel{1}{4}\\
+\clabel{1}{5}\\
 Furthermore, the process variation is considered at the processor core level,
 but in reality process variation occurs at the transistor level. The reviewer
 is wondering how this methodology would scale down to finer granularity, and
@@ -61,7 +113,7 @@ level.
 \end{authors}
 
 \begin{reviewer}
-\clabel{1}{5}\\
+\clabel{1}{6}\\
 It is clear to the reviewer that this is an important and well developed
 piece of work, and should be accepted for publication with minor revisions
 addressing the two comments above.

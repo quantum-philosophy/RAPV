@@ -16,7 +16,7 @@ The errors for the three components of $\vw = (\qoiE, \qoiQ, \qoiT)$ are denoted
 Each error indicator shows the distance between the empirical probability distributions produced by our approach and the ones produced by \MC\ sampling, and the measure of this distance is the popular Kullback--Leibler divergence (\abbr{KLD}) wherein the results of \MC\ sampling are treaded as the ``true'' ones.
 The \abbr{KLD} takes nonnegative values and attains zero only when two distributions are equal almost everywhere \cite{durrett2010}.
 In general, the errors decrease as $\nclevel$ increases.
-This trend, however, is not monotonic for expansions of high levels (see \errorQ\ and \errorT\ for $\ncorder = 5$).
+\updated{This trend, however, is not monotonic for expansions of high levels (see \errorQ\ and \errorT\ for $\nclevel = 5$).}
 The observation can be ascribed to the random nature of sampling and the fact that the reduction procedures, which we undertake to gain speed, might impose limitations on the accuracy that can be attained by polynomial expansions.
 \tref{accuracy} also contains the numbers of polynomial terms $\ncorder$ and quadrature points $\nqorder$ corresponding to each value of $\nclevel$.
 We also performed the above experiment for platforms with fewer/more processing elements; the observations were similar to the ones in \tref{accuracy}.

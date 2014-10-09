@@ -1,7 +1,8 @@
 Consider a periodic application which is composed of a number of tasks and is given as a directed acyclic graph.
 The graph has $\ntasks$ vertices representing the tasks and a number of edges specifying data dependencies between those tasks.
 Any processing element can execute any task, and each pair of a processing element and a task is characterized by an execution time and dynamic power.
-The application is scheduled using a static cyclic scheduler, and schedules are generated using the list scheduling policy \cite{adam1974}.
+\updated{Since the proposed techniques are orientated towards the design stage, static scheduling is considered, which is typically done offline.
+More specifically, the application is scheduled using a static cyclic scheduler, and schedules are generated using the list scheduling policy \cite{adam1974}.}
 A schedule is defined as a mapping of the tasks onto the processing elements and the corresponding starting times; we shall denote it by $\schedule$.
 The goal of our optimization is to find such a schedule $\schedule$ that minimizes the energy consumption while satisfying certain constraints.
 
