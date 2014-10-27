@@ -4,8 +4,8 @@ In other words, we do not consider \ta\ or reliability analysis as a separate un
 This quantity plays the key role as the objective function in \eref{objective} and the constraints in \eref{thermal-constraint} and \eref{reliability-constraint} are entirely based on it.
 
 We shall compare our performance with the performance of Monte Carlo (\MC) sampling.
-The operations performed by the \MC-based approach for one sample are the same as those performed by our technique for one quadrature point.
-The difference is that no reduction of any kind is undertaken prior to \MC\ sampling.
+\updated{The operations performed by the \MC-based approach for one sample are exactly the same as those performed by our technique for one quadrature point.
+The only difference is that no reduction of any kind is undertaken prior to \MC\ sampling.}
 In other words, the \MC-based approach samples the \emph{original} model and, hence, does not compromise any resulting accuracy.
 The number of \MC\ samples is set to $10^4$, which is a practical assumption that conforms to the experience from the literature \cite{ukhov2014, lee2013, juan2012, xiang2010} and to the theoretical estimates given in \cite{diaz-emparanza2002}.
 Hence, we consider this setup of \MC\ sampling to be a paragon of accuracy.

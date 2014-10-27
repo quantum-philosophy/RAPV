@@ -1,5 +1,5 @@
 \begin{reviewer}
-\clabel{2}{1}\\
+\clabel{2}{1}
 This work addressed a very challenging problem of temperature-induced failures
 at the system level with considering process variations. The proposed framework
 utilized several available stochastic approaches to establish their uncertainty
@@ -15,7 +15,7 @@ results.
 \end{authors}
 
 \begin{reviewer}
-\noindent\clabel{2}{2}\\
+\clabel{2}{2}
 1)The authors used their framework to perform the Monte Carlo
 simulation for each sample, then, compared their results with it, and
 calculated the error. However, in their framework, they performed the model
@@ -24,32 +24,56 @@ simulation. Hence, the results in Table I might be adjusted.
 \end{reviewer}
 
 \begin{authors}
+The reviewer is right that Monte Carlo (MC) simulations are used as a reference
+point for evaluating the accuracy of the proposed framework, and the proposed
+framework performs model order reduction. However, the MC-based approach does
+not have any kind of model order reduction inside, which we emphasize in the
+second paragraph of Sec.~X-B. In other words, the MC-based approach samples the
+original model and, hence, does not compromise the resulting accuracy. This is
+the reason for considering MC sampling to be a gold etalon for comparison.
+
 \begin{actions}
-  \action{One.}
+  \action{The description of the MC-based approach has been improved in
+  Sec.~X-B.}
 \end{actions}
 \end{authors}
 
 \begin{reviewer}
-\clabel{2}{3}\\
-\noindent 2)Could the authors report the values of $\q_\maximal$ in the
+\clabel{2}{3}
+2)Could the authors report the values of $\q_\maximal$ in the
 experimental results?
 \end{reviewer}
 
 \begin{authors}
+We purposely did not report the values of $\q_\maximal$ in Sec.~X-C due to the
+following two main reasons. First, the actual values of this parameter are,
+from our perspective, irrelevant to the goal of the study in that section
+(the second paragraph of Sec.~X-C). We compare the deterministic and
+probabilistic approaches, and they both share the same values of $\q_\maximal$.
+Second, we apply the optimization procedure to 50 different problems, and
+$\q_\maximal$ is set individually for each of the problems in order to ensure
+that $\q_\maximal$ makes sense for the subsequent optimization. Hence, there
+are 50 different values that $\q_\maximal$ takes, which might be unnecessarily
+overwhelming for the reader.
+
+We agree with the reviewer that more intuition about $\q_\maximal$ is needed,
+and we have decided to report the temperature range that $\q_\maximal$ belongs
+to in our experiments, which is 90--120${}^\circ{}C$.
+
 \begin{actions}
-  \action{One.}
+  \action{The range of $\q_\maximal$ has been reported in Sec.~X-C.}
 \end{actions}
 \end{authors}
 
 \begin{reviewer}
-\clabel{2}{4}\\
-\noindent 3)Typo: In page 12, nc=5 should be lc=5.
+\clabel{2}{4}
+3)Typo: In page 12, nc=5 should be lc=5.
 \end{reviewer}
 
 \begin{authors}
   Thank you for the careful observation.
 
 \begin{actions}
-  \action{The typo noted by the reviewer has been fixed.}
+  \action{The typo has been fixed.}
 \end{actions}
 \end{authors}

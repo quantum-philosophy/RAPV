@@ -8,6 +8,7 @@ The tuning parameter $\anisotropyKnob$ in \eref{dimension-anisotropy} is set to 
 
 \updated{Heterogeneous platforms and periodic applications are generated randomly using \abbr{TGFF} \cite{dick1998} in such a way that the execution time of each task is uniformly distributed between 10 and 30~ms, and its dynamic power between 6 and 20~W.}
 The floorplans of the platforms are regular grids wherein each processing element occupies $2 \times 2\,\text{mm}^2$.
+\updated{Thermal RC circuits---which are essentially pairs of a thermal capacitance matrix $\mCth$ and a thermal conductance $\mGth$ matrix needed in the equations given in \sref{thermal-model}---are constructed using the HotSpot thermal model \cite{skadron2004}.}
 \updated{The granularity of power and temperature profiles, that is, $\dt$ in \sref{temperature-solution} and \xref{temperature-solution}, is set to 1~ms; in practice, $\dt$ should be set to a value that is reasonable for the problem at hand.}
 The stopping condition in \aref{temperature-solution} is a decrease of the normalized root-mean-square error between two successive temperature profiles smaller than 1\%, which typically requires 3--5 iterations.
 

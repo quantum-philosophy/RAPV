@@ -1,5 +1,5 @@
 \begin{reviewer}
-\clabel{3}{1}\\
+\clabel{3}{1}
 I think this paper has value in presenting use of various probabilistic schemes
 for modeling and optimization.
 \end{reviewer}
@@ -9,21 +9,52 @@ for modeling and optimization.
 \end{authors}
 
 \begin{reviewer}
-\clabel{3}{2}\\
-However in order to be considered as a ``regular" paper, it would have been
+\clabel{3}{2}
+However in order to be considered as a ``regular'' paper, it would have been
 nice to get correlations between their reliability and thermal models with with
 real detailed simulations (leakage enhanced hotspot, EM simulation studies
 etc.).
 \end{reviewer}
 
 \begin{authors}
+We would like to clarify that the thermal model used in the experimental results
+\emph{is} the HotSpot thermal model [Skadron, 2004]. To elaborate, for each
+problem, we feed into HotSpot a floorplan file (\texttt{*.flp}) and a
+configuration file (\texttt{hotspot.config}), and HotSpot constructs an
+equivalent thermal RC circuit for us, which is essentially a system of ordinary
+differential equations given by a pair of matrices: a thermal capacitance matrix
+$\mCth$ and a thermal conductance matrix $\mGth$. This system is then
+transformed as it is described in Sec.~VII-B, which is an exact mathematical
+operation.
+
+Furthermore, the HotSpot thermal model that we use has been enhanced to account
+for the leakage power. As we write in Sec.~X-A, the leakage modeling is based on
+SPICE simulations using the NanGate cell library (\url{http://www.nangate.com/})
+configured according to the high-performance 45-nm PTM
+(\url{http://ptm.asu.edu/}). The simulations are performed on a fine-grained
+grid, and the results are tabulated. The interpolation facilities of MATLAB
+(\url{http://www.mathworks.com/products/curvefitting/}) are then utilized
+whenever we need to evaluate the leakage power for a particular point within the
+range of the grid.
+
+Regarding reliability modeling, one of the most important aspects of our
+approach is that we keep the actual reliability models intact as pluggable
+components, which is noted in Sec.~VIII-B. In this way, the user can take
+advantage of the state-of-the-art reliability models without the need of any
+preceding adaptation of those models to our framework. It also means that the
+user can choose the model that he or she considers to be the most suitable for
+the problem at hand and can replace it whenever, for example, a more accurate
+model has been developed. Consequently, reliability models are an independent
+part, and our framework remains adequate as long as the reliability models
+plugged into it are adequate.
+
 \begin{actions}
-  \action{One.}
+  \action{The use of the HotSpot thermal model has been noted in Sec.~X-A.}
 \end{actions}
 \end{authors}
 
 \begin{reviewer}
-\clabel{3}{3}\\
+\clabel{3}{3}
 Another deficiency in my view is that while the paper deals with
 manufacturing variations, it does not mention anything about modeling errors
 (thermal, power etc.). Generating more detailed validation data would be very
@@ -37,14 +68,24 @@ hard.
 \end{authors}
 
 \begin{reviewer}
-\clabel{3}{4}\\
+\clabel{3}{4}
 Hence I recommend the paper be accepted in a brief form (since the
 mathematical contributions are interesting and relevant). In my view the paper
 is deficient as a regular submission.
 \end{reviewer}
 
 \begin{authors}
-\begin{actions}
-  \action{One.}
-\end{actions}
+Thank you for your appreciation of the mathematical contribution of this work.
+Based on the feedback received from the reviewers, we let ourselves conclude
+that the presentation given in the manuscript is sufficiently clear and
+understandable, which we are undoubtedly proud of. We believe that the
+publication would not have attained this quality if we had not had all 14 pages
+at our disposal. The format of a regular journal publication enables us to
+convey to the reader the essence and usefulness of the proposed solutions in a
+coherent, consistent way.
+
+We hope that our answers to the previous comments and the corresponding changes
+in the manuscript have addressed the reviewer's concerns, and we kindly ask the
+reviewer to let us preserve the aforementioned quality of the manuscript. Thank
+you.
 \end{authors}

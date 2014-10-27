@@ -5,7 +5,6 @@
 
 \usepackage{mdframed,color}
 
-\definecolor{updatedBackground}{rgb}{1,0.95,0.95}
 \definecolor{done}{rgb}{0,0,1}
 \definecolor{reviewerLine}{rgb}{0.1,0.1,0.1}
 \definecolor{reviewerBackground}{rgb}{0.95,0.95,1}
@@ -54,15 +53,9 @@
   {\color{done}$\checkmark$~\uline{#1}}%
 }
 
-\newcommand{\figureBox}[1]{%
-  \fcolorbox{updated}{updatedBackground}{#1}%
-}
-
 \newcommand{\reviewerBox}[1]{%
   \fcolorbox{reviewerLine}{reviewerBackground}{#1}%
 }
-
-\newcommand{\feature}[1]{\textbf{Feature~#1}}
 
 \newcommand{\clabel}[2]{[\textbf{Comment~#1.#2}]}
 \newcommand{\cref}[2]{\textbf{Comment~#1.#2}}
