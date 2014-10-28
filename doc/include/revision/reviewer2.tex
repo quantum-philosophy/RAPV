@@ -30,7 +30,7 @@ framework performs model order reduction. However, the MC-based approach does
 not have any kind of model order reduction inside, which we emphasize in the
 second paragraph of Sec.~X-B. In other words, the MC-based approach samples the
 original model and, hence, does not compromise the resulting accuracy. This is
-the reason for considering MC sampling to be a gold etalon for comparison.
+one of the reasons for considering MC sampling as an etalon for comparison.
 
 \begin{actions}
   \action{The description of the MC-based approach has been improved in
@@ -46,19 +46,20 @@ experimental results?
 
 \begin{authors}
 We purposely did not report the values of $\q_\maximal$ in Sec.~X-C due to the
-following two main reasons. First, the actual values of this parameter are,
-from our perspective, irrelevant to the goal of the study in that section
-(the second paragraph of Sec.~X-C). We compare the deterministic and
-probabilistic approaches, and they both share the same values of $\q_\maximal$.
-Second, we apply the optimization procedure to 50 different problems, and
-$\q_\maximal$ is set individually for each of the problems in order to ensure
-that $\q_\maximal$ makes sense for the subsequent optimization. Hence, there
-are 50 different values that $\q_\maximal$ takes, which might be unnecessarily
-overwhelming for the reader.
+following main reasons. First, the actual values of this parameter are, from our
+perspective, irrelevant to the goal of the study in that section (the second
+paragraph of Sec.~X-C). We compare the deterministic and probabilistic
+approaches, and they both share the same values of $\q_\maximal$. Second, we
+apply the optimization procedure to 50 different problems, and $\q_\maximal$ is
+set individually for each of the problems in order to ensure that $\q_\maximal$
+makes sense for the subsequent optimization. Hence, there are 50 different
+values that $\q_\maximal$ takes, which might be unnecessarily overwhelming for
+the reader.
 
-We agree with the reviewer that more intuition about $\q_\maximal$ is needed,
-and we have decided to report the temperature range that $\q_\maximal$ belongs
-to in our experiments, which is 90--120${}^\circ{}C$.
+We agree with the reviewer that more intuition about $\q_\maximal$ is needed.
+In the revised version of the manuscript, we have reported the temperature range
+that $\q_\maximal$ belongs to in our experiments, which is approximately
+90--120${}^\circ{}C$.
 
 \begin{actions}
   \action{The range of $\q_\maximal$ has been reported in Sec.~X-C.}

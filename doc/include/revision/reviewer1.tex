@@ -34,32 +34,31 @@ static scheduling, which is typically done offline, that is, at design time.
 Since our work is targeted at the design stage, we consider static scheduling
 to be a prominent application area of the proposed techniques.
 
+Let us now comment on the 6 hours and 30 milliseconds mentioned by the reviewer.
 We agree that such a computational demand would not be acceptable for online
 usage and might not be justifiable for certain classes of offline problems.
 However, as noted earlier, our methodology has been developed with design-time
 applications in mind, and, in that case, computational time plays an important
 but secondary role. Even days might be readily acceptable if they can help to
 decrease the maintenance costs of a product which is to serve well for years.
-
-Let us now clarify the 30~ms mentioned by the reviewer. In our experiments, the
-execution time of \emph{one} task is distributed between 10 and 30~ms, and the
-number of tasks per application varies from 40 to 640 (Sec.~X-C). Therefore,
-the actual application periods, which we apply our analysis to, are much longer
-than 30~ms. It is also worth noting that the granularity of the analysis---in
-particular, the sampling interval $\dt$ (Sec.~VII-C and Appendix~A)---is a
-variable that the user is free to tune and set to the value that makes the most
-sense to the problem at hand. As a result, an application with a period of one
-second might be comparable in terms of optimization time with, for example, an
-application with a period of one minute.
+Regarding the 30~ms, in our experiments, the execution time of \emph{one} task
+is distributed between 10 and 30~ms, and the number of tasks per application
+varies from 40 to 640 (Sec.~X-C). Therefore, the actual application periods,
+which we apply our analysis to, are much longer than 30~ms. It is also worth
+noting that the granularity of the analysis---in particular, the time step $\dt$
+(Sec.~VII-C and Appendix~A)---is a variable that the user is free to adjust and
+set to the value that makes the most sense to the problem under consideration.
+As a result, an application with a period of one second might be comparable in
+terms of optimization time with an application with a period of one minute, for
+instance.
 
 To conclude, in our opinion, a design-space-exploration problem involving
 static scheduling is an important illustration of the proposed techniques, and,
-therefore, the problem formulation in Sec.~IX-A is well motivated. The reported
-optimization time is affordable, especially for the industry. In this regard,
-we would like to emphasize that the focal point of this work is the
-mathematical foundation and basic structure of the proposed solutions, and the
-corresponding implementation is merely a proof of concept, as pointed out by
-the reviewer.
+therefore, the problem formulation given in Sec.~IX-A is well motivated. The
+reported optimization time is affordable, especially for the industry. Lastly,
+we would like to emphasize that the focal point of this work is the mathematical
+foundation and basic structure of the proposed solutions, and the corresponding
+implementation is merely a proof of concept, as pointed out by the reviewer.
 
 \begin{actions}
   \action{The motivation behind static scheduling has been clarified in
@@ -86,20 +85,17 @@ level.
 \begin{authors}
 Process variation indeed takes place at the transistor level, and our work is
 indeed focused on system-level analysis and optimization. From our perspective,
-a high-level modeling can be helpful to address, and address well, low-level
-concerns. It is an abstraction that eliminates unrelated, excessive variables
-from the equation, puts emphasize on what matters the most, and makes the
-problem feasible to tackle. Therefore, we believe that our methodology,
-operating at the system level, can be used to meet low-level design
-requirements.
+high-level modeling is a helpful abstraction that puts emphasize on what matters
+the most, eliminates unrelated, excessive variables from the equation, and makes
+the problem feasible to tackle.
 
-Let us now discuss how the proposed solutions can be scaled down. We note in
-Sec.~V that the definition of a processing element is flexible and can be
-adjusted according to the intended level of granularity within the system
-level. The main scaling factor of our techniques is the stochastic
-dimensionality $\nvars$, as it is explored and elaborated on in the manuscript.
-Consequently, as long as $\nvars$ stays moderate, the analysis is expected to
-perform well.
+Let us now discuss how the proposed solutions can be scaled down as requested by
+the reviewer. We note in Sec.~V that the definition of a processing element is
+flexible and can be adjusted according to the intended level of granularity
+within the system level. The main scaling factor of our techniques is the
+stochastic dimensionality $\nvars$, as it is explored and elaborated on in the
+manuscript. Consequently, as long as $\nvars$ stays moderate, the analysis is
+expected to perform well.
 
 The dimensionality $\nvars$ does not have a direct relation with the number of
 components considered, \ie, $\nprocs$, which can also be seen in Table~II. It
@@ -118,12 +114,13 @@ doing? First of all, one should be able to capture power profiles with a
 comparable level of detail, which is doable and practical at the system level.
 Second, the thermal model that we utilize was designed for architectural
 studies and, hence, was verified under the corresponding conditions [Skadron,
-2004]. Thus, our analysis is adequate as long as we stay at the system level.
+2004]. Thus, our analysis is likely to be adequate only when it is applied at
+the system level, which is what its intended use is.
 
 To conclude, the proposed solutions have been developed for the system level
 and scale well within this particular level. Low-level applications might
 require certain components to be replaced, and the thermal model is a prominent
-candidate.
+candidate in this regard.
 
 \begin{actions}
   \action{Modeling with a finer level of granularity has been mentioned in
