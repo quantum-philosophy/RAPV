@@ -32,7 +32,7 @@ The reviewer is right that some problems require dynamic scheduling. In this
 paper, however, we consider an optimization problem (Sec.~IX-A) that involves
 static scheduling, which is typically done offline, that is, at design time.
 Since our work is targeted at the design stage, we consider static scheduling
-to be a prominent application area of the proposed techniques.
+to be a possible application area of the proposed techniques.
 
 Let us now comment on the 6 hours and 30 milliseconds mentioned by the reviewer.
 We agree that such a computational demand would not be acceptable for online
@@ -52,13 +52,13 @@ As a result, an application with a period of one second might be comparable in
 terms of optimization time with an application with a period of one minute, for
 instance.
 
-To conclude, in our opinion, a design-space-exploration problem involving
-static scheduling is an important illustration of the proposed techniques, and,
-therefore, the problem formulation given in Sec.~IX-A is well motivated. The
-reported optimization time is affordable, especially for the industry. Lastly,
-we would like to emphasize that the focal point of this work is the mathematical
-foundation and basic structure of the proposed solutions, and the corresponding
-implementation is merely a proof of concept, as pointed out by the reviewer.
+To conclude, in our opinion, a design-space-exploration problem involving static
+scheduling is an important illustration of the proposed techniques, and,
+therefore, the problem formulation given in Sec.~IX-A is motivated. The reported
+optimization time is affordable. Lastly, we would like to emphasize that the
+focal point of this work is the mathematical foundation and basic structure of
+the proposed solutions, and the corresponding implementation is merely a proof
+of concept, as pointed out by the reviewer.
 
 \begin{actions}
   \action{The motivation behind static scheduling has been clarified in
@@ -89,33 +89,29 @@ high-level modeling is a helpful abstraction that puts emphasize on what matters
 the most, eliminates unrelated, excessive variables from the equation, and makes
 the problem feasible to tackle.
 
-Let us now discuss how the proposed solutions can be scaled down as requested by
+Let us now discuss how the proposed solutions can be scaled down as indicated by
 the reviewer. We note in Sec.~V that the definition of a processing element is
 flexible and can be adjusted according to the intended level of granularity
-within the system level. The main scaling factor of our techniques is the
-stochastic dimensionality $\nvars$, as it is explored and elaborated on in the
-manuscript. Consequently, as long as $\nvars$ stays moderate, the analysis is
-expected to perform well.
+within the system level. Processing elements can correspond to, for instance,
+SoCs, CPUs, ALUs, and caches or even to such parts of the platform that do not
+have logical boundaries (imagine applying an regular grid, for example). The
+thermal model that we utilize is expected to perform well at these levels of
+granularity as it was designed for architectural studies and was validated under
+the corresponding conditions [Skadron, 2004].
 
+The main scaling factor of our techniques is the stochastic dimensionality
+$\nvars$, as it is explored and elaborated on in the manuscript. Consequently,
+as long as $\nvars$ stays moderate, the analysis is expected to perform well.
 The dimensionality $\nvars$ does not have a direct relation with the number of
-components considered, \ie, $\nprocs$, which can also be seen in Table~II. It
-is primarily due to the work done by the model-order-reduction mechanism
-discussed in Appendix~C; the reduction is possible and can be substantial due
-to the presence of correlations induced by the fabrication process
-[Friedberg,~2005]. Therefore, for a fixed problem, scaling down the granularity
-level, for example, by 10 does not imply that $\nvars$ will get one level of
-magnitude larger. In fact, assuming that the correlation structure stays the
-same, $\nvars$ is expected to increase by little and essentially plateau as
-$\nprocs$ increases.
-
-The main question to be answered, however, is the following: To what level of
-granularity does (deterministic) temperature analysis remain valid and worth
-doing? First of all, one should be able to capture power profiles with a
-comparable level of detail, which is doable and practical at the system level.
-Second, the thermal model that we utilize was designed for architectural
-studies and, hence, was verified under the corresponding conditions [Skadron,
-2004]. Thus, our analysis is likely to be adequate only when it is applied at
-the system level, which is what its intended use is.
+processing elements considered, that is, with $\nprocs$, which can also be seen in
+Table~II. It is primarily due to the work done by the model-order-reduction
+mechanism discussed in Appendix~C; the reduction is possible and can be
+substantial due to the presence of correlations induced by the fabrication
+process [Friedberg,~2005]. Therefore, for a fixed problem, scaling down the
+granularity level, for example, by 10 does not imply that $\nvars$ will get one
+level of magnitude larger. In fact, assuming that the correlation structure
+stays the same, $\nvars$ is expected to increase by little and essentially
+plateau as $\nprocs$ increases.
 
 To conclude, the proposed solutions have been developed for the system level
 and scale well within this particular level. Low-level applications might
