@@ -92,12 +92,12 @@ the problem feasible to tackle.
 Let us now discuss how the proposed solutions can be scaled down as indicated by
 the reviewer. We note in Sec.~V that the definition of a processing element is
 flexible and can be adjusted according to the intended level of granularity
-within the system level. Processing elements can correspond to, for instance,
-SoCs, CPUs, ALUs, and caches or even to such parts of the platform that do not
-have logical boundaries (imagine applying an regular grid, for example). The
-thermal model that we utilize is expected to perform well at these levels of
-granularity as it was designed for architectural studies and was validated under
-the corresponding conditions [Skadron, 2004].
+within the system level. A processing element can correspond to a SoC, CPU, ALU,
+cache, \etc\ or even to a part of the platform that cannot be ascribed to any
+particular component (imagine applying an regular grid, for example). The
+thermal model that we utilize is expected to perform well at such levels of
+granularity as it has been designed for architectural studies and has been
+validated under the corresponding conditions [Skadron, 2004].
 
 The main scaling factor of our techniques is the stochastic dimensionality
 $\nvars$, as it is explored and elaborated on in the manuscript. Consequently,
@@ -114,9 +114,7 @@ stays the same, $\nvars$ is expected to increase by little and essentially
 plateau as $\nprocs$ increases.
 
 To conclude, the proposed solutions have been developed for the system level
-and scale well within this particular level. Low-level applications might
-require certain components to be replaced, and the thermal model is a prominent
-candidate in this regard.
+and scale well within this particular level.
 
 \begin{actions}
   \action{Modeling with a finer level of granularity has been mentioned in
