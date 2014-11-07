@@ -38,7 +38,7 @@ Let us now comment on the 6 hours and 30 milliseconds mentioned by the reviewer.
 We agree that such a computational demand would not be acceptable for online
 usage and might not be justifiable for certain classes of offline problems.
 However, as noted earlier, our methodology has been developed with design-time
-applications in mind, and, in that case, computational time plays an important
+application in mind, and, in that case, computational time plays an important
 but secondary role. Even days might be readily acceptable if they can help to
 decrease the maintenance costs of a product which is to serve well for years.
 Regarding the 30~ms, in our experiments, the execution time of \emph{one} task
@@ -93,11 +93,10 @@ Let us now discuss how the proposed solutions can be scaled down as indicated by
 the reviewer. We note in Sec.~V that the definition of a processing element is
 flexible and can be adjusted according to the intended level of granularity
 within the system level. A processing element can correspond to a SoC, CPU, ALU,
-cache, \etc\ or even to a part of the platform that cannot be ascribed to any
-particular component (imagine applying an regular grid, for example). The
-thermal model that we utilize is expected to perform well at such levels of
-granularity as it has been designed for architectural studies and has been
-validated under the corresponding conditions [Skadron, 2004].
+cache, register, \etc\ The thermal model that we utilize is expected to perform
+well at such levels of granularity as it has been designed for architectural
+studies and has been validated under the corresponding conditions
+[Skadron,~2004].
 
 The main scaling factor of our techniques is the stochastic dimensionality
 $\nvars$, as it is explored and elaborated on in the manuscript. Consequently,
