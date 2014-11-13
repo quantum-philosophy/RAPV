@@ -13,11 +13,11 @@ Consequently, only one simulation of the system is needed in the deterministic c
 
 \input{include/tables/optimization.tex}
 We consider platforms with $\nprocs = 2$, 4, 8, 16, and 32 cores.
-\updated{Ten applications with the number of tasks $\ntasks = 20 \, \nprocs$ (that is, 40 tasks for 2 cores up to 640 tasks for 32 cores) are randomly generated for each platform; thus, 50 problems in total.}
+Ten applications with the number of tasks $\ntasks = 20 \, \nprocs$ (that is, 40 tasks for 2 cores up to 640 tasks for 32 cores) are randomly generated for each platform; thus, 50 problems in total.
 The floorplans of the platforms and the task graphs of the applications, including the execution time and dynamic power consumption of each task on each core, are available online at \cite{sources}.
 $\pr_\burn$ and $\pr_\wear$ in \eref{thermal-constraint} and \eref{reliability-constraint}, respectively, are set to 0.01.
 Due to the diversity of the problems, $\t_\maximal$, $\q_\maximal$, and $\T_\minimal$ are found individually for each problem, ensuring that they make sense for the subsequent optimization.
-\updated{For instance, $\q_\maximal$ was found within the range 90--120${}^\circ{}C$.}
+For instance, $\q_\maximal$ was found within the range 90--120${}^\circ{}C$.
 Note, however, that these three parameters stay the same for both the probabilistic and deterministic variants of the optimization.
 
 The obtained results are reported in \tref{optimization}, and the most important message is in the last column.

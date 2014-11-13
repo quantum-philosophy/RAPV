@@ -1,5 +1,5 @@
 Consider a heterogeneous electronic system that consists of $\nprocs$ processing elements and is equipped with a thermal package.
-\updated{The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, \abbr{SoC}s, \abbr{CPU}s, and \abbr{ALU}s); the components can be subdivided whenever a finer level of modeling is required for the problem at hand.}
+The processing elements are the active components of the system that are identified at the system level with a desired level of granularity (\eg, \abbr{SoC}s, \abbr{CPU}s, and \abbr{ALU}s); the components can be subdivided whenever a finer level of modeling is required for the problem at hand.
 
 We shall denote by $\specification$ an abstract set containing all information about the system that is relevant to our analysis, and we shall refer to it as the system specification.
 The content of $\specification$ is problem specific, and it will be gradually detailed when it is needed.
@@ -22,7 +22,7 @@ Given $\specification$, we pursue the following major objectives:
 \begin{itemize}
   \item {\bfseries Objective~1.} Extend probabilistic \ta\ to include the \DSS\ scenario under the uncertainty due to process variation specified by $\vu$.
   \item {\bfseries Objective~2.} Taking into consideration the effect of process variation on temperature, find the survival function of the system at hand under an arbitrary workload given as a dynamic power profile $\mP_\dynamic$.
-  \item {\bfseries Objective~3.} \updated{Develop a computationally tractable design-space exploration scheme exploiting the proposed framework for temperature/reliability analysis.}
+  \item {\bfseries Objective~3.} Develop a computationally tractable design-space exploration scheme exploiting the proposed framework for temperature/reliability analysis.
 \end{itemize}
 
 In order to give a better intuition about our solutions, we shall accompany the development of our framework with the development of a concrete example/application, which will eventually be utilized for the quantitative evaluation of the framework given in \sref{experimental-results}.
