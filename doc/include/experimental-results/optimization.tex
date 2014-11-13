@@ -11,7 +11,6 @@ Consequently, only one simulation of the system is needed in the deterministic c
   \min_{\schedule} \qoiE(\schedule), \hspace{0.7em} \qoiQ(\schedule) \geq \q_\maximal, \hspace{0.7em} \text{and} \hspace{0.7em} \qoiT(\schedule) \leq \T_\minimal.
 \]
 
-\input{include/tables/optimization.tex}
 We consider platforms with $\nprocs = 2$, 4, 8, 16, and 32 cores.
 Ten applications with the number of tasks $\ntasks = 20 \, \nprocs$ (that is, 40 tasks for 2 cores up to 640 tasks for 32 cores) are randomly generated for each platform; thus, 50 problems in total.
 The floorplans of the platforms and the task graphs of the applications, including the execution time and dynamic power consumption of each task on each core, are available online at \cite{sources}.
@@ -20,6 +19,7 @@ Due to the diversity of the problems, $\t_\maximal$, $\q_\maximal$, and $\T_\min
 For instance, $\q_\maximal$ was found within the range 90--120${}^\circ{}C$.
 Note, however, that these three parameters stay the same for both the probabilistic and deterministic variants of the optimization.
 
+\input{include/tables/optimization.tex}
 The obtained results are reported in \tref{optimization}, and the most important message is in the last column.
 \emph{Failure rate} refers to the ratio of the solutions produced by the deterministic optimization that, after being reevaluated using the probabilistic approach (\ie, after taking process variation into account), have been found to be violating the probabilistic constraints given in \eref{thermal-constraint} and/or \eref{reliability-constraint}.
 To give an example, for the quad-core platform, six out of ten schedules proposed by the deterministic approach violate the constraints on the maximal temperature and/or minimal lifetime when evaluated considering process variation.
